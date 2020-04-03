@@ -1,0 +1,54 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId "com.cwc.vplayer"
+        minSdkVersion 23
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.blankj:utilcodex:1.26.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.4'
+    implementation 'com.github.ReactiveX:RxKotlin:2.x-SNAPSHOT'
+    implementation 'com.drakeet.multitype:multitype:4.2.0'
+
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation project(":vplayer_base")
+
+//    implementation 'com.shuyu:gsyVideoPlayer-java:7.1.3'
+//是否需要ExoPlayer模式
+    implementation 'com.shuyu:GSYVideoPlayer-exo2:7.1.3'
+//根据你的需求ijk模式的so
+    implementation 'com.shuyu:gsyVideoPlayer-armv5:7.1.3'
+    implementation 'com.shuyu:gsyVideoPlayer-armv7a:7.1.3'
+    implementation 'com.shuyu:gsyVideoPlayer-arm64:7.1.3'
+    implementation 'com.shuyu:gsyVideoPlayer-x64:7.1.3'
+    implementation 'com.shuyu:gsyVideoPlayer-x86:7.1.3'
+
+}
