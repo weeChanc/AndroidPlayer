@@ -1,15 +1,5 @@
 package com.cwc.vplayer.utils;
 
-/**
- * Created by shuyu on 2016/8/10.
- *
- * <pre>
- *     author: Blankj
- *     blog  : http://blankj.com
- *     time  : 2016/8/2
- * </pre>
- *
- */
 
 import android.content.Context;
 import android.content.Intent;

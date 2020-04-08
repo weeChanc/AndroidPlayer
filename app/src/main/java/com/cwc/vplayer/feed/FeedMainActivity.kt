@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cwc.vplayer.R
-import com.cwc.vplayer.controller.GSYVideoManager
+import com.cwc.vplayer.controller.VideoManager
 import com.cwc.vplayer.utils.MediaRepository
 import kotlinx.android.synthetic.main.activity_feed_main.*
 
@@ -26,7 +26,7 @@ class FeedMainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (GSYVideoManager.backFromWindowFull(this)) {
+        if (VideoManager.backFromWindowFull(this)) {
             return
         }
         super.onBackPressed()
@@ -34,17 +34,17 @@ class FeedMainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        GSYVideoManager.onPause()
+        VideoManager.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        GSYVideoManager.onResume(false)
+        VideoManager.onResume(false)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        GSYVideoManager.releaseAllVideos()
+        VideoManager.releaseAllVideos()
     }
 
 

@@ -2,7 +2,6 @@ package com.cwc.vplayer.player.base.model;
 
 /**
  * video的一些默认配置
- * Created by shuyu on 2016/12/7.
  */
 
 public class VideoType {

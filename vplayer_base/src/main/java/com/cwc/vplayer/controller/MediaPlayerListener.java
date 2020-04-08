@@ -1,6 +1,6 @@
 package com.cwc.vplayer.controller;
 
-public interface GSYMediaPlayerListener {
+public interface MediaPlayerListener {
     void onPrepared();
 
     void onAutoCompletion();

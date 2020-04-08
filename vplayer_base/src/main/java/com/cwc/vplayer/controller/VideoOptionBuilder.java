@@ -3,12 +3,12 @@ package com.cwc.vplayer.controller;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
-import com.cwc.vplayer.view.display.GSYBaseVideoPlayer;
-import com.cwc.vplayer.view.display.GSYVideoProgressListener;
+import com.cwc.vplayer.view.display.BaseVideoPlayer;
+import com.cwc.vplayer.view.display.VideoProgressListener;
 import com.cwc.vplayer.view.display.LockClickListener;
-import com.cwc.vplayer.view.display.StandardGSYVideoPlayer;
+import com.cwc.vplayer.view.display.StandardVideoPlayer;
 import com.cwc.vplayer.view.display.VideoAllCallBack;
-import com.cwc.vplayer.view.render.GSYVideoGLView;
+import com.cwc.vplayer.view.render.VideoGLView;
 
 import java.io.File;
 import java.util.Map;
@@ -23,7 +23,7 @@ import java.util.Map;
  * 这只是方便使用
  */
 
-public class GSYVideoOptionBuilder {
+public class VideoOptionBuilder {
 
     //退出全屏显示的案件图片
     protected int mShrinkImageRes = -1;
@@ -160,10 +160,10 @@ public class GSYVideoOptionBuilder {
     protected Drawable mDialogProgressBarDrawable;
 
     //滤镜
-    protected GSYVideoGLView.ShaderInterface mEffectFilter = null;
+    protected VideoGLView.ShaderInterface mEffectFilter = null;
 
     //进度回调
-    protected GSYVideoProgressListener mGSYVideoProgressListener;
+    protected VideoProgressListener mVideoProgressListener;
 
 
     /**
@@ -171,7 +171,7 @@ public class GSYVideoOptionBuilder {
      *
      * @param autoFullWithSize 默认false
      */
-    public GSYVideoOptionBuilder setAutoFullWithSize(boolean autoFullWithSize) {
+    public VideoOptionBuilder setAutoFullWithSize(boolean autoFullWithSize) {
         this.mAutoFullWithSize = autoFullWithSize;
         return this;
     }
@@ -181,7 +181,7 @@ public class GSYVideoOptionBuilder {
      *
      * @param showFullAnimation 是否使用全屏动画效果
      */
-    public GSYVideoOptionBuilder setShowFullAnimation(boolean showFullAnimation) {
+    public VideoOptionBuilder setShowFullAnimation(boolean showFullAnimation) {
         this.mShowFullAnimation = showFullAnimation;
         return this;
     }
@@ -189,7 +189,7 @@ public class GSYVideoOptionBuilder {
     /**
      * 设置循环
      */
-    public GSYVideoOptionBuilder setLooping(boolean looping) {
+    public VideoOptionBuilder setLooping(boolean looping) {
         this.mLooping = looping;
         return this;
     }
@@ -200,7 +200,7 @@ public class GSYVideoOptionBuilder {
      *
      * @param mVideoAllCallBack
      */
-    public GSYVideoOptionBuilder setVideoAllCallBack(VideoAllCallBack mVideoAllCallBack) {
+    public VideoOptionBuilder setVideoAllCallBack(VideoAllCallBack mVideoAllCallBack) {
         this.mVideoAllCallBack = mVideoAllCallBack;
         return this;
     }
@@ -208,7 +208,7 @@ public class GSYVideoOptionBuilder {
     /**
      * 是否开启自动旋转
      */
-    public GSYVideoOptionBuilder setRotateViewAuto(boolean rotateViewAuto) {
+    public VideoOptionBuilder setRotateViewAuto(boolean rotateViewAuto) {
         this.mRotateViewAuto = rotateViewAuto;
         return this;
     }
@@ -216,7 +216,7 @@ public class GSYVideoOptionBuilder {
     /**
      * 一全屏就锁屏横屏，默认false竖屏，可配合setRotateViewAuto使用
      */
-    public GSYVideoOptionBuilder setLockLand(boolean lockLand) {
+    public VideoOptionBuilder setLockLand(boolean lockLand) {
         this.mLockLand = lockLand;
         return this;
     }
@@ -224,7 +224,7 @@ public class GSYVideoOptionBuilder {
     /**
      * 播放速度
      */
-    public GSYVideoOptionBuilder setSpeed(float speed) {
+    public VideoOptionBuilder setSpeed(float speed) {
         this.mSpeed = speed;
         return this;
     }
@@ -233,7 +233,7 @@ public class GSYVideoOptionBuilder {
     /**
      * 变声不变调
      */
-    public GSYVideoOptionBuilder setSoundTouch(boolean soundTouch) {
+    public VideoOptionBuilder setSoundTouch(boolean soundTouch) {
         this.mSounchTouch = soundTouch;
         return this;
     }
@@ -241,7 +241,7 @@ public class GSYVideoOptionBuilder {
     /**
      * 全屏隐藏虚拟按键，默认打开
      */
-    public GSYVideoOptionBuilder setHideKey(boolean hideKey) {
+    public VideoOptionBuilder setHideKey(boolean hideKey) {
         this.mHideKey = hideKey;
         return this;
     }
@@ -250,7 +250,7 @@ public class GSYVideoOptionBuilder {
      * 是否可以滑动界面改变进度，声音等
      * 默认true
      */
-    public GSYVideoOptionBuilder setIsTouchWiget(boolean isTouchWiget) {
+    public VideoOptionBuilder setIsTouchWiget(boolean isTouchWiget) {
         this.mIsTouchWiget = isTouchWiget;
         return this;
     }
@@ -259,7 +259,7 @@ public class GSYVideoOptionBuilder {
      * 是否可以全屏滑动界面改变进度，声音等
      * 默认 true
      */
-    public GSYVideoOptionBuilder setIsTouchWigetFull(boolean isTouchWigetFull) {
+    public VideoOptionBuilder setIsTouchWigetFull(boolean isTouchWigetFull) {
         this.mIsTouchWigetFull = isTouchWigetFull;
         return this;
     }
@@ -268,7 +268,7 @@ public class GSYVideoOptionBuilder {
     /**
      * 是否需要显示流量提示,默认true
      */
-    public GSYVideoOptionBuilder setNeedShowWifiTip(boolean needShowWifiTip) {
+    public VideoOptionBuilder setNeedShowWifiTip(boolean needShowWifiTip) {
         this.mNeedShowWifiTip = needShowWifiTip;
         return this;
     }
@@ -278,7 +278,7 @@ public class GSYVideoOptionBuilder {
      * 必须在setUp之前设置
      * 不设置使用默认
      */
-    public GSYVideoOptionBuilder setEnlargeImageRes(int mEnlargeImageRes) {
+    public VideoOptionBuilder setEnlargeImageRes(int mEnlargeImageRes) {
         this.mEnlargeImageRes = mEnlargeImageRes;
         return this;
     }
@@ -288,7 +288,7 @@ public class GSYVideoOptionBuilder {
      * 必须在setUp之前设置
      * 不设置使用默认
      */
-    public GSYVideoOptionBuilder setShrinkImageRes(int mShrinkImageRes) {
+    public VideoOptionBuilder setShrinkImageRes(int mShrinkImageRes) {
         this.mShrinkImageRes = mShrinkImageRes;
         return this;
     }
@@ -301,7 +301,7 @@ public class GSYVideoOptionBuilder {
      *
      * @param showPauseCover 默认true
      */
-    public GSYVideoOptionBuilder setShowPauseCover(boolean showPauseCover) {
+    public VideoOptionBuilder setShowPauseCover(boolean showPauseCover) {
         this.mShowPauseCover = showPauseCover;
         return this;
     }
@@ -311,7 +311,7 @@ public class GSYVideoOptionBuilder {
      *
      * @param seekRatio 滑动快进的比例，默认1。数值越大，滑动的产生的seek越小
      */
-    public GSYVideoOptionBuilder setSeekRatio(float seekRatio) {
+    public VideoOptionBuilder setSeekRatio(float seekRatio) {
         if (seekRatio < 0) {
             return this;
         }
@@ -324,7 +324,7 @@ public class GSYVideoOptionBuilder {
      *
      * @param rotateWithSystem 默认true
      */
-    public GSYVideoOptionBuilder setRotateWithSystem(boolean rotateWithSystem) {
+    public VideoOptionBuilder setRotateWithSystem(boolean rotateWithSystem) {
         this.mRotateWithSystem = rotateWithSystem;
         return this;
     }
@@ -334,7 +334,7 @@ public class GSYVideoOptionBuilder {
      *
      * @param playTag 保证不重复就好
      */
-    public GSYVideoOptionBuilder setPlayTag(String playTag) {
+    public VideoOptionBuilder setPlayTag(String playTag) {
         this.mPlayTag = playTag;
         return this;
     }
@@ -343,7 +343,7 @@ public class GSYVideoOptionBuilder {
     /**
      * 设置播放位置防止错位
      */
-    public GSYVideoOptionBuilder setPlayPosition(int playPosition) {
+    public VideoOptionBuilder setPlayPosition(int playPosition) {
         this.mPlayPosition = playPosition;
         return this;
     }
@@ -353,7 +353,7 @@ public class GSYVideoOptionBuilder {
      * 目前有时候前几秒有跳动问题，毫秒
      * 需要在startPlayLogic之前，即播放开始之前
      */
-    public GSYVideoOptionBuilder setSeekOnStart(long seekOnStart) {
+    public VideoOptionBuilder setSeekOnStart(long seekOnStart) {
         this.mSeekOnStart = seekOnStart;
         return this;
     }
@@ -363,7 +363,7 @@ public class GSYVideoOptionBuilder {
      *
      * @param url
      */
-    public GSYVideoOptionBuilder setUrl(String url) {
+    public VideoOptionBuilder setUrl(String url) {
         this.mUrl = url;
         return this;
     }
@@ -373,7 +373,7 @@ public class GSYVideoOptionBuilder {
      *
      * @param videoTitle
      */
-    public GSYVideoOptionBuilder setVideoTitle(String videoTitle) {
+    public VideoOptionBuilder setVideoTitle(String videoTitle) {
         this.mVideoTitle = videoTitle;
         return this;
     }
@@ -383,7 +383,7 @@ public class GSYVideoOptionBuilder {
      *
      * @param cacheWithPlay
      */
-    public GSYVideoOptionBuilder setCacheWithPlay(boolean cacheWithPlay) {
+    public VideoOptionBuilder setCacheWithPlay(boolean cacheWithPlay) {
         this.mCacheWithPlay = cacheWithPlay;
         return this;
     }
@@ -393,7 +393,7 @@ public class GSYVideoOptionBuilder {
      *
      * @param startAfterPrepared 默认true，false的时候需要在prepared后调用startAfterPrepared()
      */
-    public GSYVideoOptionBuilder setStartAfterPrepared(boolean startAfterPrepared) {
+    public VideoOptionBuilder setStartAfterPrepared(boolean startAfterPrepared) {
         this.mStartAfterPrepared = startAfterPrepared;
         return this;
     }
@@ -404,7 +404,7 @@ public class GSYVideoOptionBuilder {
      *
      * @param releaseWhenLossAudio 默认true，false的时候只会暂停
      */
-    public GSYVideoOptionBuilder setReleaseWhenLossAudio(boolean releaseWhenLossAudio) {
+    public VideoOptionBuilder setReleaseWhenLossAudio(boolean releaseWhenLossAudio) {
         this.mReleaseWhenLossAudio = releaseWhenLossAudio;
         return this;
     }
@@ -414,7 +414,7 @@ public class GSYVideoOptionBuilder {
      *
      * @param cachePath
      */
-    public GSYVideoOptionBuilder setCachePath(File cachePath) {
+    public VideoOptionBuilder setCachePath(File cachePath) {
         this.mCachePath = cachePath;
         return this;
     }
@@ -424,7 +424,7 @@ public class GSYVideoOptionBuilder {
      *
      * @param mapHeadData
      */
-    public GSYVideoOptionBuilder setMapHeadData(Map<String, String> mapHeadData) {
+    public VideoOptionBuilder setMapHeadData(Map<String, String> mapHeadData) {
         this.mMapHeadData = mapHeadData;
         return this;
     }
@@ -433,8 +433,8 @@ public class GSYVideoOptionBuilder {
     /**
      * 进度回调
      */
-    public GSYVideoOptionBuilder setGSYVideoProgressListener(GSYVideoProgressListener videoProgressListener) {
-        this.mGSYVideoProgressListener = videoProgressListener;
+    public VideoOptionBuilder setVideoProgressListener(VideoProgressListener videoProgressListener) {
+        this.mVideoProgressListener = videoProgressListener;
         return this;
     }
 
@@ -442,7 +442,7 @@ public class GSYVideoOptionBuilder {
     /***
      * 设置封面
      */
-    public GSYVideoOptionBuilder setThumbImageView(View view) {
+    public VideoOptionBuilder setThumbImageView(View view) {
         mThumbImageView = view;
         return this;
     }
@@ -451,7 +451,7 @@ public class GSYVideoOptionBuilder {
     /**
      * 底部进度条-弹出的
      */
-    public GSYVideoOptionBuilder setBottomShowProgressBarDrawable(Drawable drawable, Drawable thumb) {
+    public VideoOptionBuilder setBottomShowProgressBarDrawable(Drawable drawable, Drawable thumb) {
         mBottomShowProgressDrawable = drawable;
         mBottomShowProgressThumbDrawable = thumb;
         return this;
@@ -460,7 +460,7 @@ public class GSYVideoOptionBuilder {
     /**
      * 底部进度条-非弹出
      */
-    public GSYVideoOptionBuilder setBottomProgressBarDrawable(Drawable drawable) {
+    public VideoOptionBuilder setBottomProgressBarDrawable(Drawable drawable) {
         mBottomProgressDrawable = drawable;
         return this;
     }
@@ -468,7 +468,7 @@ public class GSYVideoOptionBuilder {
     /**
      * 声音进度条
      */
-    public GSYVideoOptionBuilder setDialogVolumeProgressBar(Drawable drawable) {
+    public VideoOptionBuilder setDialogVolumeProgressBar(Drawable drawable) {
         mVolumeProgressDrawable = drawable;
         return this;
     }
@@ -477,7 +477,7 @@ public class GSYVideoOptionBuilder {
     /**
      * 中间进度条
      */
-    public GSYVideoOptionBuilder setDialogProgressBar(Drawable drawable) {
+    public VideoOptionBuilder setDialogProgressBar(Drawable drawable) {
         mDialogProgressBarDrawable = drawable;
         return this;
     }
@@ -485,7 +485,7 @@ public class GSYVideoOptionBuilder {
     /**
      * 中间进度条字体颜色
      */
-    public GSYVideoOptionBuilder setDialogProgressColor(int highLightColor, int normalColor) {
+    public VideoOptionBuilder setDialogProgressColor(int highLightColor, int normalColor) {
         mDialogProgressHighLightColor = highLightColor;
         mDialogProgressNormalColor = normalColor;
         return this;
@@ -494,7 +494,7 @@ public class GSYVideoOptionBuilder {
     /**
      * 是否点击封面可以播放
      */
-    public GSYVideoOptionBuilder setThumbPlay(boolean thumbPlay) {
+    public VideoOptionBuilder setThumbPlay(boolean thumbPlay) {
         this.mThumbPlay = thumbPlay;
         return this;
     }
@@ -503,7 +503,7 @@ public class GSYVideoOptionBuilder {
      * 是否需要全屏锁定屏幕功能
      * 如果单独使用请设置setIfCurrentIsFullscreen为true
      */
-    public GSYVideoOptionBuilder setNeedLockFull(boolean needLoadFull) {
+    public VideoOptionBuilder setNeedLockFull(boolean needLoadFull) {
         this.mNeedLockFull = needLoadFull;
         return this;
     }
@@ -511,7 +511,7 @@ public class GSYVideoOptionBuilder {
     /**
      * 锁屏点击
      */
-    public GSYVideoOptionBuilder setLockClickListener(LockClickListener lockClickListener) {
+    public VideoOptionBuilder setLockClickListener(LockClickListener lockClickListener) {
         this.mLockClickListener = lockClickListener;
         return this;
     }
@@ -521,7 +521,7 @@ public class GSYVideoOptionBuilder {
      *
      * @param dismissControlTime 毫秒，默认2500
      */
-    public GSYVideoOptionBuilder setDismissControlTime(int dismissControlTime) {
+    public VideoOptionBuilder setDismissControlTime(int dismissControlTime) {
         this.mDismissControlTime = dismissControlTime;
         return this;
     }
@@ -529,7 +529,7 @@ public class GSYVideoOptionBuilder {
     /**
      * 设置滤镜效果
      */
-    public GSYVideoOptionBuilder setEffectFilter(GSYVideoGLView.ShaderInterface effectFilter) {
+    public VideoOptionBuilder setEffectFilter(VideoGLView.ShaderInterface effectFilter) {
         this.mEffectFilter = effectFilter;
         return this;
     }
@@ -538,18 +538,18 @@ public class GSYVideoOptionBuilder {
      * 是否需要覆盖拓展类型，目前只针对exoPlayer内核模式有效
      * @param overrideExtension 比如传入 m3u8,mp4,avi 等类型
      */
-    public GSYVideoOptionBuilder setOverrideExtension(String overrideExtension) {
+    public VideoOptionBuilder setOverrideExtension(String overrideExtension) {
         this.mOverrideExtension = overrideExtension;
         return this;
     }
 
 
-    public GSYVideoOptionBuilder setOnlyRotateLand(boolean onlyRotateLand) {
+    public VideoOptionBuilder setOnlyRotateLand(boolean onlyRotateLand) {
         this.mIsOnlyRotateLand = onlyRotateLand;
         return this;
     }
 
-    public GSYVideoOptionBuilder setShowDragProgressTextOnSeekBar(boolean isShowDragProgressTextOnSeekBar) {
+    public VideoOptionBuilder setShowDragProgressTextOnSeekBar(boolean isShowDragProgressTextOnSeekBar) {
         this.isShowDragProgressTextOnSeekBar = isShowDragProgressTextOnSeekBar;
         return this;
     }
@@ -559,103 +559,103 @@ public class GSYVideoOptionBuilder {
      * 目前弃用，请使用正常setup
      */
     @Deprecated
-    public GSYVideoOptionBuilder setSetUpLazy(boolean setUpLazy) {
+    public VideoOptionBuilder setSetUpLazy(boolean setUpLazy) {
         this.mSetUpLazy = setUpLazy;
         return this;
     }
 
-    public GSYVideoOptionBuilder setFullHideActionBar(boolean actionBar) {
+    public VideoOptionBuilder setFullHideActionBar(boolean actionBar) {
         this.mActionBar = actionBar;
         return this;
     }
 
-    public GSYVideoOptionBuilder setFullHideStatusBar(boolean statusBar) {
+    public VideoOptionBuilder setFullHideStatusBar(boolean statusBar) {
         this.mStatusBar = statusBar;
         return this;
     }
 
-    public void build(StandardGSYVideoPlayer gsyVideoPlayer) {
+    public void build(StandardVideoPlayer videoPlayer) {
         if (mBottomShowProgressDrawable != null && mBottomShowProgressThumbDrawable != null) {
-            gsyVideoPlayer.setBottomShowProgressBarDrawable(mBottomShowProgressDrawable, mBottomShowProgressThumbDrawable);
+            videoPlayer.setBottomShowProgressBarDrawable(mBottomShowProgressDrawable, mBottomShowProgressThumbDrawable);
         }
         if (mBottomProgressDrawable != null) {
-            gsyVideoPlayer.setBottomProgressBarDrawable(mBottomProgressDrawable);
+            videoPlayer.setBottomProgressBarDrawable(mBottomProgressDrawable);
         }
         if (mVolumeProgressDrawable != null) {
-            gsyVideoPlayer.setDialogVolumeProgressBar(mVolumeProgressDrawable);
+            videoPlayer.setDialogVolumeProgressBar(mVolumeProgressDrawable);
         }
 
         if (mDialogProgressBarDrawable != null) {
-            gsyVideoPlayer.setDialogProgressBar(mDialogProgressBarDrawable);
+            videoPlayer.setDialogProgressBar(mDialogProgressBarDrawable);
         }
 
         if (mDialogProgressHighLightColor > 0 && mDialogProgressNormalColor > 0) {
-            gsyVideoPlayer.setDialogProgressColor(mDialogProgressHighLightColor, mDialogProgressNormalColor);
+            videoPlayer.setDialogProgressColor(mDialogProgressHighLightColor, mDialogProgressNormalColor);
         }
 
-        build((GSYBaseVideoPlayer) gsyVideoPlayer);
+        build((BaseVideoPlayer) videoPlayer);
     }
 
-    public void build(GSYBaseVideoPlayer gsyVideoPlayer) {
-        gsyVideoPlayer.setPlayTag(mPlayTag);
-        gsyVideoPlayer.setPlayPosition(mPlayPosition);
+    public void build(BaseVideoPlayer videoPlayer) {
+        videoPlayer.setPlayTag(mPlayTag);
+        videoPlayer.setPlayPosition(mPlayPosition);
 
-        gsyVideoPlayer.setThumbPlay(mThumbPlay);
+        videoPlayer.setThumbPlay(mThumbPlay);
 
         if (mThumbImageView != null) {
-            gsyVideoPlayer.setThumbImageView(mThumbImageView);
+            videoPlayer.setThumbImageView(mThumbImageView);
         }
 
-        gsyVideoPlayer.setNeedLockFull(mNeedLockFull);
+        videoPlayer.setNeedLockFull(mNeedLockFull);
 
         if (mLockClickListener != null) {
-            gsyVideoPlayer.setLockClickListener(mLockClickListener);
+            videoPlayer.setLockClickListener(mLockClickListener);
         }
 
-        gsyVideoPlayer.setDismissControlTime(mDismissControlTime);
+        videoPlayer.setDismissControlTime(mDismissControlTime);
 
 
         if (mSeekOnStart > 0) {
-            gsyVideoPlayer.setSeekOnStart(mSeekOnStart);
+            videoPlayer.setSeekOnStart(mSeekOnStart);
         }
 
-        gsyVideoPlayer.setShowFullAnimation(mShowFullAnimation);
-        gsyVideoPlayer.setLooping(mLooping);
+        videoPlayer.setShowFullAnimation(mShowFullAnimation);
+        videoPlayer.setLooping(mLooping);
         if (mVideoAllCallBack != null) {
-            gsyVideoPlayer.setVideoAllCallBack(mVideoAllCallBack);
+            videoPlayer.setVideoAllCallBack(mVideoAllCallBack);
         }
-        if (mGSYVideoProgressListener != null) {
-            gsyVideoPlayer.setGSYVideoProgressListener(mGSYVideoProgressListener);
+        if (mVideoProgressListener != null) {
+            videoPlayer.setVideoProgressListener(mVideoProgressListener);
         }
-        gsyVideoPlayer.setOverrideExtension(mOverrideExtension);
-        gsyVideoPlayer.setAutoFullWithSize(mAutoFullWithSize);
-        gsyVideoPlayer.setRotateViewAuto(mRotateViewAuto);
-        gsyVideoPlayer.setOnlyRotateLand(mIsOnlyRotateLand);
-        gsyVideoPlayer.setLockLand(mLockLand);
-        gsyVideoPlayer.setSpeed(mSpeed, mSounchTouch);
-        gsyVideoPlayer.setHideKey(mHideKey);
-        gsyVideoPlayer.setIsTouchWiget(mIsTouchWiget);
-        gsyVideoPlayer.setIsTouchWigetFull(mIsTouchWigetFull);
-        gsyVideoPlayer.setNeedShowWifiTip(mNeedShowWifiTip);
-        gsyVideoPlayer.setEffectFilter(mEffectFilter);
-        gsyVideoPlayer.setStartAfterPrepared(mStartAfterPrepared);
-        gsyVideoPlayer.setReleaseWhenLossAudio(mReleaseWhenLossAudio);
-        gsyVideoPlayer.setFullHideActionBar(mActionBar);
-        gsyVideoPlayer.setShowDragProgressTextOnSeekBar(isShowDragProgressTextOnSeekBar);
-        gsyVideoPlayer.setFullHideStatusBar(mStatusBar);
+        videoPlayer.setOverrideExtension(mOverrideExtension);
+        videoPlayer.setAutoFullWithSize(mAutoFullWithSize);
+        videoPlayer.setRotateViewAuto(mRotateViewAuto);
+        videoPlayer.setOnlyRotateLand(mIsOnlyRotateLand);
+        videoPlayer.setLockLand(mLockLand);
+        videoPlayer.setSpeed(mSpeed, mSounchTouch);
+        videoPlayer.setHideKey(mHideKey);
+        videoPlayer.setIsTouchWiget(mIsTouchWiget);
+        videoPlayer.setIsTouchWigetFull(mIsTouchWigetFull);
+        videoPlayer.setNeedShowWifiTip(mNeedShowWifiTip);
+        videoPlayer.setEffectFilter(mEffectFilter);
+        videoPlayer.setStartAfterPrepared(mStartAfterPrepared);
+        videoPlayer.setReleaseWhenLossAudio(mReleaseWhenLossAudio);
+        videoPlayer.setFullHideActionBar(mActionBar);
+        videoPlayer.setShowDragProgressTextOnSeekBar(isShowDragProgressTextOnSeekBar);
+        videoPlayer.setFullHideStatusBar(mStatusBar);
         if (mEnlargeImageRes > 0) {
-            gsyVideoPlayer.setEnlargeImageRes(mEnlargeImageRes);
+            videoPlayer.setEnlargeImageRes(mEnlargeImageRes);
         }
         if (mShrinkImageRes > 0) {
-            gsyVideoPlayer.setShrinkImageRes(mShrinkImageRes);
+            videoPlayer.setShrinkImageRes(mShrinkImageRes);
         }
-        gsyVideoPlayer.setShowPauseCover(mShowPauseCover);
-        gsyVideoPlayer.setSeekRatio(mSeekRatio);
-        gsyVideoPlayer.setRotateWithSystem(mRotateWithSystem);
+        videoPlayer.setShowPauseCover(mShowPauseCover);
+        videoPlayer.setSeekRatio(mSeekRatio);
+        videoPlayer.setRotateWithSystem(mRotateWithSystem);
         if (mSetUpLazy) {
-            gsyVideoPlayer.setUpLazy(mUrl, mCacheWithPlay, mCachePath, mMapHeadData, mVideoTitle);
+            videoPlayer.setUpLazy(mUrl, mCacheWithPlay, mCachePath, mMapHeadData, mVideoTitle);
         } else {
-            gsyVideoPlayer.setUp(mUrl, mCacheWithPlay, mCachePath, mMapHeadData, mVideoTitle);
+            videoPlayer.setUp(mUrl, mCacheWithPlay, mCachePath, mMapHeadData, mVideoTitle);
         }
     }
 

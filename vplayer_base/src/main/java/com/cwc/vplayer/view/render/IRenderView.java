@@ -6,10 +6,10 @@ import android.graphics.Matrix;
 import android.view.View;
 
 import com.cwc.vplayer.utils.MeasureHelper;
-import com.cwc.vplayer.view.render.glrender.GSYVideoGLViewBaseRender;
-import com.cwc.vplayer.view.render.listener.GSYVideoShotListener;
-import com.cwc.vplayer.view.render.listener.GSYVideoShotSaveListener;
-import com.cwc.vplayer.view.render.listener.IGSYSurfaceListener;
+import com.cwc.vplayer.view.render.glrender.VideoGLViewBaseRender;
+import com.cwc.vplayer.view.render.listener.VideoShotListener;
+import com.cwc.vplayer.view.render.listener.VideoShotSaveListener;
+import com.cwc.vplayer.view.render.listener.ISurfaceListener;
 
 import java.io.File;
 
@@ -17,14 +17,14 @@ import java.io.File;
  * Created by guoshuyu on 2018/1/29.
  */
 
-public interface IGSYRenderView {
+public interface IRenderView {
 
-    IGSYSurfaceListener getIGSYSurfaceListener();
+    ISurfaceListener getISurfaceListener();
 
     /**
      * Surface变化监听，必须
      */
-    void setIGSYSurfaceListener(IGSYSurfaceListener surfaceListener);
+    void setISurfaceListener(ISurfaceListener surfaceListener);
 
     /**
      * 当前view高度，必须
@@ -49,12 +49,12 @@ public interface IGSYRenderView {
     /**
      * 截图
      */
-    void taskShotPic(GSYVideoShotListener gsyVideoShotListener, boolean shotHigh);
+    void taskShotPic(VideoShotListener videoShotListener, boolean shotHigh);
 
     /**
      * 保存当前帧
      */
-    void saveFrame(final File file, final boolean high, final GSYVideoShotSaveListener gsyVideoShotSaveListener);
+    void saveFrame(final File file, final boolean high, final VideoShotSaveListener videoShotSaveListener);
 
     /**
      * 获取当前画面的bitmap，没有返回空
@@ -76,10 +76,10 @@ public interface IGSYRenderView {
 
     void setRenderTransform(Matrix transform);
 
-    void setGLRenderer(GSYVideoGLViewBaseRender renderer);
+    void setGLRenderer(VideoGLViewBaseRender renderer);
 
     void setGLMVPMatrix(float[] MVPMatrix);
 
-    void setGLEffectFilter(GSYVideoGLView.ShaderInterface effectFilter);
+    void setGLEffectFilter(VideoGLView.ShaderInterface effectFilter);
 
 }

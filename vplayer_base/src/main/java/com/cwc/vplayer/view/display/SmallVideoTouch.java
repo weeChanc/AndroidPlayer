@@ -12,14 +12,14 @@ public class SmallVideoTouch implements View.OnTouchListener {
     private int mDownX, mDownY;
     private int mMarginLeft, mMarginTop;
     private int _xDelta, _yDelta;
-    private GSYBaseVideoPlayer mGsyBaseVideoPlayer;
+    private BaseVideoPlayer mBaseVideoPlayer;
 
 
-    public SmallVideoTouch(GSYBaseVideoPlayer gsyBaseVideoPlayer, int marginLeft, int marginTop) {
+    public SmallVideoTouch(BaseVideoPlayer baseVideoPlayer, int marginLeft, int marginTop) {
         super();
         mMarginLeft = marginLeft;
         mMarginTop = marginTop;
-        mGsyBaseVideoPlayer = gsyBaseVideoPlayer;
+        mBaseVideoPlayer = baseVideoPlayer;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class SmallVideoTouch implements View.OnTouchListener {
                 mDownX = X;
                 mDownY = Y;
 
-                FrameLayout.LayoutParams lParams = (FrameLayout.LayoutParams) mGsyBaseVideoPlayer
+                FrameLayout.LayoutParams lParams = (FrameLayout.LayoutParams) mBaseVideoPlayer
                         .getLayoutParams();
                 _xDelta = X - lParams.leftMargin;
                 _yDelta = Y - lParams.topMargin;
@@ -44,7 +44,7 @@ public class SmallVideoTouch implements View.OnTouchListener {
                     return true;
                 }
             case MotionEvent.ACTION_MOVE:
-                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mGsyBaseVideoPlayer
+                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mBaseVideoPlayer
                         .getLayoutParams();
 
                 layoutParams.leftMargin = X - _xDelta;
@@ -66,7 +66,7 @@ public class SmallVideoTouch implements View.OnTouchListener {
                     layoutParams.topMargin = 0;
                 }
 
-                mGsyBaseVideoPlayer.setLayoutParams(layoutParams);
+                mBaseVideoPlayer.setLayoutParams(layoutParams);
 
         }
         return false;

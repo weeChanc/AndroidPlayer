@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 
 import com.cwc.vplayer.utils.Debuger;
 import com.cwc.vplayer.utils.MeasureHelper;
-import com.cwc.vplayer.view.render.glrender.GSYVideoGLViewBaseRender;
-import com.cwc.vplayer.view.render.listener.GSYVideoShotListener;
-import com.cwc.vplayer.view.render.listener.GSYVideoShotSaveListener;
-import com.cwc.vplayer.view.render.listener.IGSYSurfaceListener;
+import com.cwc.vplayer.view.render.glrender.VideoGLViewBaseRender;
+import com.cwc.vplayer.view.render.listener.VideoShotListener;
+import com.cwc.vplayer.view.render.listener.VideoShotSaveListener;
+import com.cwc.vplayer.view.render.listener.ISurfaceListener;
 
 import java.io.File;
 
@@ -23,20 +23,20 @@ import java.io.File;
  * Created by guoshuyu on 2017/8/26.
  */
 
-public class GSYSurfaceView extends SurfaceView implements SurfaceHolder.Callback2, IGSYRenderView, MeasureHelper.MeasureFormVideoParamsListener {
+public class VSurfaceView extends SurfaceView implements SurfaceHolder.Callback2, IRenderView, MeasureHelper.MeasureFormVideoParamsListener {
 
-    private IGSYSurfaceListener mIGSYSurfaceListener;
+    private ISurfaceListener mSurfaceListener;
 
     private MeasureHelper.MeasureFormVideoParamsListener mVideoParamsListener;
 
     private MeasureHelper measureHelper;
 
-    public GSYSurfaceView(Context context) {
+    public VSurfaceView(Context context) {
         super(context);
         init();
     }
 
-    public GSYSurfaceView(Context context, AttributeSet attrs) {
+    public VSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
@@ -53,23 +53,23 @@ public class GSYSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        if (mIGSYSurfaceListener != null) {
-            mIGSYSurfaceListener.onSurfaceAvailable(holder.getSurface());
+        if (mSurfaceListener != null) {
+            mSurfaceListener.onSurfaceAvailable(holder.getSurface());
         }
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        if (mIGSYSurfaceListener != null) {
-            mIGSYSurfaceListener.onSurfaceSizeChanged(holder.getSurface(), width, height);
+        if (mSurfaceListener != null) {
+            mSurfaceListener.onSurfaceSizeChanged(holder.getSurface(), width, height);
         }
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         //清空释放
-        if (mIGSYSurfaceListener != null) {
-            mIGSYSurfaceListener.onSurfaceDestroyed(holder.getSurface());
+        if (mSurfaceListener != null) {
+            mSurfaceListener.onSurfaceDestroyed(holder.getSurface());
         }
     }
 
@@ -78,14 +78,14 @@ public class GSYSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
     }
 
     @Override
-    public IGSYSurfaceListener getIGSYSurfaceListener() {
-        return mIGSYSurfaceListener;
+    public ISurfaceListener getISurfaceListener() {
+        return mSurfaceListener;
     }
 
     @Override
-    public void setIGSYSurfaceListener(IGSYSurfaceListener surfaceListener) {
+    public void setISurfaceListener(ISurfaceListener surfaceListener) {
         getHolder().addCallback(this);
-        this.mIGSYSurfaceListener = surfaceListener;
+        this.mSurfaceListener = surfaceListener;
     }
 
     @Override
@@ -115,7 +115,7 @@ public class GSYSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
      *
      * @param shotHigh 是否需要高清的
      */
-    public void taskShotPic(GSYVideoShotListener gsyVideoShotListener, boolean shotHigh) {
+    public void taskShotPic(VideoShotListener videoShotListener, boolean shotHigh) {
         Debuger.printfLog(getClass().getSimpleName() + " not support taskShotPic now");
     }
 
@@ -124,7 +124,7 @@ public class GSYSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
      *
      * @param high 是否需要高清的
      */
-    public void saveFrame(final File file, final boolean high, final GSYVideoShotSaveListener gsyVideoShotSaveListener) {
+    public void saveFrame(final File file, final boolean high, final VideoShotSaveListener videoShotSaveListener) {
         Debuger.printfLog(getClass().getSimpleName() + " not support saveFrame now");
     }
 
@@ -160,7 +160,7 @@ public class GSYSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
     }
 
     @Override
-    public void setGLRenderer(GSYVideoGLViewBaseRender renderer) {
+    public void setGLRenderer(VideoGLViewBaseRender renderer) {
         Debuger.printfLog(getClass().getSimpleName() + " not support setGLRenderer now");
     }
 
@@ -173,7 +173,7 @@ public class GSYSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
      * 设置滤镜效果
      */
     @Override
-    public void setGLEffectFilter(GSYVideoGLView.ShaderInterface effectFilter) {
+    public void setGLEffectFilter(VideoGLView.ShaderInterface effectFilter) {
         Debuger.printfLog(getClass().getSimpleName() + " not support setGLEffectFilter now");
     }
 
@@ -218,17 +218,17 @@ public class GSYSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
     /**
      * 添加播放的view
      */
-    public static GSYSurfaceView addSurfaceView(Context context, ViewGroup textureViewContainer, int rotate,
-                                                final IGSYSurfaceListener gsySurfaceListener,
-                                                final MeasureHelper.MeasureFormVideoParamsListener videoParamsListener) {
+    public static VSurfaceView addSurfaceView(Context context, ViewGroup textureViewContainer, int rotate,
+                                              final ISurfaceListener surfaceListener,
+                                              final MeasureHelper.MeasureFormVideoParamsListener videoParamsListener) {
         if (textureViewContainer.getChildCount() > 0) {
             textureViewContainer.removeAllViews();
         }
-        GSYSurfaceView showSurfaceView = new GSYSurfaceView(context);
-        showSurfaceView.setIGSYSurfaceListener(gsySurfaceListener);
+        VSurfaceView showSurfaceView = new VSurfaceView(context);
+        showSurfaceView.setISurfaceListener(surfaceListener);
         showSurfaceView.setVideoParamsListener(videoParamsListener);
         showSurfaceView.setRotation(rotate);
-        GSYRenderView.addToParent(textureViewContainer, showSurfaceView);
+        RenderView.addToParent(textureViewContainer, showSurfaceView);
         return showSurfaceView;
     }
 

@@ -21,18 +21,17 @@ import com.cwc.vplayer.utils.Debuger;
 import com.cwc.vplayer.utils.NetworkUtils;
 import com.cwc.vplayer.view.end.ENDownloadView;
 import com.cwc.vplayer.view.end.ENPlayView;
-import com.cwc.vplayer.view.render.listener.GSYVideoShotListener;
-import com.cwc.vplayer.view.render.listener.GSYVideoShotSaveListener;
+import com.cwc.vplayer.view.render.listener.VideoShotListener;
+import com.cwc.vplayer.view.render.listener.VideoShotSaveListener;
 
 import java.io.File;
 
 
 /**
  * 标准播放器，继承之后实现一些ui显示效果，如显示／隐藏ui，播放按键等
- * Created by shuyu on 2016/11/11.
  */
 
-public class StandardGSYVideoPlayer extends GSYVideoPlayer {
+public class StandardVideoPlayer extends VideoPlayer {
 
     //亮度dialog
     protected Dialog mBrightnessDialog;
@@ -78,15 +77,15 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     /**
      * 1.5.0开始加入，如果需要不同布局区分功能，需要重载
      */
-    public StandardGSYVideoPlayer(Context context, Boolean fullFlag) {
+    public StandardVideoPlayer(Context context, Boolean fullFlag) {
         super(context, fullFlag);
     }
 
-    public StandardGSYVideoPlayer(Context context) {
+    public StandardVideoPlayer(Context context) {
         super(context);
     }
 
-    public StandardGSYVideoPlayer(Context context, AttributeSet attrs) {
+    public StandardVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -128,7 +127,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     public void startPlayLogic() {
         if (mVideoAllCallBack != null) {
             Debuger.printfLog("onClickStartThumb");
-            mVideoAllCallBack.onClickStartThumb(mOriginUrl, mTitle, StandardGSYVideoPlayer.this);
+            mVideoAllCallBack.onClickStartThumb(mOriginUrl, mTitle, StandardVideoPlayer.this);
         }
         prepareVideo();
         startDismissControlViewTimer();
@@ -330,10 +329,10 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     }
 
     @Override
-    protected void cloneParams(GSYBaseVideoPlayer from, GSYBaseVideoPlayer to) {
+    protected void cloneParams(BaseVideoPlayer from, BaseVideoPlayer to) {
         super.cloneParams(from, to);
-        StandardGSYVideoPlayer sf = (StandardGSYVideoPlayer) from;
-        StandardGSYVideoPlayer st = (StandardGSYVideoPlayer) to;
+        StandardVideoPlayer sf = (StandardVideoPlayer) from;
+        StandardVideoPlayer st = (StandardVideoPlayer) to;
         if (st.mProgressBar != null && sf.mProgressBar != null) {
             st.mProgressBar.setProgress(sf.mProgressBar.getProgress());
             st.mProgressBar.setSecondaryProgress(sf.mProgressBar.getSecondaryProgress());
@@ -355,16 +354,16 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
      * @return
      */
     @Override
-    public GSYBaseVideoPlayer startWindowFullscreen(Context context, boolean actionBar, boolean statusBar) {
-        GSYBaseVideoPlayer gsyBaseVideoPlayer = super.startWindowFullscreen(context, actionBar, statusBar);
-        if (gsyBaseVideoPlayer != null) {
-            StandardGSYVideoPlayer gsyVideoPlayer = (StandardGSYVideoPlayer) gsyBaseVideoPlayer;
-            gsyVideoPlayer.setLockClickListener(mLockClickListener);
-            gsyVideoPlayer.setNeedLockFull(isNeedLockFull());
-            initFullUI(gsyVideoPlayer);
+    public BaseVideoPlayer startWindowFullscreen(Context context, boolean actionBar, boolean statusBar) {
+        BaseVideoPlayer baseVideoPlayer = super.startWindowFullscreen(context, actionBar, statusBar);
+        if (baseVideoPlayer != null) {
+            StandardVideoPlayer videoPlayer = (StandardVideoPlayer) baseVideoPlayer;
+            videoPlayer.setLockClickListener(mLockClickListener);
+            videoPlayer.setNeedLockFull(isNeedLockFull());
+            initFullUI(videoPlayer);
             //比如你自定义了返回案件，但是因为返回按键底层已经设置了返回事件，所以你需要在这里重新增加的逻辑
         }
-        return gsyBaseVideoPlayer;
+        return baseVideoPlayer;
     }
 
     /********************************各类UI的状态显示*********************************************/
@@ -762,27 +761,27 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     /**
      * 全屏的UI逻辑
      */
-    private void initFullUI(StandardGSYVideoPlayer standardGSYVideoPlayer) {
+    private void initFullUI(StandardVideoPlayer standardVideoPlayer) {
 
         if (mBottomProgressDrawable != null) {
-            standardGSYVideoPlayer.setBottomProgressBarDrawable(mBottomProgressDrawable);
+            standardVideoPlayer.setBottomProgressBarDrawable(mBottomProgressDrawable);
         }
 
         if (mBottomShowProgressDrawable != null && mBottomShowProgressThumbDrawable != null) {
-            standardGSYVideoPlayer.setBottomShowProgressBarDrawable(mBottomShowProgressDrawable,
+            standardVideoPlayer.setBottomShowProgressBarDrawable(mBottomShowProgressDrawable,
                     mBottomShowProgressThumbDrawable);
         }
 
         if (mVolumeProgressDrawable != null) {
-            standardGSYVideoPlayer.setDialogVolumeProgressBar(mVolumeProgressDrawable);
+            standardVideoPlayer.setDialogVolumeProgressBar(mVolumeProgressDrawable);
         }
 
         if (mDialogProgressBarDrawable != null) {
-            standardGSYVideoPlayer.setDialogProgressBar(mDialogProgressBarDrawable);
+            standardVideoPlayer.setDialogProgressBar(mDialogProgressBarDrawable);
         }
 
         if (mDialogProgressHighLightColor >= 0 && mDialogProgressNormalColor >= 0) {
-            standardGSYVideoPlayer.setDialogProgressColor(mDialogProgressHighLightColor, mDialogProgressNormalColor);
+            standardVideoPlayer.setDialogProgressColor(mDialogProgressHighLightColor, mDialogProgressNormalColor);
         }
     }
 
@@ -837,8 +836,8 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     /**
      * 获取截图
      */
-    public void taskShotPic(GSYVideoShotListener gsyVideoShotListener) {
-        this.taskShotPic(gsyVideoShotListener, false);
+    public void taskShotPic(VideoShotListener videoShotListener) {
+        this.taskShotPic(videoShotListener, false);
     }
 
     /**
@@ -846,17 +845,17 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
      *
      * @param high 是否需要高清的
      */
-    public void taskShotPic(GSYVideoShotListener gsyVideoShotListener, boolean high) {
+    public void taskShotPic(VideoShotListener videoShotListener, boolean high) {
         if (getCurrentPlayer().getRenderProxy() != null) {
-            getCurrentPlayer().getRenderProxy().taskShotPic(gsyVideoShotListener, high);
+            getCurrentPlayer().getRenderProxy().taskShotPic(videoShotListener, high);
         }
     }
 
     /**
      * 保存截图
      */
-    public void saveFrame(final File file, GSYVideoShotSaveListener gsyVideoShotSaveListener) {
-        saveFrame(file, false, gsyVideoShotSaveListener);
+    public void saveFrame(final File file, VideoShotSaveListener videoShotSaveListener) {
+        saveFrame(file, false, videoShotSaveListener);
     }
 
     /**
@@ -864,16 +863,16 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
      *
      * @param high 是否需要高清的
      */
-    public void saveFrame(final File file, final boolean high, final GSYVideoShotSaveListener gsyVideoShotSaveListener) {
+    public void saveFrame(final File file, final boolean high, final VideoShotSaveListener videoShotSaveListener) {
         if (getCurrentPlayer().getRenderProxy() != null) {
-            getCurrentPlayer().getRenderProxy().saveFrame(file, high, gsyVideoShotSaveListener);
+            getCurrentPlayer().getRenderProxy().saveFrame(file, high, videoShotSaveListener);
         }
     }
 
     /**
      * 重新开启进度查询以及控制view消失的定时任务
-     * 用于解决GSYVideoHelper中通过removeview方式做全屏切换导致的定时任务停止的问题
-     * GSYVideoControlView   onDetachedFromWindow（）
+     * 用于解决VideoHelper中通过removeview方式做全屏切换导致的定时任务停止的问题
+     * VideoControlView   onDetachedFromWindow（）
      */
     public void restartTimerTask() {
         startProgressTimer();

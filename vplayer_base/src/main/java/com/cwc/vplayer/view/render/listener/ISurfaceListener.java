@@ -7,7 +7,7 @@ import android.view.Surface;
  * Created by guoshuyu on 2018/1/29.
  */
 
-public interface IGSYSurfaceListener {
+public interface ISurfaceListener {
     void onSurfaceAvailable(Surface surface);
 
     void onSurfaceSizeChanged(Surface surface, int width, int height);

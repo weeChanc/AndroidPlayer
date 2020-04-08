@@ -4,10 +4,9 @@ import com.cwc.vplayer.view.display.VideoAllCallBack;
 
 /**
  * 继承了接接口的类
- * Created by shuyu on 2016/11/23.
  */
 
-public class GSYSampleCallBack implements VideoAllCallBack {
+public class SimpleVideoAllCallBack implements VideoAllCallBack {
 
     //开始加载，objects[0]是title，object[1]是当前所处播放器（全屏或非全屏）
     @Override

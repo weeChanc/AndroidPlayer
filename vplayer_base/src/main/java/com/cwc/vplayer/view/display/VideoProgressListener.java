@@ -4,7 +4,7 @@ package com.cwc.vplayer.view.display;
  * 进度回调
  * Created by guoshuyu on 2017/12/20.
  */
-public interface GSYVideoProgressListener {
+public interface VideoProgressListener {
     /**
      * @param progress 当前播放进度（暂停后再播放可能会有跳动）
      * @param secProgress 当前内存缓冲进度（可能会有0值）

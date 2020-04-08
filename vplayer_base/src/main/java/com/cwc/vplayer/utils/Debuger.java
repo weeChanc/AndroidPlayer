@@ -5,13 +5,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-/**
- * Created by shuyu on 2016/11/23.
- */
 
 public class Debuger {
     
-    static final String LOG_TAG = "GSYVideoPlayer";
+    static final String LOG_TAG = "VideoPlayer";
     
     static boolean DEBUG_TAG = false;
 

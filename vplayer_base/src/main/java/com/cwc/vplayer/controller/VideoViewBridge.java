@@ -14,15 +14,15 @@ import java.util.Map;
  * Created by guoshuyu on 2018/1/25.
  */
 
-public interface GSYVideoViewBridge {
+public interface VideoViewBridge {
 
-    GSYMediaPlayerListener listener();
+    MediaPlayerListener listener();
 
-    GSYMediaPlayerListener lastListener();
+    MediaPlayerListener lastListener();
 
-    void setListener(GSYMediaPlayerListener listener);
+    void setListener(MediaPlayerListener listener);
 
-    void setLastListener(GSYMediaPlayerListener lastListener);
+    void setLastListener(MediaPlayerListener lastListener);
 
     /**
      * tag和position都是属于标记flag，不参与播放器实际工作，只是用于防止错误等等

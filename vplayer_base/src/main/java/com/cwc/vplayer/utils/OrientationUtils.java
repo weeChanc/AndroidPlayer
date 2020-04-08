@@ -8,11 +8,10 @@ import android.provider.Settings;
 import android.view.OrientationEventListener;
 import android.view.Surface;
 
-import com.cwc.vplayer.view.display.GSYBaseVideoPlayer;
+import com.cwc.vplayer.view.display.BaseVideoPlayer;
 
 /**
  * 处理屏幕旋转的的逻辑
- * Created by shuyu on 2016/11/11.
  */
 
 public class OrientationUtils {
@@ -22,7 +21,7 @@ public class OrientationUtils {
     private static final int LAND_TYPE_REVERSE = 2;
 
     private Activity mActivity;
-    private GSYBaseVideoPlayer mVideoPlayer;
+    private BaseVideoPlayer mVideoPlayer;
     private OrientationEventListener mOrientationEventListener;
     private OrientationOption mOrientationOption;
 
@@ -42,15 +41,15 @@ public class OrientationUtils {
 
     /**
      * @param activity
-     * @param gsyVideoPlayer
+     * @param videoPlayer
      */
-    public OrientationUtils(Activity activity, GSYBaseVideoPlayer gsyVideoPlayer) {
-        this(activity, gsyVideoPlayer, null);
+    public OrientationUtils(Activity activity, BaseVideoPlayer videoPlayer) {
+        this(activity, videoPlayer, null);
     }
 
-    public OrientationUtils(Activity activity, GSYBaseVideoPlayer gsyVideoPlayer, OrientationOption orientationOption) {
+    public OrientationUtils(Activity activity, BaseVideoPlayer videoPlayer, OrientationOption orientationOption) {
         this.mActivity = activity;
-        this.mVideoPlayer = gsyVideoPlayer;
+        this.mVideoPlayer = videoPlayer;
         if (orientationOption == null) {
             this.mOrientationOption = new OrientationOption();
         } else {

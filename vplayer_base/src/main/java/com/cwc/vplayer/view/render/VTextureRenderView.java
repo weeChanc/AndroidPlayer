@@ -14,21 +14,21 @@ import androidx.annotation.Nullable;
 
 import com.cwc.vplayer.player.base.model.VideoType;
 import com.cwc.vplayer.utils.MeasureHelper;
-import com.cwc.vplayer.view.render.glrender.GSYVideoGLViewBaseRender;
-import com.cwc.vplayer.view.render.listener.IGSYSurfaceListener;
+import com.cwc.vplayer.view.render.glrender.VideoGLViewBaseRender;
+import com.cwc.vplayer.view.render.listener.ISurfaceListener;
 
 /**
  * 绘制View
  * Created by guoshuyu on 2017/8/2.
  */
 
-public abstract class GSYTextureRenderView extends FrameLayout implements IGSYSurfaceListener, MeasureHelper.MeasureFormVideoParamsListener {
+public abstract class VTextureRenderView extends FrameLayout implements ISurfaceListener, MeasureHelper.MeasureFormVideoParamsListener {
 
     //native绘制
     protected Surface mSurface;
 
     //渲染控件
-    protected GSYRenderView mTextureView;
+    protected RenderView mTextureView;
 
     //渲染控件父类
     protected ViewGroup mTextureViewContainer;
@@ -37,10 +37,10 @@ public abstract class GSYTextureRenderView extends FrameLayout implements IGSYSu
     protected Bitmap mFullPauseBitmap;
 
     //GL的滤镜
-    protected GSYVideoGLView.ShaderInterface mEffectFilter = null;
+    protected VideoGLView.ShaderInterface mEffectFilter = null;
 
     //GL的自定义渲染
-    protected GSYVideoGLViewBaseRender mRenderer;
+    protected VideoGLViewBaseRender mRenderer;
 
     //GL的角度
     protected float[] mMatrixGL = null;
@@ -49,17 +49,17 @@ public abstract class GSYTextureRenderView extends FrameLayout implements IGSYSu
     protected int mRotate;
 
     //GL的布局模式
-    protected int mMode = GSYVideoGLView.MODE_LAYOUT_SIZE;
+    protected int mMode = VideoGLView.MODE_LAYOUT_SIZE;
 
-    public GSYTextureRenderView(@NonNull Context context) {
+    public VTextureRenderView(@NonNull Context context) {
         super(context);
     }
 
-    public GSYTextureRenderView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public VTextureRenderView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public GSYTextureRenderView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public VTextureRenderView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -107,10 +107,10 @@ public abstract class GSYTextureRenderView extends FrameLayout implements IGSYSu
 
     /**
      * 添加播放的view
-     * 继承后重载addTextureView，继承GSYRenderView后实现自己的IGSYRenderView类，既可以使用自己自定义的显示层
+     * 继承后重载addTextureView，继承RenderView后实现自己的IRenderView类，既可以使用自己自定义的显示层
      */
     protected void addTextureView() {
-        mTextureView = new GSYRenderView();
+        mTextureView = new RenderView();
         mTextureView.addView(getContext(), mTextureViewContainer, mRotate, this, this, mEffectFilter, mMatrixGL, mRenderer, mMode);
     }
 
@@ -155,21 +155,21 @@ public abstract class GSYTextureRenderView extends FrameLayout implements IGSYSu
         setSmallVideoTextureView();
     }
 
-    public GSYVideoGLView.ShaderInterface getEffectFilter() {
+    public VideoGLView.ShaderInterface getEffectFilter() {
         return mEffectFilter;
     }
 
     /**
      * 获取渲染的代理层
      */
-    public GSYRenderView getRenderProxy() {
+    public RenderView getRenderProxy() {
         return mTextureView;
     }
 
     /**
      * 设置滤镜效果
      */
-    public void setEffectFilter(GSYVideoGLView.ShaderInterface effectFilter) {
+    public void setEffectFilter(VideoGLView.ShaderInterface effectFilter) {
         this.mEffectFilter = effectFilter;
         if (mTextureView != null) {
             mTextureView.setEffectFilter(effectFilter);
@@ -191,7 +191,7 @@ public abstract class GSYTextureRenderView extends FrameLayout implements IGSYSu
     /**
      * 自定义GL的渲染render
      */
-    public void setCustomGLRenderer(GSYVideoGLViewBaseRender renderer) {
+    public void setCustomGLRenderer(VideoGLViewBaseRender renderer) {
         this.mRenderer = renderer;
         if (mTextureView != null) {
             mTextureView.setGLRenderer(renderer);

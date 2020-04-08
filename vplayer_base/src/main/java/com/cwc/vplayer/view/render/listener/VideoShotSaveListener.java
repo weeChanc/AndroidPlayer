@@ -8,6 +8,6 @@ import java.io.File;
  * Created by guoshuyu on 2017/9/21.
  */
 
-public interface GSYVideoShotSaveListener {
+public interface VideoShotSaveListener {
     void result(boolean success, File file);
 }

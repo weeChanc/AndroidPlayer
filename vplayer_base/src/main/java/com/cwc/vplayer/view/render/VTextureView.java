@@ -14,21 +14,20 @@ import com.cwc.vplayer.player.base.model.VideoType;
 import com.cwc.vplayer.utils.Debuger;
 import com.cwc.vplayer.utils.FileUtils;
 import com.cwc.vplayer.utils.MeasureHelper;
-import com.cwc.vplayer.view.render.glrender.GSYVideoGLViewBaseRender;
-import com.cwc.vplayer.view.render.listener.GSYVideoShotListener;
-import com.cwc.vplayer.view.render.listener.GSYVideoShotSaveListener;
-import com.cwc.vplayer.view.render.listener.IGSYSurfaceListener;
+import com.cwc.vplayer.view.render.glrender.VideoGLViewBaseRender;
+import com.cwc.vplayer.view.render.listener.VideoShotListener;
+import com.cwc.vplayer.view.render.listener.VideoShotSaveListener;
+import com.cwc.vplayer.view.render.listener.ISurfaceListener;
 
 import java.io.File;
 
 /**
  * 用于显示video的，做了横屏与竖屏的匹配，还有需要rotation需求的
- * Created by shuyu on 2016/11/11.
  */
 
-public class GSYTextureView extends TextureView implements TextureView.SurfaceTextureListener, IGSYRenderView, MeasureHelper.MeasureFormVideoParamsListener {
+public class VTextureView extends TextureView implements TextureView.SurfaceTextureListener, IRenderView, MeasureHelper.MeasureFormVideoParamsListener {
 
-    private IGSYSurfaceListener mIGSYSurfaceListener;
+    private ISurfaceListener mSurfaceListener;
 
     private MeasureHelper.MeasureFormVideoParamsListener mVideoParamsListener;
 
@@ -37,12 +36,12 @@ public class GSYTextureView extends TextureView implements TextureView.SurfaceTe
     private SurfaceTexture mSaveTexture;
     private Surface mSurface;
 
-    public GSYTextureView(Context context) {
+    public VTextureView(Context context) {
         super(context);
         init();
     }
 
-    public GSYTextureView(Context context, AttributeSet attrs) {
+    public VTextureView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
@@ -66,21 +65,21 @@ public class GSYTextureView extends TextureView implements TextureView.SurfaceTe
             } else {
                 setSurfaceTexture(mSaveTexture);
             }
-            if (mIGSYSurfaceListener != null) {
-                mIGSYSurfaceListener.onSurfaceAvailable(mSurface);
+            if (mSurfaceListener != null) {
+                mSurfaceListener.onSurfaceAvailable(mSurface);
             }
         } else {
             mSurface = new Surface(surface);
-            if (mIGSYSurfaceListener != null) {
-                mIGSYSurfaceListener.onSurfaceAvailable(mSurface);
+            if (mSurfaceListener != null) {
+                mSurfaceListener.onSurfaceAvailable(mSurface);
             }
         }
     }
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-        if (mIGSYSurfaceListener != null) {
-            mIGSYSurfaceListener.onSurfaceSizeChanged(mSurface, width, height);
+        if (mSurfaceListener != null) {
+            mSurfaceListener.onSurfaceSizeChanged(mSurface, width, height);
         }
     }
 
@@ -88,8 +87,8 @@ public class GSYTextureView extends TextureView implements TextureView.SurfaceTe
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
 
         //清空释放
-        if (mIGSYSurfaceListener != null) {
-            mIGSYSurfaceListener.onSurfaceDestroyed(mSurface);
+        if (mSurfaceListener != null) {
+            mSurfaceListener.onSurfaceDestroyed(mSurface);
         }
         if (VideoType.isMediaCodecTexture()) {
             return (mSaveTexture == null);
@@ -101,20 +100,20 @@ public class GSYTextureView extends TextureView implements TextureView.SurfaceTe
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
         //如果播放的是暂停全屏了
-        if (mIGSYSurfaceListener != null) {
-            mIGSYSurfaceListener.onSurfaceUpdated(mSurface);
+        if (mSurfaceListener != null) {
+            mSurfaceListener.onSurfaceUpdated(mSurface);
         }
     }
 
     @Override
-    public IGSYSurfaceListener getIGSYSurfaceListener() {
-        return mIGSYSurfaceListener;
+    public ISurfaceListener getISurfaceListener() {
+        return mSurfaceListener;
     }
 
     @Override
-    public void setIGSYSurfaceListener(IGSYSurfaceListener surfaceListener) {
+    public void setISurfaceListener(ISurfaceListener surfaceListener) {
         setSurfaceTextureListener(this);
-        mIGSYSurfaceListener = surfaceListener;
+        mSurfaceListener = surfaceListener;
     }
 
     @Override
@@ -156,11 +155,11 @@ public class GSYTextureView extends TextureView implements TextureView.SurfaceTe
      * @param shotHigh 是否需要高清的
      */
     @Override
-    public void taskShotPic(GSYVideoShotListener gsyVideoShotListener, boolean shotHigh) {
+    public void taskShotPic(VideoShotListener videoShotListener, boolean shotHigh) {
         if (shotHigh) {
-            gsyVideoShotListener.getBitmap(initCoverHigh());
+            videoShotListener.getBitmap(initCoverHigh());
         } else {
-            gsyVideoShotListener.getBitmap(initCover());
+            videoShotListener.getBitmap(initCover());
         }
     }
 
@@ -170,22 +169,22 @@ public class GSYTextureView extends TextureView implements TextureView.SurfaceTe
      * @param high 是否需要高清的
      */
     @Override
-    public void saveFrame(final File file, final boolean high, final GSYVideoShotSaveListener gsyVideoShotSaveListener) {
-        GSYVideoShotListener gsyVideoShotListener = new GSYVideoShotListener() {
+    public void saveFrame(final File file, final boolean high, final VideoShotSaveListener videoShotSaveListener) {
+        VideoShotListener videoShotListener = new VideoShotListener() {
             @Override
             public void getBitmap(Bitmap bitmap) {
                 if (bitmap == null) {
-                    gsyVideoShotSaveListener.result(false, file);
+                    videoShotSaveListener.result(false, file);
                 } else {
                     FileUtils.saveBitmap(bitmap, file);
-                    gsyVideoShotSaveListener.result(true, file);
+                    videoShotSaveListener.result(true, file);
                 }
             }
         };
         if (high) {
-            gsyVideoShotListener.getBitmap(initCoverHigh());
+            videoShotListener.getBitmap(initCoverHigh());
         } else {
-            gsyVideoShotListener.getBitmap(initCover());
+            videoShotListener.getBitmap(initCover());
         }
 
     }
@@ -222,7 +221,7 @@ public class GSYTextureView extends TextureView implements TextureView.SurfaceTe
     }
 
     @Override
-    public void setGLRenderer(GSYVideoGLViewBaseRender renderer) {
+    public void setGLRenderer(VideoGLViewBaseRender renderer) {
         Debuger.printfLog(getClass().getSimpleName() + " not support setGLRenderer now");
     }
 
@@ -235,7 +234,7 @@ public class GSYTextureView extends TextureView implements TextureView.SurfaceTe
      * 设置滤镜效果
      */
     @Override
-    public void setGLEffectFilter(GSYVideoGLView.ShaderInterface effectFilter) {
+    public void setGLEffectFilter(VideoGLView.ShaderInterface effectFilter) {
         Debuger.printfLog(getClass().getSimpleName() + " not support setGLEffectFilter now");
     }
 
@@ -281,17 +280,17 @@ public class GSYTextureView extends TextureView implements TextureView.SurfaceTe
     /**
      * 添加播放的view
      */
-    public static GSYTextureView addTextureView(Context context, ViewGroup textureViewContainer, int rotate,
-                                                final IGSYSurfaceListener gsySurfaceListener,
-                                                final MeasureHelper.MeasureFormVideoParamsListener videoParamsListener) {
+    public static VTextureView addTextureView(Context context, ViewGroup textureViewContainer, int rotate,
+                                              final ISurfaceListener surfaceListener,
+                                              final MeasureHelper.MeasureFormVideoParamsListener videoParamsListener) {
         if (textureViewContainer.getChildCount() > 0) {
             textureViewContainer.removeAllViews();
         }
-        GSYTextureView gsyTextureView = new GSYTextureView(context);
-        gsyTextureView.setIGSYSurfaceListener(gsySurfaceListener);
-        gsyTextureView.setVideoParamsListener(videoParamsListener);
-        gsyTextureView.setRotation(rotate);
-        GSYRenderView.addToParent(textureViewContainer, gsyTextureView);
-        return gsyTextureView;
+        VTextureView vTextureView = new VTextureView(context);
+        vTextureView.setISurfaceListener(surfaceListener);
+        vTextureView.setVideoParamsListener(videoParamsListener);
+        vTextureView.setRotation(rotate);
+        RenderView.addToParent(textureViewContainer, vTextureView);
+        return vTextureView;
     }
 }

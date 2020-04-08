@@ -11,10 +11,10 @@ import android.os.Handler;
 import android.view.Surface;
 
 import com.cwc.vplayer.utils.Debuger;
-import com.cwc.vplayer.view.render.GSYVideoGLView;
+import com.cwc.vplayer.view.render.VideoGLView;
 import com.cwc.vplayer.view.render.listener.GLSurfaceListener;
-import com.cwc.vplayer.view.render.listener.GSYVideoGLRenderErrorListener;
-import com.cwc.vplayer.view.render.listener.GSYVideoShotListener;
+import com.cwc.vplayer.view.render.listener.VideoGLRenderErrorListener;
+import com.cwc.vplayer.view.render.listener.VideoShotListener;
 
 import java.nio.IntBuffer;
 
@@ -25,12 +25,12 @@ import javax.microedition.khronos.opengles.GL10;
  *
  */
 @SuppressLint("ViewConstructor")
-public abstract class GSYVideoGLViewBaseRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener {
+public abstract class VideoGLViewBaseRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener {
 
     //是否需要高清截图
     protected boolean mHighShot = false;
 
-    protected GLSurfaceListener mGSYSurfaceListener;
+    protected GLSurfaceListener mSurfaceListener;
 
     protected GLSurfaceView mSurfaceView;
 
@@ -50,7 +50,7 @@ public abstract class GSYVideoGLViewBaseRender implements GLSurfaceView.Renderer
 
     protected boolean mChangeProgramSupportError = false;
 
-    protected GSYVideoGLRenderErrorListener mGSYVideoGLRenderErrorListener;
+    protected VideoGLRenderErrorListener mVideoGLRenderErrorListener;
 
     protected Handler mHandler = new Handler();
 
@@ -64,8 +64,8 @@ public abstract class GSYVideoGLViewBaseRender implements GLSurfaceView.Renderer
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                if (mGSYSurfaceListener != null) {
-                    mGSYSurfaceListener.onSurfaceAvailable(surface);
+                if (mSurfaceListener != null) {
+                    mSurfaceListener.onSurfaceAvailable(surface);
                 }
             }
         });
@@ -127,8 +127,8 @@ public abstract class GSYVideoGLViewBaseRender implements GLSurfaceView.Renderer
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if (mGSYVideoGLRenderErrorListener != null) {
-                        mGSYVideoGLRenderErrorListener.onError(GSYVideoGLViewBaseRender.this, op + ": glError " + error, error, mChangeProgramSupportError);
+                    if (mVideoGLRenderErrorListener != null) {
+                        mVideoGLRenderErrorListener.onError(VideoGLViewBaseRender.this, op + ": glError " + error, error, mChangeProgramSupportError);
                     }
                     mChangeProgramSupportError = false;
                 }
@@ -172,8 +172,8 @@ public abstract class GSYVideoGLViewBaseRender implements GLSurfaceView.Renderer
     }
 
 
-    public void setGSYSurfaceListener(GLSurfaceListener onSurfaceListener) {
-        this.mGSYSurfaceListener = onSurfaceListener;
+    public void setSurfaceListener(GLSurfaceListener onSurfaceListener) {
+        this.mSurfaceListener = onSurfaceListener;
     }
 
     public float[] getMVPMatrix() {
@@ -196,7 +196,7 @@ public abstract class GSYVideoGLViewBaseRender implements GLSurfaceView.Renderer
     /**
      * 截图监听
      */
-    public void setGSYVideoShotListener(GSYVideoShotListener listener, boolean high) {
+    public void setVideoShotListener(VideoShotListener listener, boolean high) {
     }
 
     /**
@@ -204,11 +204,11 @@ public abstract class GSYVideoGLViewBaseRender implements GLSurfaceView.Renderer
      *
      * @param shaderEffect
      */
-    public void setEffect(GSYVideoGLView.ShaderInterface shaderEffect) {
+    public void setEffect(VideoGLView.ShaderInterface shaderEffect) {
     }
 
 
-    public GSYVideoGLView.ShaderInterface getEffect() {
+    public VideoGLView.ShaderInterface getEffect() {
         return null;
     }
 
@@ -252,8 +252,8 @@ public abstract class GSYVideoGLViewBaseRender implements GLSurfaceView.Renderer
         }
     }
 
-    public void setGSYVideoGLRenderErrorListener(GSYVideoGLRenderErrorListener videoGLRenderErrorListener) {
-        this.mGSYVideoGLRenderErrorListener = videoGLRenderErrorListener;
+    public void setVideoGLRenderErrorListener(VideoGLRenderErrorListener videoGLRenderErrorListener) {
+        this.mVideoGLRenderErrorListener = videoGLRenderErrorListener;
     }
 }
 

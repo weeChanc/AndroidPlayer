@@ -10,11 +10,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cwc.vplayer.R
-import com.cwc.vplayer.controller.GSYSampleCallBack
-import com.cwc.vplayer.controller.GSYVideoManager
-import com.cwc.vplayer.controller.GSYVideoOptionBuilder
+import com.cwc.vplayer.controller.SimpleVideoAllCallBack
+import com.cwc.vplayer.controller.VideoManager
+import com.cwc.vplayer.controller.VideoOptionBuilder
 import com.cwc.vplayer.entity.VideoFile
-import com.cwc.vplayer.view.display.StandardGSYVideoPlayer
+import com.cwc.vplayer.view.display.StandardVideoPlayer
 import com.drakeet.multitype.ItemViewBinder
 import com.drakeet.multitype.MultiTypeAdapter
 
@@ -34,7 +34,7 @@ class VideoFileBinder : ItemViewBinder<VideoFile, VideoFileBinder.ViewHolder>() 
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val videoView = view.findViewById<StandardGSYVideoPlayer>(R.id.video_view)
+        val videoView = view.findViewById<StandardVideoPlayer>(R.id.video_view)
         val cover = view.findViewById<ImageView>(R.id.video_cover)
         val title = view.findViewById<TextView>(R.id.video_title)
 
@@ -53,7 +53,7 @@ class VideoFileBinder : ItemViewBinder<VideoFile, VideoFileBinder.ViewHolder>() 
 
     override fun onViewDetachedFromWindow(holder: ViewHolder) {
         if (holder == lastPlayingViewHolder) {
-            GSYVideoManager.instance()?.curPlayerManager?.release()
+            VideoManager.instance()?.curPlayerManager?.release()
             lastPlayingViewHolder?.videoView?.visibility = View.GONE
         }
         super.onViewDetachedFromWindow(holder)
@@ -66,7 +66,7 @@ class VideoFileBinder : ItemViewBinder<VideoFile, VideoFileBinder.ViewHolder>() 
 
         holder.cover.setOnClickListener {
             if (lastPlayingViewHolder != null) {
-                GSYVideoManager.instance()?.curPlayerManager?.release()
+                VideoManager.instance()?.curPlayerManager?.release()
                 lastPlayingViewHolder?.videoView?.visibility = View.GONE
             }
             lastPlayingViewHolder = holder
@@ -80,7 +80,7 @@ class VideoFileBinder : ItemViewBinder<VideoFile, VideoFileBinder.ViewHolder>() 
             //设置返回键
             holder.videoView.backButton.visibility = View.GONE
 
-            GSYVideoOptionBuilder().setIsTouchWiget(false)
+            VideoOptionBuilder().setIsTouchWiget(false)
                 .setThumbImageView(ImageView(holder.cover.context).apply {
                     layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
                     Glide.with(holder.view).load(item.path).into(this)
@@ -93,19 +93,19 @@ class VideoFileBinder : ItemViewBinder<VideoFile, VideoFileBinder.ViewHolder>() 
                 .setPlayTag("VideoFileBinder")
                 .setShowFullAnimation(true)
                 .setNeedLockFull(true)
-                .setVideoAllCallBack(object : GSYSampleCallBack() {
+                .setVideoAllCallBack(object : SimpleVideoAllCallBack() {
                     override fun onPrepared(url: String?, vararg objects: Any?) {
                         super.onPrepared(url, *objects)
                     }
 
                     override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
                         super.onQuitFullscreen(url, *objects)
-                        GSYVideoManager.instance().setNeedMute(true);
+                        VideoManager.instance().setNeedMute(true);
                     }
 
                     override fun onEnterFullscreen(url: String?, vararg objects: Any?) {
                         super.onEnterFullscreen(url, *objects)
-                        GSYVideoManager.instance().setNeedMute(false);
+                        VideoManager.instance().setNeedMute(false);
                     }
 
                 }).build(holder.videoView);

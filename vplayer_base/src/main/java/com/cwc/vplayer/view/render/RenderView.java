@@ -11,10 +11,10 @@ import android.widget.RelativeLayout;
 
 import com.cwc.vplayer.player.base.model.VideoType;
 import com.cwc.vplayer.utils.MeasureHelper;
-import com.cwc.vplayer.view.render.glrender.GSYVideoGLViewBaseRender;
-import com.cwc.vplayer.view.render.listener.GSYVideoShotListener;
-import com.cwc.vplayer.view.render.listener.GSYVideoShotSaveListener;
-import com.cwc.vplayer.view.render.listener.IGSYSurfaceListener;
+import com.cwc.vplayer.view.render.glrender.VideoGLViewBaseRender;
+import com.cwc.vplayer.view.render.listener.VideoShotListener;
+import com.cwc.vplayer.view.render.listener.VideoShotSaveListener;
+import com.cwc.vplayer.view.render.listener.ISurfaceListener;
 
 import java.io.File;
 
@@ -23,9 +23,9 @@ import java.io.File;
  * Created by guoshuyu on 2017/8/26.
  */
 
-public class GSYRenderView {
+public class RenderView {
 
-    protected IGSYRenderView mShowView;
+    protected IRenderView mShowView;
 
     /*************************RenderView function start *************************/
     public void requestLayout() {
@@ -75,16 +75,16 @@ public class GSYRenderView {
      * 添加播放的view
      */
     public void addView(final Context context, final ViewGroup textureViewContainer, final int rotate,
-                        final IGSYSurfaceListener gsySurfaceListener,
+                        final ISurfaceListener surfaceListener,
                         final MeasureHelper.MeasureFormVideoParamsListener videoParamsListener,
-                        final GSYVideoGLView.ShaderInterface effect, final float[] transform,
-                        final GSYVideoGLViewBaseRender customRender, int mode) {
+                        final VideoGLView.ShaderInterface effect, final float[] transform,
+                        final VideoGLViewBaseRender customRender, int mode) {
         if (VideoType.getRenderType() == VideoType.SUFRACE) {
-            mShowView = GSYSurfaceView.addSurfaceView(context, textureViewContainer, rotate, gsySurfaceListener, videoParamsListener);
+            mShowView = VSurfaceView.addSurfaceView(context, textureViewContainer, rotate, surfaceListener, videoParamsListener);
         } else if (VideoType.getRenderType() == VideoType.GLSURFACE) {
-            mShowView = GSYVideoGLView.addGLView(context, textureViewContainer, rotate, gsySurfaceListener, videoParamsListener, effect, transform, customRender, mode);
+            mShowView = VideoGLView.addGLView(context, textureViewContainer, rotate, surfaceListener, videoParamsListener, effect, transform, customRender, mode);
         } else {
-            mShowView = GSYTextureView.addTextureView(context, textureViewContainer, rotate, gsySurfaceListener, videoParamsListener);
+            mShowView = VTextureView.addTextureView(context, textureViewContainer, rotate, surfaceListener, videoParamsListener);
         }
     }
 
@@ -121,8 +121,8 @@ public class GSYRenderView {
     /**
      * 获取截图
      */
-    public void taskShotPic(GSYVideoShotListener gsyVideoShotListener) {
-        this.taskShotPic(gsyVideoShotListener, false);
+    public void taskShotPic(VideoShotListener videoShotListener) {
+        this.taskShotPic(videoShotListener, false);
     }
 
 
@@ -131,16 +131,16 @@ public class GSYRenderView {
      *
      * @param shotHigh 是否需要高清的
      */
-    public void taskShotPic(GSYVideoShotListener gsyVideoShotListener, boolean shotHigh) {
+    public void taskShotPic(VideoShotListener videoShotListener, boolean shotHigh) {
         if (mShowView != null)
-            mShowView.taskShotPic(gsyVideoShotListener, shotHigh);
+            mShowView.taskShotPic(videoShotListener, shotHigh);
     }
 
     /**
      * 保存截图
      */
-    public void saveFrame(final File file, GSYVideoShotSaveListener gsyVideoShotSaveListener) {
-        saveFrame(file, false, gsyVideoShotSaveListener);
+    public void saveFrame(final File file, VideoShotSaveListener videoShotSaveListener) {
+        saveFrame(file, false, videoShotSaveListener);
     }
 
     /**
@@ -148,9 +148,9 @@ public class GSYRenderView {
      *
      * @param high 是否需要高清的
      */
-    public void saveFrame(final File file, final boolean high, final GSYVideoShotSaveListener gsyVideoShotSaveListener) {
+    public void saveFrame(final File file, final boolean high, final VideoShotSaveListener videoShotSaveListener) {
         if (mShowView != null)
-            mShowView.saveFrame(file, high, gsyVideoShotSaveListener);
+            mShowView.saveFrame(file, high, videoShotSaveListener);
     }
 
     /**
@@ -188,7 +188,7 @@ public class GSYRenderView {
     /**
      * 自定义GL的渲染render
      */
-    public void setGLRenderer(GSYVideoGLViewBaseRender renderer) {
+    public void setGLRenderer(VideoGLViewBaseRender renderer) {
         if (mShowView != null)
             mShowView.setGLRenderer(renderer);
     }
@@ -206,7 +206,7 @@ public class GSYRenderView {
     /**
      * 设置滤镜效果
      */
-    public void setEffectFilter(GSYVideoGLView.ShaderInterface effectFilter) {
+    public void setEffectFilter(VideoGLView.ShaderInterface effectFilter) {
         if (mShowView != null)
             mShowView.setGLEffectFilter(effectFilter);
     }

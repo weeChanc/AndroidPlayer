@@ -28,15 +28,15 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 /**
  * 基类管理器
- * GSYVideoViewBridge接口说明可以查阅GSYVideoViewBridge类
+ * VideoViewBridge接口说明可以查阅VideoViewBridge类
  * Created by guoshuyu on 2018/1/25.
  */
 
-public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedListener, IMediaPlayer.OnCompletionListener,
+public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListener, IMediaPlayer.OnCompletionListener,
         IMediaPlayer.OnBufferingUpdateListener, IMediaPlayer.OnSeekCompleteListener, IMediaPlayer.OnErrorListener,
-        IMediaPlayer.OnVideoSizeChangedListener, IMediaPlayer.OnInfoListener, ICacheManager.ICacheAvailableListener, GSYVideoViewBridge {
+        IMediaPlayer.OnVideoSizeChangedListener, IMediaPlayer.OnInfoListener, ICacheManager.ICacheAvailableListener, VideoViewBridge {
 
-    public static String TAG = "GSYVideoBaseManager";
+    public static String TAG = "VideoBaseManager";
 
     protected static final int HANDLER_PREPARE = 0;
 
@@ -54,9 +54,9 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
 
     protected Handler mainThreadHandler;
 
-    protected WeakReference<GSYMediaPlayerListener> listener;
+    protected WeakReference<MediaPlayerListener> listener;
 
-    protected WeakReference<GSYMediaPlayerListener> lastListener;
+    protected WeakReference<MediaPlayerListener> lastListener;
 
     protected IPlayerInitSuccessListener mPlayerInitSuccessListener;
 
@@ -157,21 +157,21 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
     }
 
     @Override
-    public GSYMediaPlayerListener listener() {
+    public MediaPlayerListener listener() {
         if (listener == null)
             return null;
         return listener.get();
     }
 
     @Override
-    public GSYMediaPlayerListener lastListener() {
+    public MediaPlayerListener lastListener() {
         if (lastListener == null)
             return null;
         return lastListener.get();
     }
 
     @Override
-    public void setListener(GSYMediaPlayerListener listener) {
+    public void setListener(MediaPlayerListener listener) {
         if (listener == null)
             this.listener = null;
         else
@@ -179,7 +179,7 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
     }
 
     @Override
-    public void setLastListener(GSYMediaPlayerListener lastListener) {
+    public void setLastListener(MediaPlayerListener lastListener) {
         if (lastListener == null)
             this.lastListener = null;
         else
@@ -718,7 +718,7 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
      * <p>
      * 错误码为 ： BUFFER_TIME_OUT_ERROR = -192
      * <p>
-     * 由于onError之后执行GSYVideoPlayer的OnError，如果不想触发错误，
+     * 由于onError之后执行VideoPlayer的OnError，如果不想触发错误，
      * 可以重载onError，在super之前拦截处理。
      * <p>
      * public void onError(int what, int extra){

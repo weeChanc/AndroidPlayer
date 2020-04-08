@@ -12,9 +12,9 @@ public class FileUtils {
 
     private static final String SD_PATH = Environment.getExternalStorageDirectory().getPath();
 
-    public static final String NAME = "GSYVideo";
+    public static final String NAME = "Video";
 
-    public static final String NAME_TEST = "GSYVideoTest";
+    public static final String NAME_TEST = "VideoTest";
 
 
     public static String getAppPath(String name) {

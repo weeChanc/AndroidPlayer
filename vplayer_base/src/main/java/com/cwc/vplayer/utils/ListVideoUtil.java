@@ -12,9 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.cwc.vplayer.view.display.GSYBaseVideoPlayer;
-import com.cwc.vplayer.view.display.GSYVideoPlayer;
-import com.cwc.vplayer.view.display.StandardGSYVideoPlayer;
+import com.cwc.vplayer.view.display.BaseVideoPlayer;
+import com.cwc.vplayer.view.display.VideoPlayer;
+import com.cwc.vplayer.view.display.StandardVideoPlayer;
 import com.cwc.vplayer.view.display.VideoAllCallBack;
 
 import java.io.File;
@@ -26,11 +26,8 @@ import static com.cwc.vplayer.utils.CommonUtil.hideNavKey;
 import static com.cwc.vplayer.utils.CommonUtil.showNavKey;
 
 /**
- * Created by shuyu on 2016/11/12.
  * 列表工具类
  * 其中记得设置进来的fullViewContainer必须是在Activity布局下的最外层布局
- *
- * 这个类开始不再维护了
  */
 @Deprecated
 public class ListVideoUtil {
@@ -39,7 +36,7 @@ public class ListVideoUtil {
      * 该类从该版本开始不再维护，望悉知
      */
     private String TAG = "NULL"; //播放的标志
-    private StandardGSYVideoPlayer gsyVideoPlayer;
+    private StandardVideoPlayer mVideoPlayer;
     private ViewGroup fullViewContainer;
     private ViewGroup listParent;//记录列表中item的父布局
     private ViewGroup.LayoutParams listParams;
@@ -78,7 +75,7 @@ public class ListVideoUtil {
 
 
     public ListVideoUtil(Context context) {
-        gsyVideoPlayer = new StandardGSYVideoPlayer(context);
+        mVideoPlayer = new StandardVideoPlayer(context);
         this.context = context;
     }
 
@@ -96,10 +93,10 @@ public class ListVideoUtil {
         container.removeAllViews();
         if (isCurrentViewPlaying(position, tag)) {
             if (!isFull) {
-                ViewGroup viewGroup = (ViewGroup) gsyVideoPlayer.getParent();
+                ViewGroup viewGroup = (ViewGroup) mVideoPlayer.getParent();
                 if (viewGroup != null)
                     viewGroup.removeAllViews();
-                container.addView(gsyVideoPlayer);
+                container.addView(mVideoPlayer);
                 playBtn.setVisibility(View.INVISIBLE);
             }
         } else {
@@ -133,37 +130,37 @@ public class ListVideoUtil {
 
         this.url = url;
 
-        gsyVideoPlayer.release();
+        mVideoPlayer.release();
 
-        gsyVideoPlayer.setLooping(isLoop);
+        mVideoPlayer.setLooping(isLoop);
 
-        gsyVideoPlayer.setSpeed(speed);
+        mVideoPlayer.setSpeed(speed);
 
-        gsyVideoPlayer.setNeedShowWifiTip(needShowWifiTip);
+        mVideoPlayer.setNeedShowWifiTip(needShowWifiTip);
 
-        gsyVideoPlayer.setNeedLockFull(needLockFull);
+        mVideoPlayer.setNeedLockFull(needLockFull);
 
-        gsyVideoPlayer.setUp(url, true, cachePath, mapHeadData, mTitle);
+        mVideoPlayer.setUp(url, true, cachePath, mapHeadData, mTitle);
 
         if(!TextUtils.isEmpty(mTitle)) {
-            gsyVideoPlayer.getTitleTextView().setText(mTitle);
+            mVideoPlayer.getTitleTextView().setText(mTitle);
         }
 
         //增加title
-        gsyVideoPlayer.getTitleTextView().setVisibility(View.GONE);
+        mVideoPlayer.getTitleTextView().setVisibility(View.GONE);
 
         //设置返回键
-        gsyVideoPlayer.getBackButton().setVisibility(View.GONE);
+        mVideoPlayer.getBackButton().setVisibility(View.GONE);
 
         //设置全屏按键功能
-        gsyVideoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
+        mVideoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 resolveFullBtn();
             }
         });
 
-        gsyVideoPlayer.startPlayLogic();
+        mVideoPlayer.startPlayLogic();
     }
 
 
@@ -174,7 +171,7 @@ public class ListVideoUtil {
         if (!isFull) {
             resolveToFull();
         } else {
-            resolveMaterialToNormal(gsyVideoPlayer);
+            resolveMaterialToNormal(mVideoPlayer);
         }
     }
 
@@ -188,22 +185,22 @@ public class ListVideoUtil {
             hideNavKey(context);
         }
         isFull = true;
-        ViewGroup viewGroup = (ViewGroup) gsyVideoPlayer.getParent();
-        listParams = gsyVideoPlayer.getLayoutParams();
+        ViewGroup viewGroup = (ViewGroup) mVideoPlayer.getParent();
+        listParams = mVideoPlayer.getLayoutParams();
         if (viewGroup != null) {
             listParent = viewGroup;
-            viewGroup.removeView(gsyVideoPlayer);
+            viewGroup.removeView(mVideoPlayer);
         }
-        gsyVideoPlayer.setIfCurrentIsFullscreen(true);
-        gsyVideoPlayer.getFullscreenButton().setImageResource(gsyVideoPlayer.getShrinkImageRes());
-        gsyVideoPlayer.getBackButton().setVisibility(View.VISIBLE);
+        mVideoPlayer.setIfCurrentIsFullscreen(true);
+        mVideoPlayer.getFullscreenButton().setImageResource(mVideoPlayer.getShrinkImageRes());
+        mVideoPlayer.getBackButton().setVisibility(View.VISIBLE);
         //设置旋转
-        orientationUtils = new OrientationUtils((Activity) context, gsyVideoPlayer);
+        orientationUtils = new OrientationUtils((Activity) context, mVideoPlayer);
         orientationUtils.setEnable(isAutoRotation());
-        gsyVideoPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
+        mVideoPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                resolveMaterialToNormal(gsyVideoPlayer);
+                resolveMaterialToNormal(mVideoPlayer);
             }
         });
         if (showFullAnimation) {
@@ -224,7 +221,7 @@ public class ListVideoUtil {
      */
     private void resolveFullAdd() {
         fullViewContainer.setBackgroundColor(Color.BLACK);
-        fullViewContainer.addView(gsyVideoPlayer);
+        fullViewContainer.addView(mVideoPlayer);
         resolveChangeFirstLogic(50);
     }
 
@@ -240,14 +237,14 @@ public class ListVideoUtil {
         frameLayout.setBackgroundColor(Color.BLACK);
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(listItemSize[0], listItemSize[1]);
         lp.setMargins(listItemRect[0], listItemRect[1], 0, 0);
-        frameLayout.addView(gsyVideoPlayer, lp);
+        frameLayout.addView(mVideoPlayer, lp);
         fullViewContainer.addView(frameLayout, lpParent);
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 //开始动画
                 TransitionManager.beginDelayedTransition(fullViewContainer);
-                resolveMaterialFullVideoShow(gsyVideoPlayer);
+                resolveMaterialFullVideoShow(mVideoPlayer);
                 resolveChangeFirstLogic(600);
             }
         }, 300);
@@ -256,14 +253,14 @@ public class ListVideoUtil {
     /**
      * 如果是5.0的，要从原位置过度到全屏位置
      */
-    private void resolveMaterialFullVideoShow(GSYBaseVideoPlayer gsyVideoPlayer) {
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) gsyVideoPlayer.getLayoutParams();
+    private void resolveMaterialFullVideoShow(BaseVideoPlayer videoPlayer) {
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) videoPlayer.getLayoutParams();
         lp.setMargins(0, 0, 0, 0);
         lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
         lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
         lp.gravity = Gravity.CENTER;
-        gsyVideoPlayer.setLayoutParams(lp);
-        gsyVideoPlayer.setIfCurrentIsFullscreen(true);
+        videoPlayer.setLayoutParams(lp);
+        videoPlayer.setIfCurrentIsFullscreen(true);
     }
 
 
@@ -277,19 +274,19 @@ public class ListVideoUtil {
             public void run() {
                 isFull = false;
                 fullViewContainer.removeAllViews();
-                if (gsyVideoPlayer.getParent() != null) {
-                    ((ViewGroup) gsyVideoPlayer.getParent()).removeView(gsyVideoPlayer);
+                if (mVideoPlayer.getParent() != null) {
+                    ((ViewGroup) mVideoPlayer.getParent()).removeView(mVideoPlayer);
                 }
                 orientationUtils.setEnable(false);
-                gsyVideoPlayer.setIfCurrentIsFullscreen(false);
+                mVideoPlayer.setIfCurrentIsFullscreen(false);
                 fullViewContainer.setBackgroundColor(Color.TRANSPARENT);
-                listParent.addView(gsyVideoPlayer, listParams);
-                gsyVideoPlayer.getFullscreenButton().setImageResource(gsyVideoPlayer.getEnlargeImageRes());
-                gsyVideoPlayer.getBackButton().setVisibility(View.GONE);
-                gsyVideoPlayer.setIfCurrentIsFullscreen(false);
+                listParent.addView(mVideoPlayer, listParams);
+                mVideoPlayer.getFullscreenButton().setImageResource(mVideoPlayer.getEnlargeImageRes());
+                mVideoPlayer.getBackButton().setVisibility(View.GONE);
+                mVideoPlayer.setIfCurrentIsFullscreen(false);
                 if (videoAllCallBack != null) {
                     Debuger.printfLog("onQuitFullscreen");
-                    videoAllCallBack.onQuitFullscreen(url, mTitle, gsyVideoPlayer);
+                    videoAllCallBack.onQuitFullscreen(url, mTitle, mVideoPlayer);
                 }
                 if (hideKey) {
                     showNavKey(context, systemUiVisibility);
@@ -303,20 +300,20 @@ public class ListVideoUtil {
     /**
      * 动画回到正常效果
      */
-    private void resolveMaterialToNormal(final GSYVideoPlayer gsyVideoPlayer) {
+    private void resolveMaterialToNormal(final VideoPlayer videoPlayer) {
         if (showFullAnimation && fullViewContainer instanceof FrameLayout) {
             int delay = orientationUtils.backToProtVideo();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     TransitionManager.beginDelayedTransition(fullViewContainer);
-                    FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) gsyVideoPlayer.getLayoutParams();
+                    FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) videoPlayer.getLayoutParams();
                     lp.setMargins(listItemRect[0], listItemRect[1], 0, 0);
                     lp.width = listItemSize[0];
                     lp.height = listItemSize[1];
                     //注意配置回来，不然动画效果会不对
                     lp.gravity = Gravity.NO_GRAVITY;
-                    gsyVideoPlayer.setLayoutParams(lp);
+                    videoPlayer.setLayoutParams(lp);
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -345,10 +342,10 @@ public class ListVideoUtil {
                 }
             }, time);
         }
-        gsyVideoPlayer.setIfCurrentIsFullscreen(true);
+        mVideoPlayer.setIfCurrentIsFullscreen(true);
         if (videoAllCallBack != null) {
             Debuger.printfLog("onEnterFullscreen");
-            videoAllCallBack.onEnterFullscreen(this.url, mTitle, gsyVideoPlayer);
+            videoAllCallBack.onEnterFullscreen(this.url, mTitle, mVideoPlayer);
         }
     }
 
@@ -388,7 +385,7 @@ public class ListVideoUtil {
         boolean isFull = false;
         if (fullViewContainer.getChildCount() > 0) {
             isFull = true;
-            resolveMaterialToNormal(gsyVideoPlayer);
+            resolveMaterialToNormal(mVideoPlayer);
         }
         return isFull;
     }
@@ -397,7 +394,7 @@ public class ListVideoUtil {
      * 释放持有的视频
      */
     public void releaseVideoPlayer() {
-        ViewGroup viewGroup = (ViewGroup) gsyVideoPlayer.getParent();
+        ViewGroup viewGroup = (ViewGroup) mVideoPlayer.getParent();
         if (viewGroup != null)
             viewGroup.removeAllViews();
         playPosition = -1;
@@ -415,8 +412,8 @@ public class ListVideoUtil {
      * @param statusBar 是否有状态栏
      */
     public void showSmallVideo(Point size, final boolean actionBar, final boolean statusBar) {
-        if (gsyVideoPlayer.getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PLAYING) {
-            gsyVideoPlayer.showSmallVideo(size, actionBar, statusBar);
+        if (mVideoPlayer.getCurrentState() == VideoPlayer.CURRENT_STATE_PLAYING) {
+            mVideoPlayer.showSmallVideo(size, actionBar, statusBar);
             isSmall = true;
         }
     }
@@ -427,7 +424,7 @@ public class ListVideoUtil {
      */
     public void smallVideoToNormal() {
         isSmall = false;
-        gsyVideoPlayer.hideSmallVideo();
+        mVideoPlayer.hideSmallVideo();
     }
 
 
@@ -520,7 +517,7 @@ public class ListVideoUtil {
      */
     public void setVideoAllCallBack(VideoAllCallBack videoAllCallBack) {
         this.videoAllCallBack = videoAllCallBack;
-        gsyVideoPlayer.setVideoAllCallBack(videoAllCallBack);
+        mVideoPlayer.setVideoAllCallBack(videoAllCallBack);
     }
 
     public int getPlayPosition() {
@@ -551,7 +548,7 @@ public class ListVideoUtil {
      * 获取当前总时长
      */
     public int getDuration() {
-        return gsyVideoPlayer.getDuration();
+        return mVideoPlayer.getDuration();
     }
 
 
@@ -598,14 +595,14 @@ public class ListVideoUtil {
      * 获取当前播放进度
      */
     public int getCurrentPositionWhenPlaying() {
-        return gsyVideoPlayer.getCurrentPositionWhenPlaying();
+        return mVideoPlayer.getCurrentPositionWhenPlaying();
     }
 
     /**
      * 获取播放器,直接拿播放器，根据需要自定义配置
      */
-    public StandardGSYVideoPlayer getGsyVideoPlayer() {
-        return gsyVideoPlayer;
+    public StandardVideoPlayer getmVideoPlayer() {
+        return mVideoPlayer;
     }
 
     public boolean isHideKey() {

@@ -24,10 +24,6 @@ import java.util.Formatter;
 import java.util.Locale;
 
 
-/**
- * 公共类
- * Created by shuyu on 2016/11/11.
- */
 
 public class CommonUtil {
     public static String stringForTime(int timeMs) {
