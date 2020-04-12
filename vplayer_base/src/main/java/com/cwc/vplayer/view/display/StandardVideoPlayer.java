@@ -421,7 +421,7 @@ public class StandardVideoPlayer extends VideoPlayer {
     }
 
     @Override
-    protected void hideAllWidget() {
+    public void hideAllWidget() {
         setViewShowState(mBottomContainer, INVISIBLE);
         setViewShowState(mTopContainer, INVISIBLE);
         setViewShowState(mBottomProgressBar, VISIBLE);

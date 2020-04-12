@@ -11,5 +11,9 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         app = this
+
+        Thread.currentThread().uncaughtExceptionHandler = Thread.UncaughtExceptionHandler { t, e ->
+            e.printStackTrace()
+        }
     }
 }

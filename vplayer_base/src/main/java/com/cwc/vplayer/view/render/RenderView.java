@@ -20,7 +20,6 @@ import java.io.File;
 
 /**
  * render绘制中间控件
- * Created by guoshuyu on 2017/8/26.
  */
 
 public class RenderView {

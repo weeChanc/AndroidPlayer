@@ -1,78 +1,69 @@
 package com.ss.android.buzz.feed.live
 
 import android.app.Activity
+import android.util.Log
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.cwc.vplayer.entity.VideoFile
+import com.cwc.vplayer.feed.FeedVideoCard
 import com.cwc.vplayer.feed.VideoFileBinder
+import com.cwc.vplayer.feed.VideoListAdapter
 
 
-class AutoPreviewCoordinator(
-) {
+class AutoPreviewCoordinator {
 
     private var lastPreviewPosition: Int = -1
-//    private var lastPreViewItemView: IBuzzLiveCardContract.IView? = null
+    private var lastPreViewItemView: FeedVideoCard? = null
 
-    fun handleLiveAutoPreview(recyclerView: RecyclerView, activity: Activity?) {
-
-        fun getLivePreviewHolder(adapterPosition: Int): VideoFileBinder.ViewHolder? =
-            recyclerView.layoutManager?.findViewByPosition(adapterPosition)?.let {
-                recyclerView.getChildViewHolder(
-                    it
-                ) as? VideoFileBinder.ViewHolder
-            }
-
-        fun stopPreviewInAdapterPosition(position: Int) {
-            getLivePreviewHolder(position)?.let {
-                it.stopPreview()
-            }
-        }
-
-        fun startPreview(
-            holder: VideoFileBinder.ViewHolder?
-        ) {
-            holder?.startPreview(activity)
-        }
-
-        fun checkAutoPreviewToggleAndDoAction(
-            recyclerView: RecyclerView,
-            action: (LinearLayoutManager) -> Unit
-        ) {
-            (recyclerView.layoutManager as? LinearLayoutManager)?.apply {
-                action(this)
-            }
-        }
-
-        // 支持开关
-        checkAutoPreviewToggleAndDoAction(recyclerView) { layoutManager ->
+    fun handleLiveAutoPreview(recyclerView: RecyclerView, activity: Activity) {
+        if (recyclerView.layoutManager is LinearLayoutManager) {
+            val layoutManager = recyclerView.layoutManager as LinearLayoutManager
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
             var startNewPreview = false
-            for (cursorPosition in firstVisibleItemPosition..lastVisibleItemPosition) {
-                val cursorItemView = layoutManager.findViewByPosition(cursorPosition) ?: continue
-                val cursorViewHolder =
-                    recyclerView.getChildViewHolder(cursorItemView) as? VideoFileBinder.ViewHolder
+            val mid = (firstVisibleItemPosition + lastVisibleItemPosition) / 2
+            val searchPos = arrayOf(
+                (mid), mid - 1, mid + 1
+            )
+
+
+            var selectCursor = -1
+            var selectItemView: FeedVideoCard? = null;
+            for (cursorPosition in searchPos) {
+                val cursorItemView =
+                    layoutManager.findViewByPosition(cursorPosition) as? FeedVideoCard
                         ?: continue
+                val cursorViewHolder =
+                    (recyclerView).getChildViewHolder(cursorItemView) as? VideoFileBinder.ViewHolder
 
-                if (cursorViewHolder.canPreview(recyclerView.bottom)) {
-                    // HIT show live strategy!
+                val cursorItem = cursorViewHolder?.adapterPosition
+                if (cursorItem != null) {
+                    if (lastPreviewPosition != cursorPosition) {
+                        val item =
+                            (recyclerView.adapter as? VideoListAdapter)?.items?.get(cursorItem) as? VideoFile
+                                ?: break
 
-                    val previewingPosition = lastPreviewPosition
-
-                    if (previewingPosition != cursorPosition) {
-//                        lastPreViewItemView?.stopPreView()
-                        startPreview(cursorViewHolder)
-                    } else {
-                        startPreview(cursorViewHolder)
+                        startNewPreview = true
+                        cursorItemView.startPreview(
+                            activity,
+                            item
+                        )
+                        selectCursor = cursorPosition
+                        selectItemView = cursorItemView
+                        break
                     }
-                    startNewPreview = true
-//                    lastPreViewItemView = cursorItemView as? IBuzzLiveCardContract.IView
-                    lastPreviewPosition = cursorPosition
-                    break
                 }
             }
-            if (!startNewPreview) {
-//                lastPreViewItemView?.stopPreView()
-//                lastPreViewItemView = null
+
+            if (startNewPreview) {
+                lastPreViewItemView?.stopPreview()
+                if(lastPreviewPosition != -1){
+                    ((recyclerView.adapter as? VideoListAdapter)?.items?.get(lastPreviewPosition) as? VideoFile)?.isPreviewing =
+                        false
+                }
+                lastPreViewItemView = selectItemView
+                lastPreviewPosition = selectCursor
             }
         }
     }
@@ -81,12 +72,12 @@ class AutoPreviewCoordinator(
         (recyclerView.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
             layoutManager.findViewByPosition(lastPreviewPosition)
                 ?.let { itemView ->
-                    (recyclerView.getChildViewHolder(itemView) as? VideoFileBinder.ViewHolder)?.stopPreview()
+                    (itemView as? FeedVideoCard)?.stopPreview()
                 }
         }
     }
 
-    fun resume(recyclerView: RecyclerView, activity: Activity?) {
+    fun resume(recyclerView: RecyclerView, activity: Activity) {
         handleLiveAutoPreview(recyclerView, activity)
     }
 }
