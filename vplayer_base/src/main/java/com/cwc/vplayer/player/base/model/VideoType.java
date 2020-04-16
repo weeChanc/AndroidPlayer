@@ -33,11 +33,6 @@ public class VideoType {
     private static float sScreenScaleRatio = 0;
 
     /**
-     * GLSurfaceView 主要用于OpenGL渲染的
-     */
-    public final static int GLSURFACE = 2;
-
-    /**
      * SurfaceView，与动画全屏的效果不是很兼容
      */
     public final static int SUFRACE = 1;

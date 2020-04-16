@@ -94,7 +94,7 @@ public class StandardVideoPlayer extends VideoPlayer {
         super.init(context);
 
 
-        //增加自定义ui
+        //增加自定义ui【
 
         if (mBottomProgressDrawable != null) {
             mBottomProgressBar.setProgressDrawable(mBottomProgressDrawable);

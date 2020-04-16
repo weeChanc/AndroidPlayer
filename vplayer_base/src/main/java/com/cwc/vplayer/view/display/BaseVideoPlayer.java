@@ -223,7 +223,6 @@ public abstract class BaseVideoPlayer extends VideoControlView {
         to.mHadPlay = from.mHadPlay;
         to.mPlayTag = from.mPlayTag;
         to.mPlayPosition = from.mPlayPosition;
-        to.mEffectFilter = from.mEffectFilter;
         to.mFullPauseBitmap = from.mFullPauseBitmap;
         to.mNeedShowWifiTip = from.mNeedShowWifiTip;
         to.mShrinkImageRes = from.mShrinkImageRes;
@@ -236,8 +235,6 @@ public abstract class BaseVideoPlayer extends VideoControlView {
         to.mNetSate = from.mNetSate;
         to.mRotateWithSystem = from.mRotateWithSystem;
         to.mBackUpPlayingBufferState = from.mBackUpPlayingBufferState;
-        to.mRenderer = from.mRenderer;
-        to.mMode = from.mMode;
         to.mBackFromFullScreenListener = from.mBackFromFullScreenListener;
         to.mVideoProgressListener = from.mVideoProgressListener;
         to.mHadPrepared = from.mHadPrepared;

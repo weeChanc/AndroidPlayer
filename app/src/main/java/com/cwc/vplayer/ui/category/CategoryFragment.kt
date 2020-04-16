@@ -70,6 +70,7 @@ class CategoryFragment : AbsFragment<CategoryViewModel>() {
 
         mViewModel.categoryList.observe(this) {
             adapter.items = it
+            adapter.notifyDataSetChanged()
         }
     }
 

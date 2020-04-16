@@ -11,7 +11,6 @@ import java.util.Map;
 
 /**
  * Manager 与 View之间的接口
- * Created by guoshuyu on 2018/1/25.
  */
 
 public interface VideoViewBridge {

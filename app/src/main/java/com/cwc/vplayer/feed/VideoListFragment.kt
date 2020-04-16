@@ -43,7 +43,7 @@ class VideoListFragment : AbsFragment<VideoListViewModel>() {
         mainViewModel.mainTitle.value = File(dir).name
         if (dir != null && dir.isNotBlank()) {
             adapter.items =
-                File(dir).listFiles().map { VideoFile.createFromFile(it) }.filterNotNull()
+                File(dir).listFiles().mapNotNull { VideoFile.createFromFile(it) }
             adapter.notifyDataSetChanged()
         }
         val autoPreview = AutoPreviewCoordinator

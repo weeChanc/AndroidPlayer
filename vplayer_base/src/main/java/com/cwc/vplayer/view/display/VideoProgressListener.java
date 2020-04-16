@@ -2,7 +2,6 @@ package com.cwc.vplayer.view.display;
 
 /**
  * 进度回调
- * Created by guoshuyu on 2017/12/20.
  */
 public interface VideoProgressListener {
     /**

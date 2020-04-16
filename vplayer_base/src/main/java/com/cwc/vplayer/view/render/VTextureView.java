@@ -14,7 +14,6 @@ import com.cwc.vplayer.player.base.model.VideoType;
 import com.cwc.vplayer.utils.Debuger;
 import com.cwc.vplayer.utils.FileUtils;
 import com.cwc.vplayer.utils.MeasureHelper;
-import com.cwc.vplayer.view.render.glrender.VideoGLViewBaseRender;
 import com.cwc.vplayer.view.render.listener.VideoShotListener;
 import com.cwc.vplayer.view.render.listener.VideoShotSaveListener;
 import com.cwc.vplayer.view.render.listener.ISurfaceListener;
@@ -219,25 +218,6 @@ public class VTextureView extends TextureView implements TextureView.SurfaceText
     public void setRenderTransform(Matrix transform) {
         setTransform(transform);
     }
-
-    @Override
-    public void setGLRenderer(VideoGLViewBaseRender renderer) {
-        Debuger.printfLog(getClass().getSimpleName() + " not support setGLRenderer now");
-    }
-
-    @Override
-    public void setGLMVPMatrix(float[] MVPMatrix) {
-        Debuger.printfLog(getClass().getSimpleName() + " not support setGLMVPMatrix now");
-    }
-
-    /**
-     * 设置滤镜效果
-     */
-    @Override
-    public void setGLEffectFilter(VideoGLView.ShaderInterface effectFilter) {
-        Debuger.printfLog(getClass().getSimpleName() + " not support setGLEffectFilter now");
-    }
-
 
     @Override
     public void setVideoParamsListener(MeasureHelper.MeasureFormVideoParamsListener listener) {

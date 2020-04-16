@@ -11,17 +11,12 @@ import android.view.ViewGroup;
 
 import com.cwc.vplayer.utils.Debuger;
 import com.cwc.vplayer.utils.MeasureHelper;
-import com.cwc.vplayer.view.render.glrender.VideoGLViewBaseRender;
 import com.cwc.vplayer.view.render.listener.VideoShotListener;
 import com.cwc.vplayer.view.render.listener.VideoShotSaveListener;
 import com.cwc.vplayer.view.render.listener.ISurfaceListener;
 
 import java.io.File;
 
-/**
- * SurfaceView
- * Created by guoshuyu on 2017/8/26.
- */
 
 public class VSurfaceView extends SurfaceView implements SurfaceHolder.Callback2, IRenderView, MeasureHelper.MeasureFormVideoParamsListener {
 
@@ -158,25 +153,6 @@ public class VSurfaceView extends SurfaceView implements SurfaceHolder.Callback2
     public void setRenderTransform(Matrix transform) {
         Debuger.printfLog(getClass().getSimpleName() + " not support setRenderTransform now");
     }
-
-    @Override
-    public void setGLRenderer(VideoGLViewBaseRender renderer) {
-        Debuger.printfLog(getClass().getSimpleName() + " not support setGLRenderer now");
-    }
-
-    @Override
-    public void setGLMVPMatrix(float[] MVPMatrix) {
-        Debuger.printfLog(getClass().getSimpleName() + " not support setGLMVPMatrix now");
-    }
-
-    /**
-     * 设置滤镜效果
-     */
-    @Override
-    public void setGLEffectFilter(VideoGLView.ShaderInterface effectFilter) {
-        Debuger.printfLog(getClass().getSimpleName() + " not support setGLEffectFilter now");
-    }
-
 
     @Override
     public void setVideoParamsListener(MeasureHelper.MeasureFormVideoParamsListener listener) {

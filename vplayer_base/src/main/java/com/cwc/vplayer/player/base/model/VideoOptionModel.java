@@ -1,8 +1,7 @@
 package com.cwc.vplayer.player.base.model;
 
 /**
- * Created by guoshuyu on 2017/1/11.
- * 配置ijk option用的
+ * 配置ijk用的
  */
 
 public class VideoOptionModel {

@@ -32,7 +32,6 @@ import static com.cwc.vplayer.utils.CommonUtil.hideNavKey;
 
 /**
  * 播放UI的显示、控制层、手势处理等
- * Created by guoshuyu on 2017/8/2.
  */
 
 public abstract class VideoControlView extends VideoView implements View.OnClickListener, View.OnTouchListener, SeekBar.OnSeekBarChangeListener {

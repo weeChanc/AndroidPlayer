@@ -29,7 +29,6 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
 /**
  * 基类管理器
  * VideoViewBridge接口说明可以查阅VideoViewBridge类
- * Created by guoshuyu on 2018/1/25.
  */
 
 public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListener, IMediaPlayer.OnCompletionListener,

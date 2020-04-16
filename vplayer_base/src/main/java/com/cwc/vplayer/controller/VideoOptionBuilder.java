@@ -8,13 +8,11 @@ import com.cwc.vplayer.view.display.VideoProgressListener;
 import com.cwc.vplayer.view.display.LockClickListener;
 import com.cwc.vplayer.view.display.StandardVideoPlayer;
 import com.cwc.vplayer.view.display.VideoAllCallBack;
-import com.cwc.vplayer.view.render.VideoGLView;
 
 import java.io.File;
 import java.util.Map;
 
 /**
- * Created by guoshuyu on 2017/7/3.
  * <p>
  * 配置工具类吧。
  * <p>
@@ -158,9 +156,6 @@ public class VideoOptionBuilder {
 
     //滑动dialog进度条样式
     protected Drawable mDialogProgressBarDrawable;
-
-    //滤镜
-    protected VideoGLView.ShaderInterface mEffectFilter = null;
 
     //进度回调
     protected VideoProgressListener mVideoProgressListener;
@@ -527,14 +522,6 @@ public class VideoOptionBuilder {
     }
 
     /**
-     * 设置滤镜效果
-     */
-    public VideoOptionBuilder setEffectFilter(VideoGLView.ShaderInterface effectFilter) {
-        this.mEffectFilter = effectFilter;
-        return this;
-    }
-
-    /**
      * 是否需要覆盖拓展类型，目前只针对exoPlayer内核模式有效
      * @param overrideExtension 比如传入 m3u8,mp4,avi 等类型
      */
@@ -637,7 +624,6 @@ public class VideoOptionBuilder {
         videoPlayer.setIsTouchWiget(mIsTouchWiget);
         videoPlayer.setIsTouchWigetFull(mIsTouchWigetFull);
         videoPlayer.setNeedShowWifiTip(mNeedShowWifiTip);
-        videoPlayer.setEffectFilter(mEffectFilter);
         videoPlayer.setStartAfterPrepared(mStartAfterPrepared);
         videoPlayer.setReleaseWhenLossAudio(mReleaseWhenLossAudio);
         videoPlayer.setFullHideActionBar(mActionBar);

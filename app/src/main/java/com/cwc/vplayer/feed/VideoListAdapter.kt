@@ -1,22 +1,14 @@
 package com.cwc.vplayer.feed
 
-import android.content.Context
-import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cwc.vplayer.R
-import com.cwc.vplayer.controller.SimpleVideoAllCallBack
-import com.cwc.vplayer.controller.VideoManager
-import com.cwc.vplayer.controller.VideoOptionBuilder
 import com.cwc.vplayer.entity.VideoFile
-import com.cwc.vplayer.view.display.StandardVideoPlayer
 import com.drakeet.multitype.ItemViewBinder
 import com.drakeet.multitype.MultiTypeAdapter
 import com.ss.android.buzz.feed.live.AutoPreviewCoordinator

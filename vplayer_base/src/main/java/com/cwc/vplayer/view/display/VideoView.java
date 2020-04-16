@@ -37,7 +37,6 @@ import static com.cwc.vplayer.utils.CommonUtil.getTextSpeed;
 
 /**
  * 视频回调与状态处理等相关层
- * Created by guoshuyu on 2017/8/2.
  */
 
 public abstract class VideoView extends VTextureRenderView implements MediaPlayerListener {
@@ -592,7 +591,7 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
 
         if (!mStartAfterPrepared) {
             setStateAndUi(CURRENT_STATE_PAUSE);
-            onVideoPause();//todo 加上这个
+            onVideoPause();
             return;
         }
 
@@ -933,7 +932,7 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
     /**
      * 根据状态判断是否播放中
      */
-    public boolean isInPlayngState() {
+    public boolean isInPlayingState() {
         return (mCurrentState >= 0 && mCurrentState != CURRENT_STATE_NORMAL
                 && mCurrentState != CURRENT_STATE_AUTO_COMPLETE && mCurrentState != CURRENT_STATE_ERROR);
     }

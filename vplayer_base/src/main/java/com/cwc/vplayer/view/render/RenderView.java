@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 
 import com.cwc.vplayer.player.base.model.VideoType;
 import com.cwc.vplayer.utils.MeasureHelper;
-import com.cwc.vplayer.view.render.glrender.VideoGLViewBaseRender;
 import com.cwc.vplayer.view.render.listener.VideoShotListener;
 import com.cwc.vplayer.view.render.listener.VideoShotSaveListener;
 import com.cwc.vplayer.view.render.listener.ISurfaceListener;
@@ -75,13 +74,9 @@ public class RenderView {
      */
     public void addView(final Context context, final ViewGroup textureViewContainer, final int rotate,
                         final ISurfaceListener surfaceListener,
-                        final MeasureHelper.MeasureFormVideoParamsListener videoParamsListener,
-                        final VideoGLView.ShaderInterface effect, final float[] transform,
-                        final VideoGLViewBaseRender customRender, int mode) {
+                        final MeasureHelper.MeasureFormVideoParamsListener videoParamsListener) {
         if (VideoType.getRenderType() == VideoType.SUFRACE) {
             mShowView = VSurfaceView.addSurfaceView(context, textureViewContainer, rotate, surfaceListener, videoParamsListener);
-        } else if (VideoType.getRenderType() == VideoType.GLSURFACE) {
-            mShowView = VideoGLView.addGLView(context, textureViewContainer, rotate, surfaceListener, videoParamsListener, effect, transform, customRender, mode);
         } else {
             mShowView = VTextureView.addTextureView(context, textureViewContainer, rotate, surfaceListener, videoParamsListener);
         }
@@ -182,32 +177,6 @@ public class RenderView {
     public void setGLRenderMode(int mode) {
         if (mShowView != null)
             mShowView.setRenderMode(mode);
-    }
-
-    /**
-     * 自定义GL的渲染render
-     */
-    public void setGLRenderer(VideoGLViewBaseRender renderer) {
-        if (mShowView != null)
-            mShowView.setGLRenderer(renderer);
-    }
-
-    /**
-     * GL模式下的画面matrix效果
-     *
-     * @param matrixGL 16位长度
-     */
-    public void setMatrixGL(float[] matrixGL) {
-        if (mShowView != null)
-            mShowView.setGLMVPMatrix(matrixGL);
-    }
-
-    /**
-     * 设置滤镜效果
-     */
-    public void setEffectFilter(VideoGLView.ShaderInterface effectFilter) {
-        if (mShowView != null)
-            mShowView.setGLEffectFilter(effectFilter);
     }
 
 

@@ -14,13 +14,8 @@ import androidx.annotation.Nullable;
 
 import com.cwc.vplayer.player.base.model.VideoType;
 import com.cwc.vplayer.utils.MeasureHelper;
-import com.cwc.vplayer.view.render.glrender.VideoGLViewBaseRender;
 import com.cwc.vplayer.view.render.listener.ISurfaceListener;
 
-/**
- * 绘制View
- * Created by guoshuyu on 2017/8/2.
- */
 
 public abstract class VTextureRenderView extends FrameLayout implements ISurfaceListener, MeasureHelper.MeasureFormVideoParamsListener {
 
@@ -36,20 +31,11 @@ public abstract class VTextureRenderView extends FrameLayout implements ISurface
     //满屏填充暂停为徒
     protected Bitmap mFullPauseBitmap;
 
-    //GL的滤镜
-    protected VideoGLView.ShaderInterface mEffectFilter = null;
-
-    //GL的自定义渲染
-    protected VideoGLViewBaseRender mRenderer;
-
     //GL的角度
     protected float[] mMatrixGL = null;
 
     //画面选择角度
     protected int mRotate;
-
-    //GL的布局模式
-    protected int mMode = VideoGLView.MODE_LAYOUT_SIZE;
 
     public VTextureRenderView(@NonNull Context context) {
         super(context);
@@ -111,7 +97,7 @@ public abstract class VTextureRenderView extends FrameLayout implements ISurface
      */
     protected void addTextureView() {
         mTextureView = new RenderView();
-        mTextureView.addView(getContext(), mTextureViewContainer, mRotate, this, this, mEffectFilter, mMatrixGL, mRenderer, mMode);
+        mTextureView.addView(getContext(), mTextureViewContainer, mRotate, this, this);
     }
 
     /**
@@ -155,61 +141,12 @@ public abstract class VTextureRenderView extends FrameLayout implements ISurface
         setSmallVideoTextureView();
     }
 
-    public VideoGLView.ShaderInterface getEffectFilter() {
-        return mEffectFilter;
-    }
-
     /**
      * 获取渲染的代理层
      */
     public RenderView getRenderProxy() {
         return mTextureView;
     }
-
-    /**
-     * 设置滤镜效果
-     */
-    public void setEffectFilter(VideoGLView.ShaderInterface effectFilter) {
-        this.mEffectFilter = effectFilter;
-        if (mTextureView != null) {
-            mTextureView.setEffectFilter(effectFilter);
-        }
-    }
-
-    /**
-     * GL模式下的画面matrix效果
-     *
-     * @param matrixGL 16位长度
-     */
-    public void setMatrixGL(float[] matrixGL) {
-        this.mMatrixGL = matrixGL;
-        if (mTextureView != null) {
-            mTextureView.setMatrixGL(mMatrixGL);
-        }
-    }
-
-    /**
-     * 自定义GL的渲染render
-     */
-    public void setCustomGLRenderer(VideoGLViewBaseRender renderer) {
-        this.mRenderer = renderer;
-        if (mTextureView != null) {
-            mTextureView.setGLRenderer(renderer);
-        }
-    }
-
-    /**
-     * GL布局的绘制模式，利用布局计算大小还是使用render计算大小
-     *
-     * @param mode MODE_LAYOUT_SIZE = 0,  MODE_RENDER_SIZE = 1
-     */
-    public void setGLRenderMode(int mode) {
-        mMode = mode;
-        if (mTextureView != null) {
-            mTextureView.setGLRenderMode(mode);
-        }
-    }
-
 
     //暂停时使用绘制画面显示暂停、避免黑屏
     protected abstract void showPauseCover();

@@ -20,7 +20,6 @@ import com.cwc.vplayer.view.display.VideoProgressListener;
 import com.cwc.vplayer.view.display.LockClickListener;
 import com.cwc.vplayer.view.display.StandardVideoPlayer;
 import com.cwc.vplayer.view.display.VideoAllCallBack;
-import com.cwc.vplayer.view.render.VideoGLView;
 
 import java.io.File;
 import java.util.Map;
@@ -32,7 +31,6 @@ import static com.cwc.vplayer.utils.CommonUtil.showNavKey;
 
 /**
  * 视频帮助类，更加节省资源
- * Created by guoshuyu on 2018/1/15.
  */
 public class VideoHelper {
 
@@ -739,10 +737,6 @@ public class VideoHelper {
 
         public Drawable getDialogProgressBarDrawable() {
             return mDialogProgressBarDrawable;
-        }
-
-        public VideoGLView.ShaderInterface getEffectFilter() {
-            return mEffectFilter;
         }
 
         public VideoProgressListener getVideoProgressListener() {

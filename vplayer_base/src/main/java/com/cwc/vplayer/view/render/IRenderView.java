@@ -6,16 +6,11 @@ import android.graphics.Matrix;
 import android.view.View;
 
 import com.cwc.vplayer.utils.MeasureHelper;
-import com.cwc.vplayer.view.render.glrender.VideoGLViewBaseRender;
 import com.cwc.vplayer.view.render.listener.VideoShotListener;
 import com.cwc.vplayer.view.render.listener.VideoShotSaveListener;
 import com.cwc.vplayer.view.render.listener.ISurfaceListener;
 
 import java.io.File;
-
-/**
- * Created by guoshuyu on 2018/1/29.
- */
 
 public interface IRenderView {
 
@@ -75,11 +70,5 @@ public interface IRenderView {
     void setRenderMode(int mode);
 
     void setRenderTransform(Matrix transform);
-
-    void setGLRenderer(VideoGLViewBaseRender renderer);
-
-    void setGLMVPMatrix(float[] MVPMatrix);
-
-    void setGLEffectFilter(VideoGLView.ShaderInterface effectFilter);
 
 }

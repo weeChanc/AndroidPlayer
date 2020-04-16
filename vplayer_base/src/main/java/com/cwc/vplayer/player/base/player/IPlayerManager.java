@@ -12,7 +12,6 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 /**
  * 播放器差异管理接口
- * Created by guoshuyu on 2018/1/11.
  */
 
 public interface IPlayerManager {
