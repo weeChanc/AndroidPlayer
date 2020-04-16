@@ -1,4 +1,4 @@
-package com.cwc.vplayer.view.render;
+package com.cwc.vplayer.view.render.surface;
 
 
 import android.graphics.Bitmap;
@@ -60,14 +60,6 @@ public interface IRenderView {
      * 获取当前画面的高质量bitmap，没有返回空
      */
     Bitmap initCoverHigh();
-
-    void onRenderResume();
-
-    void onRenderPause();
-
-    void releaseRenderAll();
-
-    void setRenderMode(int mode);
 
     void setRenderTransform(Matrix transform);
 

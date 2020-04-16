@@ -23,16 +23,13 @@ public abstract class VTextureRenderView extends FrameLayout implements ISurface
     protected Surface mSurface;
 
     //渲染控件
-    protected RenderView mTextureView;
+    protected RenderView mRenderView;
 
     //渲染控件父类
-    protected ViewGroup mTextureViewContainer;
+    protected ViewGroup mRenderViewContainer;
 
-    //满屏填充暂停为徒
+    //满屏填充暂停位图
     protected Bitmap mFullPauseBitmap;
-
-    //GL的角度
-    protected float[] mMatrixGL = null;
 
     //画面选择角度
     protected int mRotate;
@@ -54,7 +51,7 @@ public abstract class VTextureRenderView extends FrameLayout implements ISurface
 
     @Override
     public void onSurfaceAvailable(Surface surface) {
-        pauseLogic(surface, (mTextureView != null && mTextureView.getShowView() instanceof TextureView));
+        pauseLogic(surface, (mRenderView != null && mRenderView.getShowView() instanceof TextureView));
     }
 
     @Override
@@ -96,8 +93,8 @@ public abstract class VTextureRenderView extends FrameLayout implements ISurface
      * 继承后重载addTextureView，继承RenderView后实现自己的IRenderView类，既可以使用自己自定义的显示层
      */
     protected void addTextureView() {
-        mTextureView = new RenderView();
-        mTextureView.addView(getContext(), mTextureViewContainer, mRotate, this, this);
+        mRenderView = new RenderView();
+        mRenderView.addView(getContext(), mRenderViewContainer, mRotate, this, this);
     }
 
     /**
@@ -114,12 +111,12 @@ public abstract class VTextureRenderView extends FrameLayout implements ISurface
      * 调整TextureView去适应比例变化
      */
     protected void changeTextureViewShowType() {
-        if (mTextureView != null) {
+        if (mRenderView != null) {
             int params = getTextureParams();
-            ViewGroup.LayoutParams layoutParams = mTextureView.getLayoutParams();
+            ViewGroup.LayoutParams layoutParams = mRenderView.getLayoutParams();
             layoutParams.width = params;
             layoutParams.height = params;
-            mTextureView.setLayoutParams(layoutParams);
+            mRenderView.setLayoutParams(layoutParams);
         }
     }
 
@@ -127,8 +124,8 @@ public abstract class VTextureRenderView extends FrameLayout implements ISurface
      * 暂停时初始化位图
      */
     protected void initCover() {
-        if (mTextureView != null) {
-            mFullPauseBitmap = mTextureView.initCover();
+        if (mRenderView != null) {
+            mFullPauseBitmap = mRenderView.initCover();
         }
     }
 
@@ -136,8 +133,8 @@ public abstract class VTextureRenderView extends FrameLayout implements ISurface
      * 小窗口渲染
      **/
     protected void setSmallVideoTextureView(OnTouchListener onTouchListener) {
-        mTextureViewContainer.setOnTouchListener(onTouchListener);
-        mTextureViewContainer.setOnClickListener(null);
+        mRenderViewContainer.setOnTouchListener(onTouchListener);
+        mRenderViewContainer.setOnClickListener(null);
         setSmallVideoTextureView();
     }
 
@@ -145,7 +142,7 @@ public abstract class VTextureRenderView extends FrameLayout implements ISurface
      * 获取渲染的代理层
      */
     public RenderView getRenderProxy() {
-        return mTextureView;
+        return mRenderView;
     }
 
     //暂停时使用绘制画面显示暂停、避免黑屏

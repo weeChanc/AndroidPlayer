@@ -1,4 +1,4 @@
-package com.cwc.vplayer.view.render;
+package com.cwc.vplayer.view.render.surface;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cwc.vplayer.player.base.model.VideoType;
-import com.cwc.vplayer.utils.Debuger;
 import com.cwc.vplayer.utils.FileUtils;
 import com.cwc.vplayer.utils.MeasureHelper;
+import com.cwc.vplayer.view.render.RenderView;
 import com.cwc.vplayer.view.render.listener.VideoShotListener;
 import com.cwc.vplayer.view.render.listener.VideoShotSaveListener;
 import com.cwc.vplayer.view.render.listener.ISurfaceListener;
@@ -192,26 +192,6 @@ public class VTextureView extends TextureView implements TextureView.SurfaceText
     @Override
     public View getRenderView() {
         return this;
-    }
-
-    @Override
-    public void onRenderResume() {
-        Debuger.printfLog(getClass().getSimpleName() + " not support onRenderResume now");
-    }
-
-    @Override
-    public void onRenderPause() {
-        Debuger.printfLog(getClass().getSimpleName() + " not support onRenderPause now");
-    }
-
-    @Override
-    public void releaseRenderAll() {
-        Debuger.printfLog(getClass().getSimpleName() + " not support releaseRenderAll now");
-    }
-
-    @Override
-    public void setRenderMode(int mode) {
-        Debuger.printfLog(getClass().getSimpleName() + " not support setRenderMode now");
     }
 
     @Override

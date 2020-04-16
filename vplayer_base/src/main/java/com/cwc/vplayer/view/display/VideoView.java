@@ -184,17 +184,15 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
         if (mCurrentState == CURRENT_STATE_PAUSE && mFullPauseBitmap != null
                 && !mFullPauseBitmap.isRecycled() && mShowPauseCover
                 && mSurface != null && mSurface.isValid()) {
-            if (getVideoManager().isSurfaceSupportLockCanvas()) {
-                try {
-                    RectF rectF = new RectF(0, 0, mTextureView.getWidth(), mTextureView.getHeight());
-                    Canvas canvas = mSurface.lockCanvas(new Rect(0, 0, mTextureView.getWidth(), mTextureView.getHeight()));
-                    if (canvas != null) {
-                        canvas.drawBitmap(mFullPauseBitmap, null, rectF, null);
-                        mSurface.unlockCanvasAndPost(canvas);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+            try {
+                RectF rectF = new RectF(0, 0, mRenderView.getWidth(), mRenderView.getHeight());
+                Canvas canvas = mSurface.lockCanvas(new Rect(0, 0, mRenderView.getWidth(), mRenderView.getHeight()));
+                if (canvas != null) {
+                    canvas.drawBitmap(mFullPauseBitmap, null, rectF, null);
+                    mSurface.unlockCanvasAndPost(canvas);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -270,7 +268,7 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
 
         initInflate(mContext);
 
-        mTextureViewContainer = (ViewGroup) findViewById(R.id.surface_container);
+        mRenderViewContainer = (ViewGroup) findViewById(R.id.surface_container);
         if (isInEditMode())
             return;
         mScreenWidth = mContext.getResources().getDisplayMetrics().widthPixels;
@@ -605,8 +603,8 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
         mSaveChangeViewTIme = 0;
         mCurrentPosition = 0;
 
-        if (mTextureViewContainer.getChildCount() > 0) {
-            mTextureViewContainer.removeAllViews();
+        if (mRenderViewContainer.getChildCount() > 0) {
+            mRenderViewContainer.removeAllViews();
         }
 
         if (!mIfCurrentIsFullscreen)
@@ -635,8 +633,8 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
         mSaveChangeViewTIme = 0;
         mCurrentPosition = 0;
 
-        if (mTextureViewContainer.getChildCount() > 0) {
-            mTextureViewContainer.removeAllViews();
+        if (mRenderViewContainer.getChildCount() > 0) {
+            mRenderViewContainer.removeAllViews();
         }
 
         if (!mIfCurrentIsFullscreen) {
@@ -706,8 +704,8 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
         } else if (what == getVideoManager().getRotateInfoFlag()) {
             mRotate = extra;
             Debuger.printfLog("Video Rotate Info " + extra);
-            if (mTextureView != null)
-                mTextureView.setRotation(mRotate);
+            if (mRenderView != null)
+                mRenderView.setRotation(mRotate);
         }
     }
 
@@ -715,8 +713,8 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
     public void onVideoSizeChanged() {
         int mVideoWidth = getVideoManager().getCurrentVideoWidth();
         int mVideoHeight = getVideoManager().getCurrentVideoHeight();
-        if (mVideoWidth != 0 && mVideoHeight != 0 && mTextureView != null) {
-            mTextureView.requestLayout();
+        if (mVideoWidth != 0 && mVideoHeight != 0 && mRenderView != null) {
+            mRenderView.requestLayout();
         }
     }
 
@@ -820,10 +818,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
         listenerNetWorkState();
 
         mHadPlay = true;
-
-        if (mTextureView != null) {
-            mTextureView.onResume();
-        }
 
         if (mPauseBeforePrepared) {
             onVideoPause();

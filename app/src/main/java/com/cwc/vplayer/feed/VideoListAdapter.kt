@@ -56,6 +56,7 @@ class VideoFileBinder : ItemViewBinder<VideoFile, VideoFileBinder.ViewHolder>() 
                 AutoPreviewCoordinator.lastPreviewPosition = holder.adapterPosition
             }
             holder.videoView.previewMode = 0
+//            holder.cover.setImageBitmap(holder.videoView.renderProxy.initCover())
             holder.videoView.startWindowFullscreen(holder.itemView.context, false, false)
 
         }

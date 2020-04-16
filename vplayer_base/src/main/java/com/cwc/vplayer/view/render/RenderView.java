@@ -14,11 +14,15 @@ import com.cwc.vplayer.utils.MeasureHelper;
 import com.cwc.vplayer.view.render.listener.VideoShotListener;
 import com.cwc.vplayer.view.render.listener.VideoShotSaveListener;
 import com.cwc.vplayer.view.render.listener.ISurfaceListener;
+import com.cwc.vplayer.view.render.surface.IRenderView;
+import com.cwc.vplayer.view.render.surface.VSurfaceView;
+import com.cwc.vplayer.view.render.surface.VTextureView;
 
 import java.io.File;
 
 /**
  * render绘制中间控件
+ * 具体Surface的代理，做surfaceView和Texture的差异，并提供工具方法
  */
 
 public class RenderView {
@@ -145,38 +149,6 @@ public class RenderView {
     public void saveFrame(final File file, final boolean high, final VideoShotSaveListener videoShotSaveListener) {
         if (mShowView != null)
             mShowView.saveFrame(file, high, videoShotSaveListener);
-    }
-
-    /**
-     * 主要针对GL
-     */
-    public void onResume() {
-        if (mShowView != null)
-            mShowView.onRenderResume();
-    }
-
-    /**
-     * 主要针对GL
-     */
-    public void onPause() {
-        if (mShowView != null)
-            mShowView.onRenderPause();
-    }
-
-    /**
-     * 主要针对GL
-     */
-    public void releaseAll() {
-        if (mShowView != null)
-            mShowView.releaseRenderAll();
-    }
-
-    /**
-     * 主要针对GL
-     */
-    public void setGLRenderMode(int mode) {
-        if (mShowView != null)
-            mShowView.setRenderMode(mode);
     }
 
 

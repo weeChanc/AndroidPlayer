@@ -128,8 +128,8 @@ public abstract class BaseVideoPlayer extends VideoControlView {
         if (mCurrentTimeTextView != null) {
             mCurrentTimeTextView.setVisibility(INVISIBLE);
         }
-        if (mTextureViewContainer != null) {
-            mTextureViewContainer.setOnClickListener(null);
+        if (mRenderViewContainer != null) {
+            mRenderViewContainer.setOnClickListener(null);
         }
         if (mSmallClose != null) {
             mSmallClose.setVisibility(VISIBLE);
@@ -262,7 +262,7 @@ public abstract class BaseVideoPlayer extends VideoControlView {
      * 全屏的暂停的时候返回页面不黑色
      */
     private void pauseFullCoverLogic() {
-        if (mCurrentState == VideoPlayer.CURRENT_STATE_PAUSE && mTextureView != null
+        if (mCurrentState == VideoPlayer.CURRENT_STATE_PAUSE && mRenderView != null
                 && (mFullPauseBitmap == null || mFullPauseBitmap.isRecycled()) && mShowPauseCover) {
             try {
                 initCover();
@@ -279,7 +279,7 @@ public abstract class BaseVideoPlayer extends VideoControlView {
     private void pauseFullBackCoverLogic(BaseVideoPlayer videoPlayer) {
         //如果是暂停状态
         if (videoPlayer.mCurrentState == VideoPlayer.CURRENT_STATE_PAUSE
-                && videoPlayer.mTextureView != null && mShowPauseCover) {
+                && videoPlayer.mRenderView != null && mShowPauseCover) {
             //全屏的位图还在，说明没播放，直接用原来的
             if (videoPlayer.mFullPauseBitmap != null
                     && !videoPlayer.mFullPauseBitmap.isRecycled() && mShowPauseCover) {
@@ -630,8 +630,8 @@ public abstract class BaseVideoPlayer extends VideoControlView {
         //处理暂停的逻辑
         pauseFullCoverLogic();
 
-        if (mTextureViewContainer.getChildCount() > 0) {
-            mTextureViewContainer.removeAllViews();
+        if (mRenderViewContainer.getChildCount() > 0) {
+            mRenderViewContainer.removeAllViews();
         }
 
         saveLocationStatus(context, statusBar, actionBar);
@@ -746,8 +746,8 @@ public abstract class BaseVideoPlayer extends VideoControlView {
 
         removeVideo(vp, getSmallId());
 
-        if (mTextureViewContainer.getChildCount() > 0) {
-            mTextureViewContainer.removeAllViews();
+        if (mRenderViewContainer.getChildCount() > 0) {
+            mRenderViewContainer.removeAllViews();
         }
 
         try {

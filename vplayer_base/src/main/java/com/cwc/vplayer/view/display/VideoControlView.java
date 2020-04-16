@@ -221,9 +221,9 @@ public abstract class VideoControlView extends VideoView implements View.OnClick
             mBottomContainer.setOnClickListener(this);
         }
 
-        if (mTextureViewContainer != null) {
-            mTextureViewContainer.setOnClickListener(this);
-            mTextureViewContainer.setOnTouchListener(this);
+        if (mRenderViewContainer != null) {
+            mRenderViewContainer.setOnClickListener(this);
+            mRenderViewContainer.setOnTouchListener(this);
         }
 
         if (mProgressBar != null) {

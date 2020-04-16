@@ -46,33 +46,6 @@ public class VideoManager extends VideoBaseManager {
     }
 
     /**
-     * 同步创建一个临时管理器
-     */
-    public static synchronized VideoManager tmpInstance(MediaPlayerListener listener) {
-        VideoManager mVideoManager = new VideoManager();
-        mVideoManager.bufferPoint = videoManager.bufferPoint;
-        mVideoManager.optionModelList = videoManager.optionModelList;
-        mVideoManager.playTag = videoManager.playTag;
-        mVideoManager.currentVideoWidth = videoManager.currentVideoWidth;
-        mVideoManager.currentVideoHeight = videoManager.currentVideoHeight;
-        mVideoManager.context = videoManager.context;
-        mVideoManager.lastState = videoManager.lastState;
-        mVideoManager.playPosition = videoManager.playPosition;
-        mVideoManager.timeOut = videoManager.timeOut;
-        mVideoManager.needMute = videoManager.needMute;
-        mVideoManager.needTimeOutOther = videoManager.needTimeOutOther;
-        mVideoManager.setListener(listener);
-        return mVideoManager;
-    }
-
-    /**
-     * 替换管理器
-     */
-    public static synchronized void changeManager(VideoManager manager) {
-        videoManager = manager;
-    }
-
-    /**
      * 退出全屏，主要用于返回键
      *
      * @return 返回是否全屏

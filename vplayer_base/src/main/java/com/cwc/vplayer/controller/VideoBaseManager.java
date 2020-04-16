@@ -35,34 +35,22 @@ public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListene
         IMediaPlayer.OnBufferingUpdateListener, IMediaPlayer.OnSeekCompleteListener, IMediaPlayer.OnErrorListener,
         IMediaPlayer.OnVideoSizeChangedListener, IMediaPlayer.OnInfoListener, ICacheManager.ICacheAvailableListener, VideoViewBridge {
 
-    public static String TAG = "VideoBaseManager";
-
-    protected static final int HANDLER_PREPARE = 0;
-
-    protected static final int HANDLER_SETDISPLAY = 1;
-
-    protected static final int HANDLER_RELEASE = 2;
-
-    protected static final int HANDLER_RELEASE_SURFACE = 3;
-
-    protected static final int BUFFER_TIME_OUT_ERROR = -192;//外部超时错误码
-
-    protected Context context;
-
-    protected MediaHandler mMediaHandler;
-
-    protected Handler mainThreadHandler;
-
-    protected WeakReference<MediaPlayerListener> listener;
-
-    protected WeakReference<MediaPlayerListener> lastListener;
-
-    protected IPlayerInitSuccessListener mPlayerInitSuccessListener;
+    private static final int HANDLER_PREPARE = 0;
+    private static final int HANDLER_SETDISPLAY = 1;
+    private static final int HANDLER_RELEASE = 2;
+    private static final int HANDLER_RELEASE_SURFACE = 3;
+    private static final int BUFFER_TIME_OUT_ERROR = -192;//外部超时错误码
+    private Context context;
+    private MediaHandler mMediaHandler;
+    private Handler mainThreadHandler;
+    private WeakReference<MediaPlayerListener> listener;
+    private WeakReference<MediaPlayerListener> lastListener;
+    private IPlayerInitSuccessListener mPlayerInitSuccessListener;
 
     /**
      * 配置ijk option
      */
-    protected List<VideoOptionModel> optionModelList;
+    private List<VideoOptionModel> optionModelList;
 
     /**
      * 播放的tag，防止错位置，因为普通的url也可能重复
@@ -72,12 +60,12 @@ public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListene
     /**
      * 播放内核管理
      */
-    protected IPlayerManager playerManager;
+    private IPlayerManager playerManager;
 
     /**
      * 缓存管理
      */
-    protected ICacheManager cacheManager;
+    private ICacheManager cacheManager;
 
     /**
      * 当前播放的视频宽的高
@@ -533,15 +521,6 @@ public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListene
     @Override
     public int getRotateInfoFlag() {
         return IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED;
-    }
-
-
-    @Override
-    public boolean isSurfaceSupportLockCanvas() {
-        if (playerManager != null) {
-            return playerManager.isSurfaceSupportLockCanvas();
-        }
-        return false;
     }
 
     protected void sendMessage(Message message) {
