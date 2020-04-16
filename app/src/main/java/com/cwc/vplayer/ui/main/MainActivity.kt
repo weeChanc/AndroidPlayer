@@ -23,8 +23,14 @@ class MainActivity : AbsActivity<MainViewModel>() {
         }
         Log.e("cwc", mViewModel.hashCode().toString())
         mViewModel.displayFragment.observe(this) {
-            supportFragmentManager.beginTransaction().addToBackStack(null)
-                .replace(R.id.fragment_container, it).commit()
+            if (it is CategoryFragment) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, it).commit()
+            } else {
+                supportFragmentManager.beginTransaction().addToBackStack(null)
+                    .replace(R.id.fragment_container, it).commit()
+            }
+
         }
     }
 

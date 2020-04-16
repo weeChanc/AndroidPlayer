@@ -933,7 +933,7 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
     /**
      * 根据状态判断是否播放中
      */
-    public boolean isInPlayingState() {
+    public boolean isInPlayngState() {
         return (mCurrentState >= 0 && mCurrentState != CURRENT_STATE_NORMAL
                 && mCurrentState != CURRENT_STATE_AUTO_COMPLETE && mCurrentState != CURRENT_STATE_ERROR);
     }

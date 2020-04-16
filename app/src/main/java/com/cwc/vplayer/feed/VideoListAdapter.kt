@@ -19,6 +19,7 @@ import com.cwc.vplayer.entity.VideoFile
 import com.cwc.vplayer.view.display.StandardVideoPlayer
 import com.drakeet.multitype.ItemViewBinder
 import com.drakeet.multitype.MultiTypeAdapter
+import com.ss.android.buzz.feed.live.AutoPreviewCoordinator
 
 
 class VideoListAdapter : MultiTypeAdapter() {
@@ -30,7 +31,7 @@ class VideoListAdapter : MultiTypeAdapter() {
 
 class VideoFileBinder : ItemViewBinder<VideoFile, VideoFileBinder.ViewHolder>() {
 
-    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(val view: FeedVideoCard) : RecyclerView.ViewHolder(view) {
         val videoView = view.findViewById<StandardPreviewPlayer>(R.id.video_view)
         val cover = view.findViewById<ImageView>(R.id.video_cover)
         val title = view.findViewById<TextView>(R.id.video_title)
@@ -47,13 +48,24 @@ class VideoFileBinder : ItemViewBinder<VideoFile, VideoFileBinder.ViewHolder>() 
         Glide.with(holder.view).load(item.path).into(holder.cover)
         holder.title.text = item.path
 
-        if(item.isPreviewing){
+        if (item.isPreviewing) {
             holder.videoView.visibility = View.VISIBLE
-        }else{
+        } else {
             holder.videoView.visibility = View.GONE
         }
 
         holder.cover.setOnClickListener {
+            if (!holder.videoView.isInPlayingState) {
+                AutoPreviewCoordinator.pause()
+                holder.view.startPreview(item)
+                (adapter.items.getOrNull(AutoPreviewCoordinator.lastPreviewPosition) as? VideoFile)?.isPreviewing =
+                    false
+                AutoPreviewCoordinator.lastPreViewItemView = holder.view
+                AutoPreviewCoordinator.lastPreviewPosition = holder.adapterPosition
+            }
+            holder.videoView.previewMode = 0
+            holder.videoView.startWindowFullscreen(holder.itemView.context, false, false)
+
         }
     }
 

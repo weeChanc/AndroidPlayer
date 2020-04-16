@@ -46,14 +46,17 @@ class VideoListFragment : AbsFragment<VideoListViewModel>() {
                 File(dir).listFiles().map { VideoFile.createFromFile(it) }.filterNotNull()
             adapter.notifyDataSetChanged()
         }
-        val autoPreview = AutoPreviewCoordinator()
+        val autoPreview = AutoPreviewCoordinator
 
         feed_recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if(newState == RecyclerView.SCROLL_STATE_IDLE){
-                    autoPreview.handleLiveAutoPreview(feed_recycler, this@VideoListFragment.activity!!)
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    autoPreview.handleLiveAutoPreview(
+                        feed_recycler,
+                        this@VideoListFragment.activity!!
+                    )
                 }
             }
         })

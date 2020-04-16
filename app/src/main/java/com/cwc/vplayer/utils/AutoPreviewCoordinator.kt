@@ -11,10 +11,10 @@ import com.cwc.vplayer.feed.VideoFileBinder
 import com.cwc.vplayer.feed.VideoListAdapter
 
 
-class AutoPreviewCoordinator {
+object AutoPreviewCoordinator {
 
-    private var lastPreviewPosition: Int = -1
-    private var lastPreViewItemView: FeedVideoCard? = null
+    var lastPreviewPosition: Int = -1
+    var lastPreViewItemView: FeedVideoCard? = null
 
     fun handleLiveAutoPreview(recyclerView: RecyclerView, activity: Activity) {
         if (recyclerView.layoutManager is LinearLayoutManager) {
@@ -22,9 +22,9 @@ class AutoPreviewCoordinator {
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
             var startNewPreview = false
-            val mid = (firstVisibleItemPosition + lastVisibleItemPosition) / 2
+            val mid = Math.round((firstVisibleItemPosition + lastVisibleItemPosition) / 2.0).toInt()
             val searchPos = arrayOf(
-                (mid), mid - 1, mid + 1
+                firstVisibleItemPosition + 1, firstVisibleItemPosition
             )
 
 
@@ -46,19 +46,20 @@ class AutoPreviewCoordinator {
 
                         startNewPreview = true
                         cursorItemView.startPreview(
-                            activity,
                             item
                         )
                         selectCursor = cursorPosition
                         selectItemView = cursorItemView
                         break
+                    } else {
+                        return
                     }
                 }
             }
 
             if (startNewPreview) {
                 lastPreViewItemView?.stopPreview()
-                if(lastPreviewPosition != -1){
+                if (lastPreviewPosition != -1) {
                     ((recyclerView.adapter as? VideoListAdapter)?.items?.get(lastPreviewPosition) as? VideoFile)?.isPreviewing =
                         false
                 }
@@ -68,16 +69,15 @@ class AutoPreviewCoordinator {
         }
     }
 
-    fun pause(recyclerView: RecyclerView) {
-        (recyclerView.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
-            layoutManager.findViewByPosition(lastPreviewPosition)
-                ?.let { itemView ->
-                    (itemView as? FeedVideoCard)?.stopPreview()
-                }
-        }
+    fun pause() {
+        lastPreViewItemView?.stopPreview()
     }
 
     fun resume(recyclerView: RecyclerView, activity: Activity) {
         handleLiveAutoPreview(recyclerView, activity)
+    }
+
+    fun clear() {
+        lastPreViewItemView = null
     }
 }

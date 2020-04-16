@@ -33,7 +33,7 @@ class FeedVideoCard @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.video_card,this,true)
     }
 
-    fun startPreview(activity: Activity, item: VideoFile) {
+    fun startPreview(item: VideoFile) {
         //设置全屏按键功能
         item.isPreviewing = true
         videoView.visibility = View.VISIBLE
@@ -62,6 +62,7 @@ class FeedVideoCard @JvmOverloads constructor(
                 override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
                     super.onQuitFullscreen(url, *objects)
                     VideoManager.instance().setNeedMute(true);
+                    videoView.previewMode = 1;
                 }
 
                 override fun onEnterFullscreen(url: String?, vararg objects: Any?) {
