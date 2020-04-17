@@ -9,7 +9,6 @@ import com.cwc.vplayer.R
 import com.cwc.vplayer.entity.VideoCategory
 import com.drakeet.multitype.ItemViewBinder
 import com.drakeet.multitype.MultiTypeAdapter
-import kotlinx.android.synthetic.main.video_category.view.*
 
 class CategoryAdapter : MultiTypeAdapter() {
 

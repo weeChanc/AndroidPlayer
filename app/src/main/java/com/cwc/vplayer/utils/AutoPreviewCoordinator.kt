@@ -1,8 +1,6 @@
 package com.ss.android.buzz.feed.live
 
 import android.app.Activity
-import android.util.Log
-import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cwc.vplayer.entity.VideoFile

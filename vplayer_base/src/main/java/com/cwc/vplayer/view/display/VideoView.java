@@ -281,19 +281,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
         try {
             View.inflate(context, getLayoutId(), this);
         } catch (InflateException e) {
-            if (e.toString().contains("ImageCover")) {
-                Debuger.printfError("********************\n" +
-                        "*****   注意   *****" +
-                        "********************\n" +
-                        "*该版本需要清除布局文件中的ImageCover\n" +
-                        "****  Attention  ***\n" +
-                        "*Please remove ImageCover from Layout in this Version\n" +
-                        "********************\n");
-                e.printStackTrace();
-                throw new InflateException("该版本需要清除布局文件中的ImageCover，please remove ImageCover from your layout");
-            } else {
-                e.printStackTrace();
-            }
         }
     }
 

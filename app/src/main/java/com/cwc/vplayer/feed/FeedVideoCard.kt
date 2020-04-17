@@ -1,6 +1,5 @@
 package com.cwc.vplayer.feed
 
-import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -8,7 +7,6 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import com.cwc.vplayer.R
 import com.cwc.vplayer.controller.SimpleVideoAllCallBack
 import com.cwc.vplayer.controller.VideoManager
@@ -47,7 +45,11 @@ class FeedVideoCard @JvmOverloads constructor(
         videoView.hideAllWidget()
         VideoOptionBuilder()
             .setIsTouchWiget(false)
-            .setUrl("file://" + item.path)
+            .apply {
+                if(!item.path.startsWith("http://")){
+                    setUrl("file://" + item.path)
+                }
+            }
             .setVideoTitle(item.title)
             .setCacheWithPlay(false)
             .setRotateViewAuto(true)
