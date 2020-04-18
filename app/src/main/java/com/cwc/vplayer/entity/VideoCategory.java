@@ -1,5 +1,6 @@
 package com.cwc.vplayer.entity;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -79,7 +80,7 @@ public class VideoCategory implements Comparable<VideoCategory> {
     @Override
     public boolean equals(@Nullable Object obj) {
         if(obj instanceof VideoCategory){
-            return path.equals(obj);
+            return path.equals(((VideoCategory) obj).path);
         }else{
             return false;
         }
@@ -93,5 +94,11 @@ public class VideoCategory implements Comparable<VideoCategory> {
     @Override
     public int compareTo(VideoCategory o) {
        return path.compareTo(o.path);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "VideoCategory: path" + path;
     }
 }

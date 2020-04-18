@@ -112,7 +112,6 @@ public class VideoHelper {
         mVideoPlayer = player;
         this.mContext = context;
         this.mWindowViewContainer = (ViewGroup) (CommonUtil.scanForActivity(context)).findViewById(Window.ID_ANDROID_CONTENT);
-
     }
 
     /**

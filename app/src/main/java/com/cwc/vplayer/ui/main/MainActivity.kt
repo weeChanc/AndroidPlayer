@@ -1,11 +1,14 @@
 package com.cwc.vplayer.ui.main
 
+import android.Manifest
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.cwc.vplayer.R
 import com.cwc.vplayer.base.AbsActivity
-import com.cwc.vplayer.base.utils.observe
+import com.cwc.vplayer.utils.observe
 import com.cwc.vplayer.controller.VideoManager
 import com.cwc.vplayer.ui.category.CategoryFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -17,6 +20,7 @@ class MainActivity : AbsActivity<MainViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),1)
         mViewModel.displayFragment.value = CategoryFragment()
         mViewModel.mainTitle.observe(this) { title: String ->
             main_toolbar.title = title

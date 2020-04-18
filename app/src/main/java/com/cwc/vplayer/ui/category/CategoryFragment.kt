@@ -2,26 +2,23 @@ package com.cwc.vplayer.ui.category
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.files.FileFilter
-import com.afollestad.materialdialogs.files.fileChooser
 import com.afollestad.materialdialogs.files.folderChooser
 import com.blankj.utilcode.util.ToastUtils
-import com.blankj.utilcode.util.Utils
 import com.cwc.vplayer.R
 import com.cwc.vplayer.base.AbsFragment
-import com.cwc.vplayer.base.utils.observe
+import com.cwc.vplayer.utils.observe
 import com.cwc.vplayer.entity.VideoCategory
 import com.cwc.vplayer.entity.db.AppDataBase
-import com.cwc.vplayer.feed.VideoListFragment
+import com.cwc.vplayer.ui.feed.VideoListFragment
+import com.cwc.vplayer.ui.history.HisotryItem
+import com.cwc.vplayer.ui.history.HistoryItemBinder
 import com.cwc.vplayer.ui.main.MainViewModel
-import com.leon.lfilepickerlibrary.LFilePicker
 import kotlinx.android.synthetic.main.fragment_category.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -54,7 +51,15 @@ class CategoryFragment : AbsFragment<CategoryViewModel>() {
         super.onViewCreated(view, savedInstanceState)
         val mainViewModel = ViewModelProvider(activity!!).get(MainViewModel::class.java);
         category_recyclerview.adapter = adapter
-        category_recyclerview.layoutManager = GridLayoutManager(context, 3)
+        category_recyclerview.layoutManager = GridLayoutManager(context, 3).apply {
+            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    if(position == 0 || position == 1) return 3
+                    return 1
+                }
+
+            }
+        }
 
         add_btn.setOnClickListener {
             MaterialDialog(context!!).show {
@@ -94,13 +99,27 @@ class CategoryFragment : AbsFragment<CategoryViewModel>() {
                 }
         })
 
+        adapter.register(String::class.java,CategoryTitleBinder())
+
+        adapter.register(HisotryItem::class.java,
+            HistoryItemBinder()
+        )
+
         mainViewModel.mainTitle.value = "文件夹"
         mainViewModel.categories.observe(this) {
             mViewModel.categoryList.value = it
         }
 
         mViewModel.categoryList.observe(this) {
-            adapter.items = it
+            val displayItem = mutableListOf<Any>();
+            val historyVideo = mainViewModel.videos?.value?.filter { it.lastPlayTimeStamp != 0L }?: emptyList();
+            val historyItem =
+                HisotryItem(historyVideo)
+            displayItem.add(historyItem)
+            displayItem.add("Category")
+            displayItem.addAll(it)
+
+            adapter.items = displayItem
             adapter.notifyDataSetChanged()
         }
     }

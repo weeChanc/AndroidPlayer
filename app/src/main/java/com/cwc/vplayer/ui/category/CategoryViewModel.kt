@@ -7,8 +7,5 @@ import com.cwc.vplayer.entity.VideoCategory
 
 class CategoryViewModel(app: Application) : AndroidViewModel(app) {
     val categoryList = MutableLiveData<List<VideoCategory>>()
-
-
-
 }
 

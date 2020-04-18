@@ -1,4 +1,4 @@
-package com.cwc.vplayer.feed
+package com.cwc.vplayer.ui.feed
 
 import android.content.Context
 import android.util.AttributeSet
@@ -46,8 +46,10 @@ class FeedVideoCard @JvmOverloads constructor(
         VideoOptionBuilder()
             .setIsTouchWiget(false)
             .apply {
-                if(!item.path.startsWith("http://")){
+                if(item.path.startsWith("/")){
                     setUrl("file://" + item.path)
+                }else{
+                    setUrl(item.path)
                 }
             }
             .setVideoTitle(item.title)

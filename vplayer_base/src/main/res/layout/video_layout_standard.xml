@@ -121,7 +121,7 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <com.cwc.vplayer.view.end.ENDownloadView
+        <com.cwc.vplayer.view.widget.ENDownloadView
             android:id="@+id/loading"
             android:layout_width="28dp"
             android:layout_height="28dp"
@@ -129,7 +129,7 @@
             android:layout_centerVertical="true"
             android:visibility="invisible" />
 
-        <com.cwc.vplayer.view.end.ENPlayView
+        <com.cwc.vplayer.view.widget.ENPlayView
             android:id="@+id/start"
             android:layout_width="60dp"
             android:layout_height="60dp"

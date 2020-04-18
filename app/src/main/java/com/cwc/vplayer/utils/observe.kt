@@ -1,4 +1,4 @@
-package com.cwc.vplayer.base.utils
+package com.cwc.vplayer.utils
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData

@@ -1,4 +1,4 @@
-package com.cwc.vplayer.feed
+package com.cwc.vplayer.ui.feed
 
 //import com.cwc.vplayer.utils.MediaRepository
 import android.Manifest
@@ -11,15 +11,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
+import com.afollestad.materialdialogs.list.listItems
 import com.blankj.utilcode.util.ToastUtils
 import com.cwc.vplayer.R
 import com.cwc.vplayer.base.AbsFragment
-import com.cwc.vplayer.base.utils.observe
+import com.cwc.vplayer.utils.observe
 import com.cwc.vplayer.controller.VideoManager
 import com.cwc.vplayer.entity.VideoFile
+import com.cwc.vplayer.entity.db.AppDataBase
 import com.cwc.vplayer.ui.main.MainViewModel
+import com.cwc.vplayer.utils.FileUtils
 import com.ss.android.buzz.feed.live.AutoPreviewCoordinator
 import kotlinx.android.synthetic.main.activity_feed_main.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class VideoListFragment : AbsFragment<VideoListViewModel>() {
@@ -41,15 +47,40 @@ class VideoListFragment : AbsFragment<VideoListViewModel>() {
         requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 0)
         val mainViewModel = ViewModelProvider(activity!!).get(MainViewModel::class.java)
         val adapter = VideoListAdapter()
+        adapter.register(VideoFile::class.java, VideoFileBinder { videoFile ->
+            MaterialDialog(context!!).show {
+                listItems(items = arrayListOf("删除", "重命名"), selection = { dialog, index, text ->
+                    when (index) {
+                        0 -> {
+                            mainViewModel.deleteVideoFile(videoFile)
+                            ToastUtils.showShort("删除成功")
+                        }
+
+                        1 -> {
+                            MaterialDialog(context).show {
+                                input(hint = "请输入新的名字") { materialDialog, charSequence ->
+                                    if (mainViewModel.updateVideo(videoFile)) {
+                                        ToastUtils.showShort("修改成功")
+                                    }else{
+                                        ToastUtils.showShort("修改失败")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+        })
+        adapter.register(String::class.java, FeedCategoryBinder())
         feed_recycler.adapter = adapter
         feed_recycler.layoutManager = LinearLayoutManager(context)
         val dir: String? = arguments?.getString(DATA_DIR)
         mainViewModel.mainTitle.value = File(dir).name
-        mViewModel.init(mainViewModel,dir,this)
+        mViewModel.init(mainViewModel, dir, this)
         val autoPreview = AutoPreviewCoordinator
 
-        mViewModel.videoFiles.observe(this){
-            adapter.items =it
+        mViewModel.videoFiles.observe(this) {
+            adapter.items = it
             adapter.notifyDataSetChanged()
         }
 
@@ -68,14 +99,11 @@ class VideoListFragment : AbsFragment<VideoListViewModel>() {
         add_btn.setOnClickListener {
             MaterialDialog(context!!).show {
                 var input = ""
-                input(hint = "请输入URL"){
-                    dialog,text->
+                input(hint = "请输入URL") { dialog, text ->
                     input = text.toString()
                 }
                 positiveButton(text= "添加",click = {
-                    mainViewModel.videos.value = mainViewModel.videos.value?.toMutableList()?.apply {
-                        add(VideoFile(input,dir,input,0,""))
-                    }
+                    mainViewModel.addVideoFile(VideoFile(input,dir,input,0,0,System.currentTimeMillis()))
                 })
             }
         }

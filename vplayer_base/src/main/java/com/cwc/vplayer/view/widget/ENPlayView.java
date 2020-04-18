@@ -1,4 +1,4 @@
-package com.cwc.vplayer.view.end;
+package com.cwc.vplayer.view.widget;
 
 import android.animation.ValueAnimator;
 import android.content.Context;

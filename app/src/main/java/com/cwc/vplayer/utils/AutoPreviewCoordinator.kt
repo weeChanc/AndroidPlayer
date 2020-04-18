@@ -4,9 +4,9 @@ import android.app.Activity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cwc.vplayer.entity.VideoFile
-import com.cwc.vplayer.feed.FeedVideoCard
-import com.cwc.vplayer.feed.VideoFileBinder
-import com.cwc.vplayer.feed.VideoListAdapter
+import com.cwc.vplayer.ui.feed.FeedVideoCard
+import com.cwc.vplayer.ui.feed.VideoFileBinder
+import com.cwc.vplayer.ui.feed.VideoListAdapter
 
 
 object AutoPreviewCoordinator {
@@ -58,7 +58,7 @@ object AutoPreviewCoordinator {
             if (startNewPreview) {
                 lastPreViewItemView?.stopPreview()
                 if (lastPreviewPosition != -1) {
-                    ((recyclerView.adapter as? VideoListAdapter)?.items?.get(lastPreviewPosition) as? VideoFile)?.isPreviewing =
+                    ((recyclerView.adapter as? VideoListAdapter)?.items?.getOrNull(lastPreviewPosition) as? VideoFile)?.isPreviewing =
                         false
                 }
                 lastPreViewItemView = selectItemView

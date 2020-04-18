@@ -1,12 +1,10 @@
-package com.cwc.vplayer.feed
+package com.cwc.vplayer.ui.feed
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.TextureView
 import android.view.View
 import com.cwc.vplayer.R
 import com.cwc.vplayer.view.display.StandardVideoPlayer
-import com.cwc.vplayer.view.render.RenderView
 
 class StandardPreviewPlayer(context: Context, attributeSet: AttributeSet?) :
     StandardVideoPlayer(context, attributeSet) {

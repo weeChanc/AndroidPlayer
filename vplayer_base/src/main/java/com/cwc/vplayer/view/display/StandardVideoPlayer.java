@@ -19,8 +19,8 @@ import android.widget.TextView;
 import com.cwc.vplayer.R;
 import com.cwc.vplayer.utils.Debuger;
 import com.cwc.vplayer.utils.NetworkUtils;
-import com.cwc.vplayer.view.end.ENDownloadView;
-import com.cwc.vplayer.view.end.ENPlayView;
+import com.cwc.vplayer.view.widget.ENDownloadView;
+import com.cwc.vplayer.view.widget.ENPlayView;
 import com.cwc.vplayer.view.render.listener.VideoShotListener;
 import com.cwc.vplayer.view.render.listener.VideoShotSaveListener;
 

@@ -1,13 +1,12 @@
-package com.cwc.vplayer.feed
+package com.cwc.vplayer.ui.feed
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
-import com.cwc.vplayer.base.utils.observe
+import com.cwc.vplayer.utils.observe
 import com.cwc.vplayer.entity.VideoFile
 import com.cwc.vplayer.ui.main.MainViewModel
-import java.io.File
 
 class VideoListViewModel(app: Application) : AndroidViewModel(app) {
     val videoFiles = MutableLiveData<List<VideoFile>>()

@@ -20,7 +20,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     val mainTitle = MutableLiveData<String>()
     val displayFragment = MutableLiveData<Fragment>()
     val videos = MutableLiveData<List<VideoFile>>()
-    val categories =  MutableLiveData<List<VideoCategory>>()
+    val categories = MutableLiveData<List<VideoCategory>>()
 
     private val mContentResolver: ContentResolver = App.app.contentResolver
     private val formatter = SimpleDateFormat.getDateInstance()
@@ -44,15 +44,87 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             }
             videos.postValue(contentProviderData)
             categories.postValue(contentProviderCategories)
-            val combineData  = contentProviderData.toHashSet().apply { addAll(AppDataBase.INSTANCE.appDao().loadAllVideoFile().toMutableList()) }.toMutableList().sorted()
-            val combineCategories =contentProviderCategories.toHashSet().apply { addAll(AppDataBase.INSTANCE.appDao().loadAllCategory().toMutableList()) }.toMutableList().sorted()
-            categories.postValue(combineCategories)
+
+            AppDataBase.INSTANCE.appDao().insertAllCategory(contentProviderCategories)
+
+
+            // 删除在文件系统中不存在的文件
+            var dbVideos = AppDataBase.INSTANCE.appDao().loadAllVideoFile()
+            AppDataBase.INSTANCE.appDao()
+                .deleteVideoFiles(dbVideos.filter { !it.path.startsWith("/") && !File(it.path).exists() })
+
+            dbVideos = dbVideos.filter { !it.path.startsWith("/") || File(it.path).exists() }
+            // find exists
+            val combineData = dbVideos.toHashSet().apply { addAll(contentProviderData) }.toMutableList().sorted()
+            AppDataBase.INSTANCE.appDao().insertAllVideoFile(combineData)
+            val combineCategories = contentProviderCategories.toHashSet()
+                .apply { addAll(AppDataBase.INSTANCE.appDao().loadAllCategory().toMutableList()) }
+                .toMutableList().sorted()
+
+            //test
+            val set = contentProviderCategories.toHashSet()
+            set.addAll(AppDataBase.INSTANCE.appDao().loadAllCategory().toMutableList())
+
             videos.postValue(combineData)
+            categories.postValue(combineCategories)
+
         }
     }
 
-    private fun scanVideoFromFileSystem() {
+    fun updateVideo(videoFile: VideoFile): Boolean {
 
+        val cur = videos.value
+        if (cur != null) {
+            cur.get(cur.indexOf(videoFile)).let {
+                if (File(it.path).renameTo(File(videoFile.path))) {
+                    it.title = videoFile.title
+                    it.lastPlayTimeStamp = videoFile.lastPlayTimeStamp
+                    it.lastModify = videoFile.lastModify
+                    it.path = videoFile.path
+                    GlobalScope.launch {
+                        AppDataBase.INSTANCE.appDao().updateVideoFile((videoFile))
+                    }
+                    videos.value = cur
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    fun addVideoFile(videoFile: VideoFile) {
+        videos.value = videos.value?.toMutableList()?.apply {
+            add(videoFile)
+        }
+
+        val category = findCategory(videoFile.categoryPath)
+        if (category != null) {
+            category.count = category.count + 1
+        }
+
+        GlobalScope.launch { AppDataBase.INSTANCE.appDao().insertVideoFile(videoFile) }
+
+    }
+
+    fun deleteVideoFile(videoFile: VideoFile) {
+        val cur = videos.value?.toMutableList()
+        if (cur != null) {
+            cur.removeAt(cur.indexOf(videoFile))
+            GlobalScope.launch {
+                AppDataBase.INSTANCE.appDao().deleteVideoFiles(arrayListOf(videoFile))
+                File(videoFile.path).delete()
+            }
+            val category = findCategory(videoFile.categoryPath)
+            if (category != null) {
+                category.count = category.count - 1
+            }
+        }
+        categories.value = categories.value
+        videos.value = cur
+    }
+
+    fun findCategory(categoryId: String): VideoCategory? {
+        return categories.value?.find { it.path.equals(categoryId) }
     }
 
 
@@ -61,8 +133,11 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val cursor = mContentResolver.query(
             MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
             arrayOf(
-                MediaStore.Video.VideoColumns.DATA, MediaStore.Video.VideoColumns.TITLE,
-                MediaStore.Video.VideoColumns.SIZE, MediaStore.Video.VideoColumns._ID
+                MediaStore.Video.VideoColumns.DATA,
+                MediaStore.Video.VideoColumns.TITLE,
+                MediaStore.Video.VideoColumns.SIZE,
+                MediaStore.Video.VideoColumns._ID,
+                MediaStore.Video.VideoColumns.DURATION
             ),
             null, null, MediaStore.Video.VideoColumns.DATE_MODIFIED + "  desc"
         )
@@ -78,12 +153,15 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                         cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.SIZE))
                             ?: "0"
                     )
+                val duration =
+                    cursor.getLong(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION))
                 val info = VideoFile(
                     location,
                     File(location).parentFile.absolutePath,
                     title,
+                    duration.toLong(),
                     initSize,
-                    formatter.format(Date(File(location).lastModified()))
+                    File(location).lastModified()
                 )
                 if (File(location).exists() && initSize > 100) {
                     list.add(info)
