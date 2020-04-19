@@ -3,10 +3,12 @@ package com.ss.android.buzz.feed.live
 import android.app.Activity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.cwc.vplayer.R
 import com.cwc.vplayer.entity.VideoFile
 import com.cwc.vplayer.ui.feed.FeedVideoCard
 import com.cwc.vplayer.ui.feed.VideoFileBinder
 import com.cwc.vplayer.ui.feed.VideoListAdapter
+import kotlinx.android.synthetic.main.feed_video_card.view.*
 
 
 object AutoPreviewCoordinator {
@@ -30,7 +32,7 @@ object AutoPreviewCoordinator {
             var selectItemView: FeedVideoCard? = null;
             for (cursorPosition in searchPos) {
                 val cursorItemView =
-                    layoutManager.findViewByPosition(cursorPosition) as? FeedVideoCard
+                    layoutManager.findViewByPosition(cursorPosition)
                         ?: continue
                 val cursorViewHolder =
                     (recyclerView).getChildViewHolder(cursorItemView) as? VideoFileBinder.ViewHolder
@@ -43,11 +45,12 @@ object AutoPreviewCoordinator {
                                 ?: break
 
                         startNewPreview = true
-                        cursorItemView.startPreview(
+                        val feedCard =( cursorItemView.findViewById(R.id.feed_video_card) as? FeedVideoCard)
+                        feedCard?.startPreview(
                             item
                         )
                         selectCursor = cursorPosition
-                        selectItemView = cursorItemView
+                        selectItemView = feedCard
                         break
                     } else {
                         return

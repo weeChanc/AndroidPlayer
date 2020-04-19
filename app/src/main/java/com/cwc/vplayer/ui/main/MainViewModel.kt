@@ -2,7 +2,12 @@ package com.cwc.vplayer.ui.main
 
 import android.app.Application
 import android.content.ContentResolver
+import android.database.ContentObserver
+import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -27,6 +32,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
 
     init {
+        init()
+    }
+
+    fun init() {
         GlobalScope.launch {
             val contentProviderData = scanVideoFromContentProvider()
             val contentProviderCategories = transfromVideoFileToCategory(contentProviderData).map {
@@ -55,7 +64,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
             dbVideos = dbVideos.filter { !it.path.startsWith("/") || File(it.path).exists() }
             // find exists
-            val combineData = dbVideos.toHashSet().apply { addAll(contentProviderData) }.toMutableList().sorted()
+            val combineData =
+                dbVideos.toHashSet().apply { addAll(contentProviderData) }.toMutableList().sorted()
             AppDataBase.INSTANCE.appDao().insertAllVideoFile(combineData)
             val combineCategories = contentProviderCategories.toHashSet()
                 .apply { addAll(AppDataBase.INSTANCE.appDao().loadAllCategory().toMutableList()) }
@@ -67,8 +77,55 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
             videos.postValue(combineData)
             categories.postValue(combineCategories)
-
         }
+
+        mContentResolver.registerContentObserver(
+            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+            true,
+            object :
+                ContentObserver(Handler(Looper.getMainLooper())) {
+                override fun onChange(selfChange: Boolean, uri: Uri?) {
+                    super.onChange(selfChange, uri)
+                    if (uri == null) return
+                    val cursor = mContentResolver.query(
+                        MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                        arrayOf(
+                            MediaStore.Video.VideoColumns.DATA,
+                            MediaStore.Video.VideoColumns.TITLE,
+                            MediaStore.Video.VideoColumns.SIZE,
+                            MediaStore.Video.VideoColumns._ID,
+                            MediaStore.Video.VideoColumns.DURATION
+                        ),
+                        null, null, MediaStore.Video.VideoColumns.DATE_MODIFIED + "  desc"
+                    )
+                    if (cursor != null && cursor.moveToFirst() && cursor.count > 0) {
+                        val location =
+                            cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA))
+                        val title =
+                            cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.TITLE))
+                        val initSize =
+                            java.lang.Long.parseLong(
+                                cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.SIZE))
+                                    ?: "0"
+                            )
+                        val duration =
+                            cursor.getLong(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION))
+                        val info = VideoFile(
+                            location,
+                            File(location).parentFile.absolutePath,
+                            title,
+                            duration.toLong(),
+                            initSize,
+                            File(location).lastModified()
+                        )
+                        Log.e("weechan", info.toString())
+                        cursor.close()
+                        addVideoFile(info)
+                    }
+
+                    Log.e("weechan", "$selfChange  $uri")
+                }
+            })
     }
 
     fun updateVideo(videoFile: VideoFile): Boolean {
@@ -93,6 +150,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun addVideoFile(videoFile: VideoFile) {
+        if (videos.value?.contains(videoFile) == true) {
+            return
+        }
+
         videos.value = videos.value?.toMutableList()?.apply {
             add(videoFile)
         }

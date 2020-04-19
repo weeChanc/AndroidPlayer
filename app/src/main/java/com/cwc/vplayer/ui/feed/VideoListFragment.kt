@@ -80,7 +80,12 @@ class VideoListFragment : AbsFragment<VideoListViewModel>() {
         val autoPreview = AutoPreviewCoordinator
 
         mViewModel.videoFiles.observe(this) {
-            adapter.items = it
+            adapter.items = it.sortedWith(object :Comparator<VideoFile>{
+                override fun compare(o1: VideoFile, o2: VideoFile): Int {
+                    return -o1?.lastModify?.compareTo(o2?.lastModify)
+                }
+
+            })
             adapter.notifyDataSetChanged()
         }
 

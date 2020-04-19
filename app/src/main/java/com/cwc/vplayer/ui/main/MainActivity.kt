@@ -2,6 +2,7 @@ package com.cwc.vplayer.ui.main
 
 import android.Manifest
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.core.app.ActivityCompat
@@ -42,6 +43,14 @@ class MainActivity : AbsActivity<MainViewModel>() {
         return ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        mViewModel.init()
+    }
 
     override fun onBackPressed() {
         if (VideoManager.backFromWindowFull(this)) {
