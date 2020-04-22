@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class VideoListFragment : AbsFragment<VideoListViewModel>() {
+open class VideoListFragment<VM : VideoListViewModel> : AbsFragment<VM>() {
 
     companion object {
         const val DATA_DIR = "DATA_DIR"
@@ -49,38 +49,47 @@ class VideoListFragment : AbsFragment<VideoListViewModel>() {
         val adapter = VideoListAdapter()
         adapter.register(VideoFile::class.java, VideoFileBinder { videoFile ->
             MaterialDialog(context!!).show {
-                listItems(items = arrayListOf("删除", "重命名"), selection = { dialog, index, text ->
-                    when (index) {
-                        0 -> {
-                            mainViewModel.deleteVideoFile(videoFile)
-                            ToastUtils.showShort("删除成功")
-                        }
+                listItems(
+                    items = arrayListOf("删除", "重命名", if (videoFile.isLike) "取消收藏 " else "收藏"),
+                    selection = { dialog, index, text ->
+                        when (index) {
+                            0 -> {
+                                mainViewModel.deleteVideoFile(videoFile)
+                                ToastUtils.showShort("删除成功")
+                            }
 
-                        1 -> {
-                            MaterialDialog(context).show {
-                                input(hint = "请输入新的名字") { materialDialog, charSequence ->
-                                    if (mainViewModel.updateVideo(videoFile)) {
-                                        ToastUtils.showShort("修改成功")
-                                    }else{
-                                        ToastUtils.showShort("修改失败")
+                            1 -> {
+                                MaterialDialog(context).show {
+                                    input(hint = "请输入新的名字") { materialDialog, charSequence ->
+                                        if (mainViewModel.updateVideo(videoFile)) {
+                                            ToastUtils.showShort("修改成功")
+                                        } else {
+                                            ToastUtils.showShort("修改失败")
+                                        }
                                     }
                                 }
                             }
+                            2 -> {
+                                mainViewModel.updateVideo(videoFile.apply {
+                                    this.isLike = !this.isLike
+                                })
+                            }
                         }
-                    }
-                })
+                    })
             }
         })
         adapter.register(String::class.java, FeedCategoryBinder())
         feed_recycler.adapter = adapter
         feed_recycler.layoutManager = LinearLayoutManager(context)
         val dir: String? = arguments?.getString(DATA_DIR)
-        mainViewModel.mainTitle.value = File(dir).name
+        if(dir != null){
+            mainViewModel.mainTitle.value = File(dir).name
+        }
         mViewModel.init(mainViewModel, dir, this)
         val autoPreview = AutoPreviewCoordinator
 
         mViewModel.videoFiles.observe(this) {
-            adapter.items = it.sortedWith(object :Comparator<VideoFile>{
+            adapter.items = it.sortedWith(object : Comparator<VideoFile> {
                 override fun compare(o1: VideoFile, o2: VideoFile): Int {
                     return -o1?.lastModify?.compareTo(o2?.lastModify)
                 }
@@ -107,8 +116,17 @@ class VideoListFragment : AbsFragment<VideoListViewModel>() {
                 input(hint = "请输入URL") { dialog, text ->
                     input = text.toString()
                 }
-                positiveButton(text= "添加",click = {
-                    mainViewModel.addVideoFile(VideoFile(input,dir,input,0,0,System.currentTimeMillis()))
+                positiveButton(text = "添加", click = {
+                    mainViewModel.addVideoFile(
+                        VideoFile(
+                            input,
+                            dir,
+                            input,
+                            0,
+                            0,
+                            System.currentTimeMillis()
+                        )
+                    )
                 })
             }
         }
@@ -130,7 +148,7 @@ class VideoListFragment : AbsFragment<VideoListViewModel>() {
         VideoManager.releaseAllVideos()
     }
 
-    override fun createViewModel(): VideoListViewModel {
-        return ViewModelProvider(this).get(VideoListViewModel::class.java)
+    override fun createViewModel(): VM {
+        return ViewModelProvider(this).get(VideoListViewModel::class.java) as VM
     }
 }

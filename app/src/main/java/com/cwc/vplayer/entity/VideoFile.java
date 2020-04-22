@@ -27,7 +27,7 @@ public class VideoFile implements Comparable<VideoFile> {
     long lastModify;
     long seek = 0;
     long lastPlayTimeStamp = 0;
-
+    boolean like = false;
     //  功能字段
     @Ignore
     boolean isPreviewing;
@@ -54,6 +54,13 @@ public class VideoFile implements Comparable<VideoFile> {
         return path.hashCode();
     }
 
+    public boolean isLike() {
+        return like;
+    }
+
+    public void setLike(boolean like) {
+        this.like = like;
+    }
 
     public VideoFile(@NotNull String path, String categoryPath, String title, long duration, long size, long lastModify) {
         this.path = path;

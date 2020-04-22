@@ -8,10 +8,10 @@ import com.cwc.vplayer.utils.observe
 import com.cwc.vplayer.entity.VideoFile
 import com.cwc.vplayer.ui.main.MainViewModel
 
-class VideoListViewModel(app: Application) : AndroidViewModel(app) {
+open class VideoListViewModel(app: Application) : AndroidViewModel(app) {
     val videoFiles = MutableLiveData<List<VideoFile>>()
 
-    fun init(mainViewModel : MainViewModel,dir : String?,lifecycleOwner: LifecycleOwner){
+    open fun init(mainViewModel : MainViewModel,dir : String?,lifecycleOwner: LifecycleOwner){
         mainViewModel.videos.observe(lifecycleOwner){
             videoFiles.value =  it.filter {
                 it.categoryPath.equals(dir)

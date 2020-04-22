@@ -16,6 +16,7 @@ import com.cwc.vplayer.utils.observe
 import com.cwc.vplayer.entity.VideoCategory
 import com.cwc.vplayer.entity.db.AppDataBase
 import com.cwc.vplayer.ui.feed.VideoListFragment
+import com.cwc.vplayer.ui.feed.VideoListViewModel
 import com.cwc.vplayer.ui.history.HisotryItem
 import com.cwc.vplayer.ui.history.HistoryItemBinder
 import com.cwc.vplayer.ui.main.MainViewModel
@@ -89,7 +90,7 @@ class CategoryFragment : AbsFragment<CategoryViewModel>() {
 
         adapter.register(VideoCategory::class.java, CategoryFileBinder {
             mainViewModel.displayFragment.value =
-                VideoListFragment().apply {
+                VideoListFragment<VideoListViewModel>().apply {
                     arguments = Bundle().apply {
                         putString(
                             VideoListFragment.DATA_DIR,
@@ -98,9 +99,7 @@ class CategoryFragment : AbsFragment<CategoryViewModel>() {
                     }
                 }
         })
-
         adapter.register(String::class.java,CategoryTitleBinder())
-
         adapter.register(HisotryItem::class.java,
             HistoryItemBinder()
         )

@@ -146,6 +146,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 }
             }
         }
+        videos.value = videos.value
         return false
     }
 
