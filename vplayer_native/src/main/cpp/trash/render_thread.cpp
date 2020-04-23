@@ -8,11 +8,11 @@ extern "C" {
 #include <stdio.h>
 #include <libavutil/time.h>
 //编码
-#include "include/libavcodec/avcodec.h"
+#include "libavcodec/avcodec.h"
 //封装格式处理
-#include "include/libavformat/avformat.h"
+#include "libavformat/avformat.h"
 //像素处理
-#include "include/libswscale/swscale.h"
+#include "libswscale/swscale.h"
 //使用这两个 Window 相关的头文件
 // 需要在 CMake 脚本中引入 android 库
 #include <android/native_window_jni.h>

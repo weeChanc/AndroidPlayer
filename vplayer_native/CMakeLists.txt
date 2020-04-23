@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.4.1)
 
-include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/include)
+include_directories(
+        ${CMAKE_SOURCE_DIR}/src/main/cpp/include
+        ${CMAKE_SOURCE_DIR}/src/main/cpp )
 set(jnilibs "${CMAKE_SOURCE_DIR}/src/main/jniLibs")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${jnilibs}/${ANDROID_ABI})
 
@@ -13,8 +15,12 @@ add_library( # Sets the name of the library.
 
         # Provides a relative path to your source file(s).
         src/main/cpp/native-lib.cpp
-        src/main/cpp/player.cpp
-        src/main/cpp/render_thread.cpp)
+        src/main/cpp/log_util.cpp
+        src/main/cpp/opensles.cpp
+        src/main/cpp/easy_player.cpp
+        src/main/cpp/event_callback.cpp
+        src/main/cpp/native_window_renderer.cpp
+        src/main/cpp/native-lib.cpp)
 
 # 添加 FFmpeg 的 8 个函数库和 yuvlib 库
 add_library(avutil SHARED IMPORTED )
@@ -74,6 +80,7 @@ find_library(
 target_link_libraries( native-lib
         ${log-lib}
         ${android-lib}
+        OpenSLES
         avutil
         swresample
         avcodec

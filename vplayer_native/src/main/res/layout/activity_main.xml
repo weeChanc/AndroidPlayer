@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextureView
-        android:id="@+id/texture"
+    <SurfaceView
+        android:id="@+id/video_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </TextureView>
+    </SurfaceView>
 </FrameLayout>
