@@ -1,4 +1,4 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
@@ -17,6 +17,13 @@ android {
     }
 
     buildTypes {
+
+        all{
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -33,9 +40,13 @@ android {
         }
     }
 
+    packagingOptions {
+        pickFirst 'lib/armeabi-v7a/libnative-lib.so'
+    }
+
     sourceSets {
         main {
-            jniLibs.srcDirs = ['libs']
+//            jniLibs.srcDirs = ['libs']
         }
     }
 
