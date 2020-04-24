@@ -6,13 +6,29 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${jnilibs}/${ANDROID_ABI})
 
 
 add_library( # Sets the name of the library.
-        native-lib
+        ffplayer_jni
 
         # Sets the library as a shared library.
         SHARED
-
+        src/main/cpp/adev.h
+        src/main/cpp/adev-android.cpp
+        src/main/cpp/adev-cmn.cpp
+        src/main/cpp/ffplayer.cpp
+        src/main/cpp/ffplayer.h
+        src/main/cpp/ffrender.cpp
+        src/main/cpp/ffrender.h
+        src/main/cpp/pktqueue.cpp
+        src/main/cpp/pktqueue.h
+        src/main/cpp/recorder.cpp
+        src/main/cpp/recorder.h
+        src/main/cpp/vdev.h
+        src/main/cpp/vdev-android.cpp
+        src/main/cpp/vdev-cmn.cpp
+        src/main/cpp/ffplayer_jni.cpp
+        src/main/cpp/ffplayer_jni.h
         # Provides a relative path to your source file(s).
         src/main/cpp/native-lib.cpp
+
         src/main/cpp/player.cpp
         src/main/cpp/render_thread.cpp)
 
@@ -71,7 +87,7 @@ find_library(
 )
 
 
-target_link_libraries( native-lib
+target_link_libraries( ffplayer_jni
         ${log-lib}
         ${android-lib}
         avutil

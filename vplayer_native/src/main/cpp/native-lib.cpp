@@ -246,6 +246,13 @@ Java_com_cwc_vplayer_jni_AVUtils_videoRender(JNIEnv *env, jclass type, jstring i
         return;
     }
 
+
+    LOGI("视频的文件格式：%s", pFormatCtx->iformat->name);
+    LOGI("视频时长：%lld", (pFormatCtx->duration) / (1000 * 1000));
+    LOGI("视频的宽高：%d,%d", pCodecCtx->width, pCodecCtx->height);
+    LOGI("解码器的名称：%s", pCodec->name);
+
+
     //准备读取
     //AVPacket用于存储一帧一帧的压缩数据（H264）
     //缓冲区，开辟空间
@@ -277,7 +284,7 @@ Java_com_cwc_vplayer_jni_AVUtils_videoRender(JNIEnv *env, jclass type, jstring i
 
             //为0说明解码完成，非0正在解码
             if (got_picture) {
-
+                LOGI("解码绘制第%d帧 pts: %f  %d", frame_count,    av_q2d(pCodecCtx->time_base)*packet->pts,pFormatCtx->duration );
                 //lock window
                 //设置缓冲区的属性：宽高、像素格式（需要与Java层的格式一致）
                 ANativeWindow_setBuffersGeometry(pWindow, pCodecCtx->width, pCodecCtx->height,
@@ -303,7 +310,7 @@ Java_com_cwc_vplayer_jni_AVUtils_videoRender(JNIEnv *env, jclass type, jstring i
                 ANativeWindow_unlockAndPost(pWindow);
 
                 frame_count++;
-                LOGI("解码绘制第%d帧", frame_count);
+
             }
         }
 

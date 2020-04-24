@@ -2,6 +2,7 @@ package com.cwc.vplayer.jni;
 
 import android.media.AudioFormat;
 import android.media.AudioManager;
+import android.media.AudioTimestamp;
 import android.media.AudioTrack;
 import android.util.Log;
 import android.view.Surface;
@@ -16,12 +17,13 @@ public class AVUtils {
     private static final String TAG = "AVUtils";
     private static AVCallback AVCallback;
     private static AVCallback sAVCallback;
+
     public static void registerCallback(AVCallback callback) {
         sAVCallback = callback;
     }
 
-    public static void onNativeCallback(){
-        Log.e("GGOOOO","GOOO");
+    public static void onNativeCallback() {
+        Log.e("GGOOOO", "GOOO");
     }
 
     static {
@@ -37,29 +39,34 @@ public class AVUtils {
         System.loadLibrary("c++_shared");
         System.loadLibrary("yuv");
     }
+
     /**
      * 解码视频中的视频压缩数据
-     * @param input_file_path 输入的视频文件路径
+     *
+     * @param input_file_path  输入的视频文件路径
      * @param output_file_path 视频压缩数据解码后输出的 YUV 文件路径
      */
     public static native void videoDecode(String input_file_path, String output_file_path);
 
     /**
      * 显示视频视频解码后像素数据
-     * @param input 输入的视频文件路径
+     *
+     * @param input   输入的视频文件路径
      * @param surface 用于显示视频视频解码后的 RGBA 像素数据
      */
     public static native void videoRender(String input, Surface surface);
 
     /**
      * 解码视频中的音频压缩数据
-     * @param input 输入的视频文件路径
+     *
+     * @param input  输入的视频文件路径
      * @param output 音频压缩数据解码后输出的 PCM 文件路径
      */
     public static native void audioDecode(String input, String output);
 
     /**
      * 播放视频中的音频数据
+     *
      * @param input 输入的视频文件路径
      */
     public static native void audioPlay(String input);
@@ -81,11 +88,33 @@ public class AVUtils {
 
         int bufferSize = AudioTrack.getMinBufferSize(sampleRate, channelConfig, audioFormat);
 
-        AudioTrack audioTrack = new AudioTrack(
+        final AudioTrack audioTrack = new AudioTrack(
                 AudioManager.STREAM_MUSIC,
                 sampleRate, channelConfig,
                 audioFormat,
                 bufferSize, AudioTrack.MODE_STREAM);
+        audioTrack.setPlaybackPositionUpdateListener(new AudioTrack.OnPlaybackPositionUpdateListener() {
+            @Override
+            public void onMarkerReached(AudioTrack track) {
+            }
+
+            @Override
+            public void onPeriodicNotification(AudioTrack track) {
+
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AudioTimestamp timestamp = new AudioTimestamp();
+                while (true) {
+                    audioTrack.getTimestamp(timestamp);
+
+                    Log.e("tag", "time" + timestamp.framePosition + " , " + timestamp.nanoTime + "  " + audioTrack.getPlaybackHeadPosition());
+                }
+            }
+        }).start();
         return audioTrack;
     }
 

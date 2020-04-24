@@ -10,7 +10,7 @@
         android:label="Test"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".jni.MainActivity">
+            android:name="com.rockcarry.ffplayer.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

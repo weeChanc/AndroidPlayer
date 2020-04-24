@@ -1,5 +1,6 @@
 
 #include "thread"
+
 extern "C" {
 #include <libyuv/convert_argb.h>
 #include <jni.h>
@@ -28,13 +29,12 @@ extern "C" {
 #define LOGI(FORMAT, ...) __android_log_print(ANDROID_LOG_INFO,"weechan",FORMAT,##__VA_ARGS__);
 #define LOGE(FORMAT, ...) __android_log_print(ANDROID_LOG_ERROR,"weechan",FORMAT,##__VA_ARGS__);
 
-void startRead(){
+void startRead() {
 
 }
 
 void startReadThread() {
     std::thread thread(&startRead);
+
 }
-
-
 }

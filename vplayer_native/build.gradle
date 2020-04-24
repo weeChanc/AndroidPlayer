@@ -41,7 +41,7 @@ android {
     }
 
     packagingOptions {
-        pickFirst 'lib/armeabi-v7a/libnative-lib.so'
+        pickFirst 'lib/armeabi-v7a/libffplayer_jni.so'
     }
 
     sourceSets {

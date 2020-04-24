@@ -1,6 +1,9 @@
 package com.cwc.vplayer.jni
 
 import android.graphics.SurfaceTexture
+import android.media.AudioFormat
+import android.media.AudioManager
+import android.media.AudioTrack
 import android.os.Bundle
 import android.util.Log
 import android.view.Surface
@@ -52,12 +55,12 @@ class MainActivity : AppCompatActivity() {
                 height: Int
             ) {
 
+
                 thread{
-                    AVUtils.videoRender("file:///storage/emulated/0/Lark/download/IMG_3712.MOV", Surface(surface))
+                    AVUtils.videoRender("file:///storage/emulated/0/DCIM/Camera/55b6f164186c7d8d983d1b7a68557310.mp4", Surface(surface))
                 }
 
             }
-
         }
         Log.e("tag", "finish")
     }
