@@ -271,10 +271,12 @@ Java_com_cwc_vplayer_jni_AVUtils_videoRender(JNIEnv *env, jclass type, jstring i
     //绘制时的缓冲区
     ANativeWindow_Buffer out_buffer;
 
+    int count = 0 ;
     //一帧一帧的读取压缩数据
     while (av_read_frame(pFormatCtx, packet) >= 0) {
         //只要视频压缩数据（根据流的索引位置判断）
         if (packet->stream_index == v_stream_idx) {
+            LOGE("weechan packet %d",count++);
             //7.解码一帧视频压缩数据，得到视频像素数据
             ret = avcodec_decode_video2(pCodecCtx, yuv_frame, &got_picture, packet);
             if (ret < 0) {
