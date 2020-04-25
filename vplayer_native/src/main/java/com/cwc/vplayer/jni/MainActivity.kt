@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
 
 
                 thread{
-                    AVUtils.videoRender("file:///storage/emulated/0/Lark/download/IMG_3712.MOV", Surface(surface))
+                    AVUtils.videoRender("file:///storage/emulated/0/DCIM/Camera/55b6f164186c7d8d983d1b7a68557310.mp4", Surface(surface))
                 }
 
             }

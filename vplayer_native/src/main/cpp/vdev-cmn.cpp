@@ -14,10 +14,6 @@ void* vdev_create(int type, void *surface, int bufnum, int w, int h, int frate)
 {
     VDEV_COMMON_CTXT *c = NULL;
     switch (type) {
-#ifdef WIN32
-    case VDEV_RENDER_TYPE_GDI    : c = (VDEV_COMMON_CTXT*)vdev_gdi_create    (surface, bufnum, w, h, frate); break;
-    case VDEV_RENDER_TYPE_D3D    : c = (VDEV_COMMON_CTXT*)vdev_d3d_create    (surface, bufnum, w, h, frate); break;
-#endif
 #ifdef ANDROID
     case VDEV_RENDER_TYPE_ANDROID: c = (VDEV_COMMON_CTXT*)vdev_android_create(surface, bufnum, w, h, frate); break;
 #endif
@@ -123,19 +119,6 @@ void vdev_refresh_background(void *ctxt)
     VDEV_COMMON_CTXT *c = (VDEV_COMMON_CTXT*)ctxt;
     RECT rtwin, rect1, rect2, rect3, rect4;
     int  x = c->x, y = c->y, w = c->w, h = c->h;
-
-#ifdef WIN32
-    HWND hwnd = (HWND)c->surface;
-    GetClientRect(hwnd, &rtwin);
-    rect1.left = 0;   rect1.top = 0;   rect1.right = rtwin.right; rect1.bottom = y;
-    rect2.left = 0;   rect2.top = y;   rect2.right = x;           rect2.bottom = y+h;
-    rect3.left = x+w; rect3.top = y;   rect3.right = rtwin.right; rect3.bottom = y+h;
-    rect4.left = 0;   rect4.top = y+h; rect4.right = rtwin.right; rect4.bottom = rtwin.bottom;
-    InvalidateRect(hwnd, &rect1, TRUE);
-    InvalidateRect(hwnd, &rect2, TRUE);
-    InvalidateRect(hwnd, &rect3, TRUE);
-    InvalidateRect(hwnd, &rect4, TRUE);
-#endif
 }
 
 void vdev_avsync_and_complete(void *ctxt)

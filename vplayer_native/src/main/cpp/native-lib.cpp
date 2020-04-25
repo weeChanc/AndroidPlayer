@@ -231,7 +231,6 @@ Java_com_cwc_vplayer_jni_AVUtils_videoRender(JNIEnv *env, jclass type, jstring i
 
     //获取视频流中的编解码上下文
     AVCodecContext *pCodecCtx = pFormatCtx->streams[v_stream_idx]->codec;
-
     //根据编解码上下文中的编码 id 查找对应的解码器
     AVCodec *pCodec = avcodec_find_decoder(pCodecCtx->codec_id);
 
@@ -248,7 +247,9 @@ Java_com_cwc_vplayer_jni_AVUtils_videoRender(JNIEnv *env, jclass type, jstring i
 
 
     LOGI("视频的文件格式：%s", pFormatCtx->iformat->name);
-    LOGI("视频时长：%lld", (pFormatCtx->duration) / (1000 * 1000));
+    LOGI("timebase %f", (pFormatCtx->streams[v_stream_idx]->time_base.num + 0.0) /
+                        pFormatCtx->streams[v_stream_idx]->time_base.den)
+    LOGI("视频时长：%lld", (pFormatCtx->duration) / AV_TIME_BASE);
     LOGI("视频的宽高：%d,%d", pCodecCtx->width, pCodecCtx->height);
     LOGI("解码器的名称：%s", pCodec->name);
 
@@ -271,12 +272,12 @@ Java_com_cwc_vplayer_jni_AVUtils_videoRender(JNIEnv *env, jclass type, jstring i
     //绘制时的缓冲区
     ANativeWindow_Buffer out_buffer;
 
-    int count = 0 ;
+    int count = 0;
     //一帧一帧的读取压缩数据
     while (av_read_frame(pFormatCtx, packet) >= 0) {
         //只要视频压缩数据（根据流的索引位置判断）
         if (packet->stream_index == v_stream_idx) {
-            LOGE("weechan packet %d",count++);
+            LOGE("weechan packet %d", count++);
             //7.解码一帧视频压缩数据，得到视频像素数据
             ret = avcodec_decode_video2(pCodecCtx, yuv_frame, &got_picture, packet);
             if (ret < 0) {
@@ -286,7 +287,8 @@ Java_com_cwc_vplayer_jni_AVUtils_videoRender(JNIEnv *env, jclass type, jstring i
 
             //为0说明解码完成，非0正在解码
             if (got_picture) {
-                LOGI("解码绘制第%d帧 pts: %f  %d", frame_count,    av_q2d(pCodecCtx->time_base)*packet->pts,pFormatCtx->duration );
+                LOGI("解码绘制第%d帧 pts: %f %f", frame_count,
+                     av_q2d(pFormatCtx->streams[v_stream_idx]->time_base),av_q2d(pCodecCtx->time_base));
                 //lock window
                 //设置缓冲区的属性：宽高、像素格式（需要与Java层的格式一致）
                 ANativeWindow_setBuffersGeometry(pWindow, pCodecCtx->width, pCodecCtx->height,
@@ -307,12 +309,9 @@ Java_com_cwc_vplayer_jni_AVUtils_videoRender(JNIEnv *env, jclass type, jstring i
                                    yuv_frame->data[1], yuv_frame->linesize[1],
                                    rgb_frame->data[0], rgb_frame->linesize[0],
                                    pCodecCtx->width, pCodecCtx->height);
-
                 //3、unlock window
                 ANativeWindow_unlockAndPost(pWindow);
-
                 frame_count++;
-
             }
         }
 

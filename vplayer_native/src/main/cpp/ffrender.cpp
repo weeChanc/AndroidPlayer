@@ -10,10 +10,6 @@ extern "C" {
 #include "libswscale/swscale.h"
 }
 
-#ifdef WIN32
-#pragma warning(disable:4311)
-#pragma warning(disable:4312)
-#endif
 
 // �ڲ����Ͷ���
 typedef struct
@@ -52,31 +48,12 @@ typedef struct
     // playback speed
     int            render_speed_cur;
     int            render_speed_new;
-
-#if CONFIG_ENABLE_VEFFECT
-    // visual effect
-    void          *veffect_context;
-    int            veffect_type;
-    int            veffect_x;
-    int            veffect_y;
-    int            veffect_w;
-    int            veffect_h;
-    pthread_t      veffect_thread;
-#endif
-
     // render status
     #define RENDER_CLOSE    (1 << 0)
     #define RENDER_PAUSE    (1 << 1)
     #define RENDER_SNAPSHOT (1 << 2)  // take snapshot
     #define RENDER_SEEKSTEP (1 << 3)  // seek step
     int            render_status;
-
-#if CONFIG_ENABLE_SNAPSHOT
-    // snapshot
-    char           snapfile[MAX_PATH];
-    int            snapwidth;
-    int            snapheight;
-#endif
 } RENDER;
 
 // �ڲ�����ʵ��
@@ -140,10 +117,6 @@ void* render_open(int adevtype, int srate, AVSampleFormat sndfmt, int64_t ch_lay
     render->chan_layout  = ch_layout;
 
     // init for visual effect
-#if CONFIG_ENABLE_VEFFECT
-    render->veffect_context = veffect_create(surface);
-    pthread_create(&render->veffect_thread, NULL, render_veffect_thread, render);
-#endif
 
     // create adev & vdev
     render->adev = adev_create(adevtype, 0, (int)((double)ADEV_SAMPLE_RATE * frate.den / frate.num + 0.5) * 4);
@@ -153,13 +126,6 @@ void* render_open(int adevtype, int srate, AVSampleFormat sndfmt, int64_t ch_lay
     int64_t *papts = NULL;
     vdev_getavpts(render->vdev, &papts, NULL);
     adev_syncapts(render->adev,  papts);
-
-#ifdef WIN32
-    RECT rect; GetClientRect((HWND)surface, &rect);
-    render_setrect(render, 0, rect.left, rect.top, rect.right, rect.bottom);
-    render_setrect(render, 1, rect.left, rect.top, rect.right, rect.bottom);
-#endif
-
     // set default playback speed
     render_setspeed(render, 100);
     return render;
@@ -171,11 +137,6 @@ void render_close(void *hrender)
 
     // wait visual effect thread exit
     render->render_status = RENDER_CLOSE;
-
-#if CONFIG_ENABLE_VEFFECT
-    pthread_join(render->veffect_thread, NULL);
-    veffect_destroy(render->veffect_context);
-#endif
 
     //++ audio ++//
     // destroy adev
@@ -287,14 +248,6 @@ void render_video(void *hrender, AVFrame *video)
             vdev_unlock(render->vdev, video->pts);
         }
 
-#if CONFIG_ENABLE_SNAPSHOT
-        if (render->render_status & RENDER_SNAPSHOT) {
-            int ret = take_snapshot(render->snapfile, render->snapwidth, render->snapheight, video);
-            player_send_message(((VDEV_COMMON_CTXT*)render->vdev)->surface, MSG_TAKE_SNAPSHOT, 0);
-            render->render_status &= ~RENDER_SNAPSHOT;
-        }
-#endif
-
         //++ seek step
         if (render->render_status & RENDER_SEEKSTEP) {
             render->render_status &= ~RENDER_SEEKSTEP;
@@ -315,14 +268,6 @@ void render_setrect(void *hrender, int type, int x, int y, int w, int h)
         render->render_wnew = w > 1 ? w : 1;
         render->render_hnew = h > 1 ? h : 1;
         break;
-#if CONFIG_ENABLE_VEFFECT
-    case 1:
-        render->veffect_x = x;
-        render->veffect_y = y;
-        render->veffect_w = w > 1 ? w : 1;
-        render->veffect_h = h > 1 ? h : 1;
-        break;
-#endif
     }
 }
 
@@ -360,33 +305,6 @@ int render_snapshot(void *hrender, char *file, int w, int h, int waitt)
     DO_USE_VAR(w);
     DO_USE_VAR(h);
     DO_USE_VAR(waitt);
-
-#if CONFIG_ENABLE_SNAPSHOT
-    if (!hrender) return -1;
-    RENDER *render = (RENDER*)hrender;
-
-    // if take snapshot in progress
-    if (render->render_status & RENDER_SNAPSHOT) {
-        return -1;
-    }
-
-    // copy snapshot file name
-    strcpy(render->snapfile, file);
-    render->snapwidth  = w;
-    render->snapheight = h;
-
-    // setup render flags to request snapshot
-    render->render_status |= RENDER_SNAPSHOT;
-
-    // wait take snapshot done
-    if (waitt > 0) {
-        int retry = waitt / 10;
-        while ((render->render_status & RENDER_SNAPSHOT) && retry--) {
-            av_usleep(10 * 1000);
-        }
-    }
-#endif
-
     return 0;
 }
 
@@ -402,17 +320,6 @@ void render_setparam(void *hrender, int id, void *param)
     case PARAM_PLAY_SPEED:
         render_setspeed(render, *(int*)param);
         break;
-#if CONFIG_ENABLE_VEFFECT
-    case PARAM_VISUAL_EFFECT:
-        render->veffect_type = *(int*)param;
-        if (render->veffect_type == VISUAL_EFFECT_DISABLE) {
-            veffect_render(render->veffect_context,
-                render->veffect_x, render->veffect_y,
-                render->veffect_w, render->veffect_h,
-                VISUAL_EFFECT_DISABLE, 0, 0);
-        }
-        break;
-#endif
     case PARAM_AVSYNC_TIME_DIFF:
     case PARAM_VDEV_POST_SURFACE:
         vdev_setparam(render->vdev, id, param);
@@ -443,11 +350,6 @@ void render_getparam(void *hrender, int id, void *param)
     case PARAM_PLAY_SPEED:
         *(int*)param = render->render_speed_cur;
         break;
-#if CONFIG_ENABLE_VEFFECT
-    case PARAM_VISUAL_EFFECT:
-        *(int*)param = render->veffect_type;
-        break;
-#endif
     case PARAM_AVSYNC_TIME_DIFF:
     case PARAM_VDEV_GET_D3DDEV:
         vdev_getparam(render->vdev, id, param);

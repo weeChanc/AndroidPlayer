@@ -35,7 +35,7 @@ public class AVUtils {
         System.loadLibrary("swresample");
         System.loadLibrary("swscale");
         System.loadLibrary("postproc");
-        System.loadLibrary("native-lib");
+        System.loadLibrary("ffplayer_jni");
         System.loadLibrary("c++_shared");
         System.loadLibrary("yuv");
     }

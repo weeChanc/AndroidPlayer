@@ -2,7 +2,6 @@
 #include <pthread.h>
 #include "pktqueue.h"
 #include "ffrender.h"
-#include "recorder.h"
 #include "ffplayer.h"
 
 extern "C" {
@@ -499,13 +498,11 @@ static void *av_demux_thread_proc(void *param) {
 
         // audio
         if (packet->stream_index == player->astream_index) {
-            recorder_packet(player->recorder, packet);
             pktqueue_audio_enqueue(player->pktqueue, packet);
         }
 
         // video
         if (packet->stream_index == player->vstream_index) {
-            recorder_packet(player->recorder, packet);
             pktqueue_video_enqueue(player->pktqueue, packet);
         }
 
@@ -615,8 +612,6 @@ static void *video_decode_thread_proc(void *param) {
     if (!vframe) return NULL;
     else vframe->pts = -1;
 
-    int count = 0;
-
     while (!(player->player_status & PS_CLOSE)) {
         //++ when video decode pause ++//
         if (player->player_status & PS_V_PAUSE) {
@@ -634,7 +629,6 @@ static void *video_decode_thread_proc(void *param) {
             av_usleep(20 * 1000);
             continue;
         }
-        av_log(NULL, AV_LOG_WARNING, "weechan packet %d", count++);
         //++ decode video packet ++//
         while (packet->size > 0 && !(player->player_status & (PS_V_PAUSE | PS_CLOSE))) {
             int consumed = 0;
@@ -647,23 +641,21 @@ static void *video_decode_thread_proc(void *param) {
             }
 
             if (gotvideo) {
-                vfilter_graph_input(player, vframe);
-                do {
-                    if (vfilter_graph_output(player, vframe) < 0) break;
-                    vframe->pts = av_rescale_q(av_frame_get_best_effort_timestamp(vframe),
-                                               player->vstream_timebase, TIMEBASE_MS);
-                    //++ for seek operation
-                    if (player->player_status & PS_V_SEEK) {
-                        if (player->seek_dest - vframe->pts < 100) {
-                            player->player_status &= ~PS_V_SEEK;
-                            if (player->player_status & PS_R_PAUSE) {
-                                render_pause(player->render);
-                            }
+                av_log(NULL,AV_LOG_ERROR,"weechanff %f",av_frame_get_best_effort_timestamp(vframe)*(av_q2d(player->vstream_timebase))  );
+                vframe->pts = av_rescale_q(av_frame_get_best_effort_timestamp(vframe),
+                                           player->vstream_timebase, TIMEBASE_MS);
+                av_log(NULL,AV_LOG_ERROR,"got frame %lld",vframe->pts);
+                //++ for seek operation
+                if (player->player_status & PS_V_SEEK) {
+                    if (player->seek_dest - vframe->pts < 100) {
+                        player->player_status &= ~PS_V_SEEK;
+                        if (player->player_status & PS_R_PAUSE) {
+                            render_pause(player->render);
                         }
                     }
-                    //-- for seek operation
-                    if (!(player->player_status & PS_V_SEEK)) render_video(player->render, vframe);
-                } while (player->vfilter_graph);
+                }
+                //-- for seek operation
+                if (!(player->player_status & PS_V_SEEK)) render_video(player->render, vframe);
             }
 
             vframe->pts = AV_NOPTS_VALUE;
@@ -779,7 +771,6 @@ void player_close(void *hplayer) {
     if (player->acodec_context) avcodec_close(player->acodec_context);
     if (player->vcodec_context) avcodec_close(player->vcodec_context);
     if (player->avformat_context) avformat_close_input(&player->avformat_context);
-    if (player->recorder) recorder_free(player->recorder);
     get_jni_env()->DeleteGlobalRef((jobject) player->appdata);
 
     free(player);
@@ -866,22 +857,6 @@ void player_seek(void *hplayer, int64_t ms, int type) {
 
     // set PS_F_SEEK flag
     player->player_status |= PS_F_SEEK;
-}
-
-int player_snapshot(void *hplayer, char *file, int w, int h, int waitt) {
-    if (!hplayer) return -1;
-    PLAYER *player = (PLAYER *) hplayer;
-    return player->vstream_index == -1 ? -1 : render_snapshot(player->render, file, w, h, waitt);
-}
-
-int player_record(void *hplayer, char *file) {
-    if (!hplayer) return -1;
-    PLAYER *player = (PLAYER *) hplayer;
-    void *recorder = player->recorder;
-    player->recorder = NULL;
-    recorder_free(recorder);
-    player->recorder = recorder_init(file, player->avformat_context);
-    return 0;
 }
 
 void player_setparam(void *hplayer, int id, void *param) {

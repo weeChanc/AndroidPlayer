@@ -19,8 +19,6 @@ add_library( # Sets the name of the library.
         src/main/cpp/ffrender.h
         src/main/cpp/pktqueue.cpp
         src/main/cpp/pktqueue.h
-        src/main/cpp/recorder.cpp
-        src/main/cpp/recorder.h
         src/main/cpp/vdev.h
         src/main/cpp/vdev-android.cpp
         src/main/cpp/vdev-cmn.cpp
