@@ -1,7 +1,6 @@
 // ����ͷ�ļ�
 #include <pthread.h>
 #include "ffrender.h"
-#include "snapshot.h"
 #include "adev.h"
 #include "vdev.h"
 

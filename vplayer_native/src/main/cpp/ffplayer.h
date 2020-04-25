@@ -108,7 +108,6 @@ typedef struct {
     int video_stream_total;       // r  视频流总数
     int video_stream_cur;         // wr 当前视频流
     int video_thread_count;       // wr 视频解码线程数
-    int video_hwaccel;            // wr 视频硬解码使能
     int video_deinterlace;        // wr 视频反交错使能
     int video_rotate;             // wr 视频旋转角度
 

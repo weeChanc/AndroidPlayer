@@ -30,7 +30,7 @@ add_library( # Sets the name of the library.
         src/main/cpp/native-lib.cpp
 
         src/main/cpp/player.cpp
-        src/main/cpp/render_thread.cpp)
+        )
 
 # 添加 FFmpeg 的 8 个函数库和 yuvlib 库
 add_library(avutil SHARED IMPORTED )

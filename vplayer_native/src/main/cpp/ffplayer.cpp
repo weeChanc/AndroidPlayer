@@ -408,14 +408,6 @@ static int player_prepare(PLAYER *player) {
     if (player->vstream_index == -1) {
         int effect = VISUAL_EFFECT_WAVEFORM;
         render_setparam(player->render, PARAM_VISUAL_EFFECT, &effect);
-    } else if (player->init_params.video_hwaccel) {
-#ifdef WIN32
-        void *d3ddev = NULL;
-        render_getparam(player->render, PARAM_VDEV_GET_D3DDEV, &d3ddev);
-        if (dxva2hwa_init(player->vcodec_context, d3ddev) != 0) {
-            player->init_params.video_hwaccel = 0;
-        }
-#endif
     }
 
     // for player init params
@@ -687,10 +679,7 @@ static void *video_decode_thread_proc(void *param) {
     }
 
     av_frame_free(&vframe);
-#ifdef ANDROID
-    // need detach current thread
     get_jni_jvm()->DetachCurrentThread();
-#endif
     return NULL;
 }
 
@@ -735,12 +724,7 @@ void *player_open(char *file, void *appdata, PLAYER_INIT_PARAMS *params) {
 
     //++ for player_prepare
     strcpy(player->url, file);
-#ifdef WIN32
-    player->appdata = appdata;
-#endif
-#ifdef ANDROID
     player->appdata = get_jni_env()->NewGlobalRef((jobject) appdata);
-#endif
     //-- for player_prepare
 
     if (player->init_params.open_syncmode && player_prepare(player) == -1) {
@@ -794,15 +778,9 @@ void player_close(void *hplayer) {
     if (player->render) render_close(player->render);
     if (player->acodec_context) avcodec_close(player->acodec_context);
     if (player->vcodec_context) avcodec_close(player->vcodec_context);
-#ifdef WIN32
-    if (player->vcodec_context  ) dxva2hwa_free(player->vcodec_context);
-#endif
     if (player->avformat_context) avformat_close_input(&player->avformat_context);
     if (player->recorder) recorder_free(player->recorder);
-
-#ifdef ANDROID
     get_jni_env()->DeleteGlobalRef((jobject) player->appdata);
-#endif
 
     free(player);
 
@@ -1017,7 +995,6 @@ static int parse_params(const char *str, const char *key) {
 void player_load_params(PLAYER_INIT_PARAMS *params, char *str) {
     params->video_stream_cur = parse_params(str, "video_stream_cur");
     params->video_thread_count = parse_params(str, "video_thread_count");
-    params->video_hwaccel = parse_params(str, "video_hwaccel");
     params->video_deinterlace = parse_params(str, "video_deinterlace");
     params->video_rotate = parse_params(str, "video_rotate");
     params->audio_stream_cur = parse_params(str, "audio_stream_cur");
