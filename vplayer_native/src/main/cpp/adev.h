@@ -19,26 +19,25 @@ typedef struct {
 #define ADEV_SAMPLE_RATE  44100
 
 //++ adev context common members
-#define ADEV_COMMON_MEMBERS         \
-    int64_t *ppts;                  \
-    int      bufnum;                \
-    int      buflen;                \
-    int      head;                  \
-    int      tail;                  \
-    int64_t *apts;                  \
-                                    \
-    /* store current audio data */  \
-    int16_t *curdata;               \
-                                    \
-    /* software volume */           \
-    int      vol_scaler[256];       \
-    int      vol_zerodb;            \
-    int      vol_curvol;
+
 //-- adev context common members
 
 // 类型定义
 typedef struct {
-    ADEV_COMMON_MEMBERS
+    int64_t *ppts;
+    int      bufnum;
+    int      buflen;
+    int      head;
+    int      tail;
+    int64_t *apts;
+
+    /* store current audio data */
+    int16_t *curdata;
+
+    /* software volume */
+    int      vol_scaler[256];
+    int      vol_zerodb;
+    int      vol_curvol;
 } ADEV_COMMON_CTXT;
 
 // 函数声明

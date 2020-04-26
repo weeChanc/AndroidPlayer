@@ -116,6 +116,7 @@ static jlong JNICALL nativeGetParam(JNIEnv *env, jobject obj, jlong hplayer, jin
 static void JNICALL nativeSetDisplaySurface(JNIEnv *env, jobject obj, jlong hplayer, jobject surface)
 {
     DO_USE_VAR(obj);
+
     void *vdev = NULL;
     player_getparam((void*)hplayer, PARAM_VDEV_GET_CONTEXT, &vdev);
     vdev_android_setwindow(vdev, surface);

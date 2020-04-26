@@ -171,7 +171,7 @@ void render_audio(void *hrender, AVFrame *audio)
         if (render->adev_buf_avail == 0) {
             adev_lock(render->adev, &render->adev_hdr_cur);
             apts += 10 * render->render_speed_cur * render->frame_rate.den / render->frame_rate.num;
-            render->adev_buf_avail = (int     )render->adev_hdr_cur->size;
+            render->adev_buf_avail = (int)render->adev_hdr_cur->size;
             render->adev_buf_cur   = (uint8_t*)render->adev_hdr_cur->data;
         }
 

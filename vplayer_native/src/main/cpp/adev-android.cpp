@@ -16,7 +16,20 @@ JNIEXPORT JNIEnv* get_jni_env(void);
 // 内部类型定义
 typedef struct
 {
-    ADEV_COMMON_MEMBERS
+    int64_t *ppts;
+    int      bufnum;
+    int      buflen;
+    int      head;
+    int      tail;
+    int64_t *apts;
+
+    /* store current audio data */
+    int16_t *curdata;
+
+    /* software volume */
+    int      vol_scaler[256];
+    int      vol_zerodb;
+    int      vol_curvol;
 
     uint8_t   *pWaveBuf;
     AUDIOBUF  *pWaveHdr;

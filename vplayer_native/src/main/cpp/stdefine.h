@@ -1,4 +1,4 @@
-/* 标准头文件 */
+/* 锟斤拷准头锟侥硷拷 */
 #ifndef __STDEFINE_H__
 #define __STDEFINE_H__
 
@@ -24,6 +24,9 @@
 #include <limits.h>
 #include <inttypes.h>
 #include <android/log.h>
+
+#define LOGI(FORMAT, ...) __android_log_print(ANDROID_LOG_INFO,"haohao",FORMAT,##__VA_ARGS__);
+#define LOGE(FORMAT, ...) __android_log_print(ANDROID_LOG_ERROR,"haohao",FORMAT,##__VA_ARGS__);
 
 #define MAX_PATH  PATH_MAX
 

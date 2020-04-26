@@ -17,7 +17,47 @@ JNIEXPORT JNIEnv* get_jni_env(void);
 // 内部类型定义
 typedef struct {
     // common members
-    VDEV_COMMON_MEMBERS
+    int       bufnum;
+    int       pixfmt;
+    int       x;   /* video display rect x */
+    int       y;   /* video display rect y */
+    int       w;   /* video display rect w */
+    int       h;   /* video display rect h */
+    int       sw;  /* surface width        */
+    int       sh;  /* surface height       */
+
+    void     *surface;
+    int64_t  *ppts;
+    int64_t   apts;
+    int64_t   vpts;
+
+    int       head;
+    int       tail;
+    sem_t     semr;
+    sem_t     semw;
+
+    int       tickavdiff;
+    int       tickframe;
+    int       ticksleep;
+    int64_t   ticklast;
+
+    int       status;
+    pthread_t thread;
+
+    int       completed_counter;
+    int64_t   completed_apts;
+    int64_t   completed_vpts;
+    int       refresh_flag;
+
+    /* used to sync video to system clock */
+    int64_t   start_pts;
+    int64_t   start_tick;
+    void (*lock    )(void *ctxt, uint8_t *buffer[8], int linesize[8]);
+    void (*unlock  )(void *ctxt, int64_t pts);
+    void (*setrect )(void *ctxt, int x, int y, int w, int h);
+    void (*setparam)(void *ctxt, int id, void *param);
+    void (*getparam)(void *ctxt, int id, void *param);
+    void (*destroy )(void *ctxt);
 
     ANativeWindow *wincur;
     ANativeWindow *winnew;
@@ -55,9 +95,10 @@ static void vdev_android_lock(void *ctxt, uint8_t *buffer[8], int linesize[8])
 static void vdev_android_unlock(void *ctxt, int64_t pts)
 {
     VDEVCTXT *c = (VDEVCTXT*)ctxt;
-    if (c->wincur) ANativeWindow_unlockAndPost(c->wincur);
     c->vpts = pts;
     vdev_avsync_and_complete(c);
+    if (c->wincur) ANativeWindow_unlockAndPost(c->wincur);
+
 }
 
 static void vdev_android_destroy(void *ctxt)
