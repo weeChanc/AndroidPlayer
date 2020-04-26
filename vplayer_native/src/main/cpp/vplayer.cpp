@@ -1,8 +1,8 @@
 ﻿// 包含头文件
 #include <pthread.h>
 #include "pktqueue.h"
-#include "ffrender.h"
-#include "ffplayer.h"
+#include "render.h"
+#include "vplayer.h"
 
 extern "C" {
 #include "libavutil/time.h"

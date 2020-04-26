@@ -2,7 +2,7 @@
 #define __FFPLAYER_ADEV_H__
 
 // 包含头文件
-#include "ffrender.h"
+#include "render.h"
 
 #ifdef __cplusplus
 extern "C" {

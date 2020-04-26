@@ -1,6 +1,6 @@
 // 包含头文件
-#include "ffplayer_jni.h"
-#include "ffplayer.h"
+#include "vplayer_jni.h"
+#include "vplayer.h"
 #include "adev.h"
 #include "vdev.h"
 

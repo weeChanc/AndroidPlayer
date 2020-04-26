@@ -13,17 +13,17 @@ add_library( # Sets the name of the library.
         src/main/cpp/adev.h
         src/main/cpp/adev-android.cpp
         src/main/cpp/adev-cmn.cpp
-        src/main/cpp/ffplayer.cpp
-        src/main/cpp/ffplayer.h
-        src/main/cpp/ffrender.cpp
-        src/main/cpp/ffrender.h
+        src/main/cpp/vplayer.cpp
+        src/main/cpp/vplayer.h
+        src/main/cpp/render.cpp
+        src/main/cpp/render.h
         src/main/cpp/pktqueue.cpp
         src/main/cpp/pktqueue.h
         src/main/cpp/vdev.h
         src/main/cpp/vdev-android.cpp
         src/main/cpp/vdev-cmn.cpp
-        src/main/cpp/ffplayer_jni.cpp
-        src/main/cpp/ffplayer_jni.h
+        src/main/cpp/vplayer_jni.cpp
+        src/main/cpp/vplayer_jni.h
         # Provides a relative path to your source file(s).
         src/main/cpp/native-lib.cpp
 
