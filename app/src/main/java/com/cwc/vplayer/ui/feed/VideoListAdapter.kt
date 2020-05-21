@@ -58,7 +58,7 @@ open class VideoFileBinder(val onClickAction: ((VideoFile) -> Unit)?) : ItemView
         }
 
         holder.durationText.text = com.cwc.vplayer.utils.TimeUtils.getTimeFormLong(item.duration)
-        if(item.duration == 0L){
+        if (item.duration == 0L) {
             holder.durationText.visibility = View.GONE
         }
 
@@ -71,7 +71,7 @@ open class VideoFileBinder(val onClickAction: ((VideoFile) -> Unit)?) : ItemView
                 AutoPreviewCoordinator.pause()
                 holder.feedCard.startPreview(item)
                 (adapter.items.getOrNull(AutoPreviewCoordinator.lastPreviewPosition) as? VideoFile)?.isPreviewing =
-                    false
+                        false
                 AutoPreviewCoordinator.lastPreViewItemView = holder.feedCard
                 AutoPreviewCoordinator.lastPreviewPosition = holder.adapterPosition
             }

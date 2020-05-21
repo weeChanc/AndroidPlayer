@@ -16,7 +16,7 @@ public class CacheFactory {
 
     private static Class<? extends ICacheManager> sICacheManager;
 
-    public static void setCacheManager(Class<? extends ICacheManager>  cacheManager) {
+    public static void setCacheManager(Class<? extends ICacheManager> cacheManager) {
         sICacheManager = cacheManager;
     }
 

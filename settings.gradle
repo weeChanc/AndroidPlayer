@@ -1,4 +1,4 @@
-rootProject.name='VPlayer'
+rootProject.name = 'VPlayer'
 include ':app'
 include ':vplayer_base'
 include ':vplayer_native'

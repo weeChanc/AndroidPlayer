@@ -6,7 +6,6 @@ import com.cwc.vplayer.controller.VideoManager;
 import com.cwc.vplayer.controller.VideoViewBridge;
 
 
-
 public abstract class VideoPlayer extends BaseVideoPlayer {
 
     public VideoPlayer(Context context, Boolean fullFlag) {

@@ -208,7 +208,7 @@ public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListene
     }
 
     @Override
-    public void  setDisplay(Surface holder) {
+    public void setDisplay(Surface holder) {
         Message msg = new Message();
         msg.what = HANDLER_SETDISPLAY;
         msg.obj = holder;

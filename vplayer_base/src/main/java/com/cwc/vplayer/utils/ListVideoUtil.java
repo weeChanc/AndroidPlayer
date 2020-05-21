@@ -142,7 +142,7 @@ public class ListVideoUtil {
 
         mVideoPlayer.setUp(url, true, cachePath, mapHeadData, mTitle);
 
-        if(!TextUtils.isEmpty(mTitle)) {
+        if (!TextUtils.isEmpty(mTitle)) {
             mVideoPlayer.getTitleTextView().setText(mTitle);
         }
 

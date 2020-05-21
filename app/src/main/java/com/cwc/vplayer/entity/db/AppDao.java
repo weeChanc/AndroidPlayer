@@ -18,7 +18,7 @@ import com.cwc.vplayer.entity.VideoFile;
 import java.util.List;
 
 @Dao
-public interface AppDao{
+public interface AppDao {
 
     @Query("SELECT * FROM video_file")
     List<VideoFile> loadAllVideoFile();
@@ -30,17 +30,17 @@ public interface AppDao{
     Long insertVideoFile(VideoFile video);
 
     @Delete
-    void deleteVideoFiles( List<VideoFile> video);
+    void deleteVideoFiles(List<VideoFile> video);
 
     @Update
-    int updateVideoFile(VideoFile video) ;
+    int updateVideoFile(VideoFile video);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     List<Long> insertAllVideoFile(List<VideoFile> video);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insertCategory( VideoCategory category);
+    void insertCategory(VideoCategory category);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    List<Long> insertAllCategory( List<VideoCategory> category);
+    List<Long> insertAllCategory(List<VideoCategory> category);
 }

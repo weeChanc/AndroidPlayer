@@ -90,7 +90,7 @@ public final class MeasureHelper {
 
         int realWidth = mVideoWidth;
 
-        if(mVideoSarNum != 0 && mVideoSarDen != 0) {
+        if (mVideoSarNum != 0 && mVideoSarDen != 0) {
             double pixelWidthHeightRatio = mVideoSarNum / (mVideoSarDen / 1.0);
             realWidth = (int) (pixelWidthHeightRatio * mVideoWidth);
         }

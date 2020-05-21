@@ -882,7 +882,6 @@ public abstract class BaseVideoPlayer extends VideoControlView {
 
     /**
      * 获取全屏播放器对象
-     *
      */
     @SuppressWarnings("ResourceType")
     public VideoPlayer getFullWindowPlayer() {
@@ -897,7 +896,6 @@ public abstract class BaseVideoPlayer extends VideoControlView {
 
     /**
      * 获取小窗口播放器对象
-     *
      */
     @SuppressWarnings("ResourceType")
     public VideoPlayer getSmallWindowPlayer() {

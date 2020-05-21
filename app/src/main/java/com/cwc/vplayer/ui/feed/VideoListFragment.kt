@@ -35,9 +35,9 @@ open class VideoListFragment<VM : VideoListViewModel> : AbsFragment<VM>() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.activity_feed_main, container, false)
     }
@@ -50,39 +50,39 @@ open class VideoListFragment<VM : VideoListViewModel> : AbsFragment<VM>() {
         adapter.register(VideoFile::class.java, VideoFileBinder { videoFile ->
             MaterialDialog(context!!).show {
                 listItems(
-                    items = arrayListOf("删除", "重命名", if (videoFile.isLike) "取消收藏 " else "收藏"),
-                    selection = { dialog, index, text ->
-                        when (index) {
-                            0 -> {
-                                mainViewModel.deleteVideoFile(videoFile)
-                                ToastUtils.showShort("删除成功")
-                            }
+                        items = arrayListOf("删除", "重命名", if (videoFile.isLike) "取消收藏 " else "收藏"),
+                        selection = { dialog, index, text ->
+                            when (index) {
+                                0 -> {
+                                    mainViewModel.deleteVideoFile(videoFile)
+                                    ToastUtils.showShort("删除成功")
+                                }
 
-                            1 -> {
-                                MaterialDialog(context).show {
-                                    input(hint = "请输入新的名字") { materialDialog, charSequence ->
-                                        if (mainViewModel.updateVideo(videoFile)) {
-                                            ToastUtils.showShort("修改成功")
-                                        } else {
-                                            ToastUtils.showShort("修改失败")
+                                1 -> {
+                                    MaterialDialog(context).show {
+                                        input(hint = "请输入新的名字") { materialDialog, charSequence ->
+                                            if (mainViewModel.updateVideo(videoFile)) {
+                                                ToastUtils.showShort("修改成功")
+                                            } else {
+                                                ToastUtils.showShort("修改失败")
+                                            }
                                         }
                                     }
                                 }
+                                2 -> {
+                                    mainViewModel.updateVideo(videoFile.apply {
+                                        this.isLike = !this.isLike
+                                    })
+                                }
                             }
-                            2 -> {
-                                mainViewModel.updateVideo(videoFile.apply {
-                                    this.isLike = !this.isLike
-                                })
-                            }
-                        }
-                    })
+                        })
             }
         })
         adapter.register(String::class.java, FeedCategoryBinder())
         feed_recycler.adapter = adapter
         feed_recycler.layoutManager = LinearLayoutManager(context)
         val dir: String? = arguments?.getString(DATA_DIR)
-        if(dir != null){
+        if (dir != null) {
             mainViewModel.mainTitle.value = File(dir).name
         }
         mViewModel.init(mainViewModel, dir, this)
@@ -103,8 +103,8 @@ open class VideoListFragment<VM : VideoListViewModel> : AbsFragment<VM>() {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     autoPreview.handleLiveAutoPreview(
-                        feed_recycler,
-                        this@VideoListFragment.activity!!
+                            feed_recycler,
+                            this@VideoListFragment.activity!!
                     )
                 }
             }
@@ -118,14 +118,14 @@ open class VideoListFragment<VM : VideoListViewModel> : AbsFragment<VM>() {
                 }
                 positiveButton(text = "添加", click = {
                     mainViewModel.addVideoFile(
-                        VideoFile(
-                            input,
-                            dir,
-                            input,
-                            0,
-                            0,
-                            System.currentTimeMillis()
-                        )
+                            VideoFile(
+                                    input,
+                                    dir,
+                                    input,
+                                    0,
+                                    0,
+                                    System.currentTimeMillis()
+                            )
                     )
                 })
             }

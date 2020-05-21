@@ -523,6 +523,7 @@ public class VideoOptionBuilder {
 
     /**
      * 是否需要覆盖拓展类型，目前只针对exoPlayer内核模式有效
+     *
      * @param overrideExtension 比如传入 m3u8,mp4,avi 等类型
      */
     public VideoOptionBuilder setOverrideExtension(String overrideExtension) {

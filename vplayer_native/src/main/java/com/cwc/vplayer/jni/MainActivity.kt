@@ -11,7 +11,6 @@ import android.view.TextureView
 import androidx.appcompat.app.AppCompatActivity
 import com.cwc.vplayer.R
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
 import kotlin.concurrent.thread
 
 
@@ -19,8 +18,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(
-            R.layout.activity_main
+                R.layout.activity_main
         )
+
 
 //        Log.d("zhumr", "CPU_ABI = $CPU_ABI.")
 
@@ -34,34 +34,34 @@ class MainActivity : AppCompatActivity() {
 //            "/storage/emulated/0/temp"
 //        )
 
-        texture.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
-            override fun onSurfaceTextureSizeChanged(
-                surface: SurfaceTexture?,
-                width: Int,
-                height: Int
-            ) {
-            }
-
-            override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
-            }
-
-            override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
-                return false
-            }
-
-            override fun onSurfaceTextureAvailable(
-                surface: SurfaceTexture?,
-                width: Int,
-                height: Int
-            ) {
-
-
-                thread{
-                    AVUtils.videoRender("file:///storage/emulated/0/DCIM/Camera/55b6f164186c7d8d983d1b7a68557310.mp4", Surface(surface))
-                }
-
-            }
-        }
+//        texture.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
+//            override fun onSurfaceTextureSizeChanged(
+//                    surface: SurfaceTexture?,
+//                    width: Int,
+//                    height: Int
+//            ) {
+//            }
+//
+//            override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
+//            }
+//
+//            override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
+//                return false
+//            }
+//
+//            override fun onSurfaceTextureAvailable(
+//                    surface: SurfaceTexture?,
+//                    width: Int,
+//                    height: Int
+//            ) {
+//
+//
+//                thread {
+//                    AVUtils.videoRender("file:///storage/emulated/0/DCIM/Camera/55b6f164186c7d8d983d1b7a68557310.mp4", Surface(surface))
+//                }
+//
+//            }
+//        }
         Log.e("tag", "finish")
     }
 }

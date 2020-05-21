@@ -19,7 +19,6 @@ import com.cwc.vplayer.R;
 
 /**
  * Created by codeest on 16/11/7.
- *
  */
 
 public class ENPlayView extends View {
@@ -106,7 +105,7 @@ public class ENPlayView extends View {
         mCenterY = h / 2;
         mRectF = new RectF(mCenterX - mCircleRadius, mCenterY + 0.6f * mCircleRadius,
                 mCenterX + mCircleRadius, mCenterY + 2.6f * mCircleRadius);
-        mBgRectF = new RectF(mCenterX - mWidth / 2 ,mCenterY - mHeight / 2 ,mCenterX + mWidth / 2, mCenterY + mHeight / 2);
+        mBgRectF = new RectF(mCenterX - mWidth / 2, mCenterY - mHeight / 2, mCenterX + mWidth / 2, mCenterY + mHeight / 2);
         mPath.moveTo(mCenterX - mCircleRadius, mCenterY + 1.8f * mCircleRadius);
         mPath.lineTo(mCenterX - mCircleRadius, mCenterY - 1.8f * mCircleRadius);
         mPath.lineTo(mCenterX + mCircleRadius, mCenterY);
@@ -126,7 +125,7 @@ public class ENPlayView extends View {
             canvas.drawLine(mCenterX - mCircleRadius, mCenterY - 1.6f * mCircleRadius,
                     mCenterX - mCircleRadius, mCenterY + 1.6f * mCircleRadius, mPaint);
 
-            canvas.drawArc(mBgRectF, -105 , 360 , false, mPaint);
+            canvas.drawArc(mBgRectF, -105, 360, false, mPaint);
         } else if (mFraction <= 0.3) {  //嗷~~ 右侧直线和下方曲线
             canvas.drawLine(mCenterX + mCircleRadius, mCenterY - 1.6f * mCircleRadius + mCircleRadius * 3.2f / 0.3f * mFraction,
                     mCenterX + mCircleRadius, mCenterY + 1.6f * mCircleRadius, mPaint);
@@ -139,11 +138,11 @@ public class ENPlayView extends View {
 
             canvas.drawArc(mBgRectF, -105 + 360 * mFraction, 360 * (1 - mFraction), false, mPaint);
         } else if (mFraction <= 0.6) {  //嗷~~ 下方曲线和三角形
-            canvas.drawArc(mRectF, 180f / 0.3f * (mFraction - 0.3f), 180 - 180f / 0.3f * (mFraction - 0.3f), false , mPaint);
+            canvas.drawArc(mRectF, 180f / 0.3f * (mFraction - 0.3f), 180 - 180f / 0.3f * (mFraction - 0.3f), false, mPaint);
 
             mDstPath.reset();
             //mDstPath.lineTo(0 ,0);
-            mPathMeasure.getSegment(0.02f * mPathLength, 0.38f * mPathLength + 0.42f * mPathLength / 0.3f * (mFraction - 0.3f) ,
+            mPathMeasure.getSegment(0.02f * mPathLength, 0.38f * mPathLength + 0.42f * mPathLength / 0.3f * (mFraction - 0.3f),
                     mDstPath, true);
             canvas.drawPath(mDstPath, mPaint);
 
@@ -152,7 +151,7 @@ public class ENPlayView extends View {
             mDstPath.reset();
             //mDstPath.lineTo(0 ,0);
             mPathMeasure.getSegment(0.02f * mPathLength + 0.2f * mPathLength / 0.2f * (mFraction - 0.6f)
-                    , 0.8f * mPathLength + 0.2f * mPathLength / 0.2f * (mFraction - 0.6f) ,
+                    , 0.8f * mPathLength + 0.2f * mPathLength / 0.2f * (mFraction - 0.6f),
                     mDstPath, true);
             canvas.drawPath(mDstPath, mPaint);
 
@@ -161,7 +160,7 @@ public class ENPlayView extends View {
             mDstPath.reset();
             //mDstPath.lineTo(0 ,0);
             mPathMeasure.getSegment(10 * mCircleRadius * (mFraction - 1)
-                    , mPathLength ,
+                    , mPathLength,
                     mDstPath, true);
             canvas.drawPath(mDstPath, mPaint);
         }

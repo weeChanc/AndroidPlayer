@@ -24,7 +24,7 @@ class CategoryAdapter : MultiTypeAdapter() {
 }
 
 class CategoryFileBinder(val onClick: ((category: VideoCategory) -> Unit)? = null) :
-    ItemViewBinder<VideoCategory, CategoryFileBinder.ViewHolder>() {
+        ItemViewBinder<VideoCategory, CategoryFileBinder.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.findViewById<TextView>(R.id.video_category)
@@ -45,7 +45,7 @@ class CategoryFileBinder(val onClick: ((category: VideoCategory) -> Unit)? = nul
 }
 
 class CategoryTitleBinder(val onClick: ((category: VideoCategory) -> Unit)? = null) :
-    ItemViewBinder<String, RecyclerView.ViewHolder>() {
+        ItemViewBinder<String, RecyclerView.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     }
 

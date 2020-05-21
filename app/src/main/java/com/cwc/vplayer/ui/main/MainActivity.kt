@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AbsActivity<MainViewModel>() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main,menu)
+        menuInflater.inflate(R.menu.menu_main, menu)
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -35,7 +35,7 @@ class MainActivity : AbsActivity<MainViewModel>() {
             true
         }
 //        main_toolbar.setNavigationIcon(R.drawable.more)
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),1)
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
         mViewModel.displayFragment.value = CategoryFragment()
         mViewModel.mainTitle.observe(this) { title: String ->
             main_toolbar.title = title
@@ -44,10 +44,10 @@ class MainActivity : AbsActivity<MainViewModel>() {
         mViewModel.displayFragment.observe(this) {
             if (it is CategoryFragment) {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, it).commit()
+                        .replace(R.id.fragment_container, it).commit()
             } else {
                 supportFragmentManager.beginTransaction().addToBackStack(null)
-                    .replace(R.id.fragment_container, it).commit()
+                        .replace(R.id.fragment_container, it).commit()
             }
         }
 //        like.setOnClickListener {
@@ -60,9 +60,9 @@ class MainActivity : AbsActivity<MainViewModel>() {
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+            requestCode: Int,
+            permissions: Array<out String>,
+            grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         mViewModel.init()

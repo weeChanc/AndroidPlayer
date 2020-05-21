@@ -7,9 +7,9 @@ import android.widget.Toast;
 
 
 public class Debuger {
-    
+
     static final String LOG_TAG = "VideoPlayer";
-    
+
     static boolean DEBUG_TAG = false;
 
     public static void enable() {

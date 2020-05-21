@@ -7,7 +7,7 @@ import com.cwc.vplayer.R
 import com.cwc.vplayer.view.display.StandardVideoPlayer
 
 class StandardPreviewPlayer(context: Context, attributeSet: AttributeSet?) :
-    StandardVideoPlayer(context, attributeSet) {
+        StandardVideoPlayer(context, attributeSet) {
 
     constructor(context: Context) : this(context, null)
 

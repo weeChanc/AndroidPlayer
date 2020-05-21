@@ -8,9 +8,9 @@ import com.cwc.vplayer.utils.observe
 
 class LikeViewModel(app: Application) : VideoListViewModel(app) {
 
-    override fun init(mainViewModel : MainViewModel, dir : String?, lifecycleOwner: LifecycleOwner){
-        mainViewModel.videos.observe(lifecycleOwner){
-            videoFiles.value =  it.filter {
+    override fun init(mainViewModel: MainViewModel, dir: String?, lifecycleOwner: LifecycleOwner) {
+        mainViewModel.videos.observe(lifecycleOwner) {
+            videoFiles.value = it.filter {
                 it.isLike
             }
         }

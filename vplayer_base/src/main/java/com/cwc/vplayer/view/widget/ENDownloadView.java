@@ -306,7 +306,7 @@ public class ENDownloadView extends View {
                 mValueAnimator.cancel();
             mValueAnimator = null;
         }
-        mValueAnimator= ValueAnimator.ofFloat(1.f, 100.f);
+        mValueAnimator = ValueAnimator.ofFloat(1.f, 100.f);
         mValueAnimator.setDuration(700);
         mValueAnimator.setInterpolator(new OvershootInterpolator());
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {

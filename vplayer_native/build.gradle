@@ -18,7 +18,7 @@ android {
 
     buildTypes {
 
-        all{
+        all {
             ndk {
                 abiFilters "armeabi-v7a"
             }

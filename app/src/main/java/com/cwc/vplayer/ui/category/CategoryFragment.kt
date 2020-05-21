@@ -37,9 +37,9 @@ class CategoryFragment : AbsFragment<CategoryViewModel>() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_category, container, false)
     }
@@ -55,7 +55,7 @@ class CategoryFragment : AbsFragment<CategoryViewModel>() {
         category_recyclerview.layoutManager = GridLayoutManager(context, 3).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    if(position == 0 || position == 1) return 3
+                    if (position == 0 || position == 1) return 3
                     return 1
                 }
 
@@ -65,17 +65,17 @@ class CategoryFragment : AbsFragment<CategoryViewModel>() {
         add_btn.setOnClickListener {
             MaterialDialog(context!!).show {
                 folderChooser(context,
-                    filter =  {
-                         it.isDirectory && !it.name.startsWith(".")
-                    },
-                    allowFolderCreation = true,
-                    initialDirectory = File("/storage/emulated/0") ) { dialog, file ->
+                        filter = {
+                            it.isDirectory && !it.name.startsWith(".")
+                        },
+                        allowFolderCreation = true,
+                        initialDirectory = File("/storage/emulated/0")) { dialog, file ->
 
                     GlobalScope.launch {
-                        val categoriesInfo = VideoCategory(file.absolutePath,file.name,0,null,
-                            emptyList())
+                        val categoriesInfo = VideoCategory(file.absolutePath, file.name, 0, null,
+                                emptyList())
                         mainViewModel.categories.value?.forEach {
-                            if(it.path.equals(file.absolutePath)){
+                            if (it.path.equals(file.absolutePath)) {
                                 ToastUtils.showShort("不能重复创建")
                                 return@launch
                             }
@@ -90,18 +90,18 @@ class CategoryFragment : AbsFragment<CategoryViewModel>() {
 
         adapter.register(VideoCategory::class.java, CategoryFileBinder {
             mainViewModel.displayFragment.value =
-                VideoListFragment<VideoListViewModel>().apply {
-                    arguments = Bundle().apply {
-                        putString(
-                            VideoListFragment.DATA_DIR,
-                            it.path
-                        )
+                    VideoListFragment<VideoListViewModel>().apply {
+                        arguments = Bundle().apply {
+                            putString(
+                                    VideoListFragment.DATA_DIR,
+                                    it.path
+                            )
+                        }
                     }
-                }
         })
-        adapter.register(String::class.java,CategoryTitleBinder())
+        adapter.register(String::class.java, CategoryTitleBinder())
         adapter.register(HisotryItem::class.java,
-            HistoryItemBinder()
+                HistoryItemBinder()
         )
 
         mainViewModel.mainTitle.value = "文件夹"
@@ -111,9 +111,9 @@ class CategoryFragment : AbsFragment<CategoryViewModel>() {
 
         mViewModel.categoryList.observe(this) {
             val displayItem = mutableListOf<Any>();
-            val historyVideo = mainViewModel.videos?.value?.filter { it.lastPlayTimeStamp != 0L }?: emptyList();
+            val historyVideo = mainViewModel.videos?.value?.filter { it.lastPlayTimeStamp != 0L } ?: emptyList();
             val historyItem =
-                HisotryItem(historyVideo)
+                    HisotryItem(historyVideo)
             displayItem.add(historyItem)
             displayItem.add("Category")
             displayItem.addAll(it)

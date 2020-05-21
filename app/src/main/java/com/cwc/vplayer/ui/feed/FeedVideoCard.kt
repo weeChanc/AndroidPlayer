@@ -14,7 +14,7 @@ import com.cwc.vplayer.controller.VideoOptionBuilder
 import com.cwc.vplayer.entity.VideoFile
 
 class FeedVideoCard @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     val videoView: StandardPreviewPlayer by lazy {
@@ -28,7 +28,7 @@ class FeedVideoCard @JvmOverloads constructor(
     }
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.video_card,this,true)
+        LayoutInflater.from(context).inflate(R.layout.video_card, this, true)
     }
 
     fun startPreview(item: VideoFile) {
@@ -36,45 +36,45 @@ class FeedVideoCard @JvmOverloads constructor(
         item.isPreviewing = true
         videoView.visibility = View.VISIBLE
         videoView.fullscreenButton
-            .setOnClickListener {
-                videoView.startWindowFullscreen(context, false, false)
-            }
+                .setOnClickListener {
+                    videoView.startWindowFullscreen(context, false, false)
+                }
 
         //设置返回键
         videoView.backButton.visibility = View.GONE
         videoView.hideAllWidget()
         VideoOptionBuilder()
-            .setIsTouchWiget(false)
-            .apply {
-                if(item.path.startsWith("/")){
-                    setUrl("file://" + item.path)
-                }else{
-                    setUrl(item.path)
+                .setIsTouchWiget(false)
+                .apply {
+                    if (item.path.startsWith("/")) {
+                        setUrl("file://" + item.path)
+                    } else {
+                        setUrl(item.path)
+                    }
                 }
-            }
-            .setVideoTitle(item.title)
-            .setCacheWithPlay(false)
-            .setRotateViewAuto(true)
-            .setPlayTag("Preview")
-            .setShowFullAnimation(false)
-            .setNeedLockFull(false)
-            .setVideoAllCallBack(object : SimpleVideoAllCallBack() {
-                override fun onPrepared(url: String?, vararg objects: Any?) {
-                    super.onPrepared(url, *objects)
-                }
+                .setVideoTitle(item.title)
+                .setCacheWithPlay(false)
+                .setRotateViewAuto(true)
+                .setPlayTag("Preview")
+                .setShowFullAnimation(false)
+                .setNeedLockFull(false)
+                .setVideoAllCallBack(object : SimpleVideoAllCallBack() {
+                    override fun onPrepared(url: String?, vararg objects: Any?) {
+                        super.onPrepared(url, *objects)
+                    }
 
-                override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
-                    super.onQuitFullscreen(url, *objects)
-                    VideoManager.instance().setNeedMute(true);
-                    videoView.previewMode = 1;
-                }
+                    override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
+                        super.onQuitFullscreen(url, *objects)
+                        VideoManager.instance().setNeedMute(true);
+                        videoView.previewMode = 1;
+                    }
 
-                override fun onEnterFullscreen(url: String?, vararg objects: Any?) {
-                    super.onEnterFullscreen(url, *objects)
-                    VideoManager.instance().setNeedMute(false);
-                }
+                    override fun onEnterFullscreen(url: String?, vararg objects: Any?) {
+                        super.onEnterFullscreen(url, *objects)
+                        VideoManager.instance().setNeedMute(false);
+                    }
 
-            }).build(videoView);
+                }).build(videoView);
 
         videoView.previewMode = 1;
         videoView.startPlayLogic()

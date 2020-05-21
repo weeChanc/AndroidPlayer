@@ -5,7 +5,7 @@ buildscript {
     repositories {
         google()
         jcenter()
-        
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.1'
@@ -18,7 +18,7 @@ buildscript {
 
 allprojects {
     repositories {
-        maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         google()
         jcenter()
         maven { url 'https://jitpack.io' }
@@ -28,16 +28,16 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-ext{
+ext {
     ijkplayer = '0.8.8'
     deps = [
-            ijkplayer_java       : "tv.danmaku.ijk.media:ijkplayer-java:${ijkplayer}",
-            ijkplayer_armv7a     : "tv.danmaku.ijk.media:ijkplayer-armv7a:${ijkplayer}",
-            ijkplayer_armv5      : "tv.danmaku.ijk.media:ijkplayer-armv5:${ijkplayer}",
-            ijkplayer_arm64      : "tv.danmaku.ijk.media:ijkplayer-arm64:${ijkplayer}",
-            ijkplayer_x86_64     : "tv.danmaku.ijk.media:ijkplayer-x86_64:${ijkplayer}",
-            ijkplayer_x86        : "tv.danmaku.ijk.media:ijkplayer-x86:${ijkplayer}",
-            ijkplayer_exo        : "tv.danmaku.ijk.media:ijkplayer-exo:${ijkplayer}",
+            ijkplayer_java  : "tv.danmaku.ijk.media:ijkplayer-java:${ijkplayer}",
+            ijkplayer_armv7a: "tv.danmaku.ijk.media:ijkplayer-armv7a:${ijkplayer}",
+            ijkplayer_armv5 : "tv.danmaku.ijk.media:ijkplayer-armv5:${ijkplayer}",
+            ijkplayer_arm64 : "tv.danmaku.ijk.media:ijkplayer-arm64:${ijkplayer}",
+            ijkplayer_x86_64: "tv.danmaku.ijk.media:ijkplayer-x86_64:${ijkplayer}",
+            ijkplayer_x86   : "tv.danmaku.ijk.media:ijkplayer-x86:${ijkplayer}",
+            ijkplayer_exo   : "tv.danmaku.ijk.media:ijkplayer-exo:${ijkplayer}",
     ]
 
 }

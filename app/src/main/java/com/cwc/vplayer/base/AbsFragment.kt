@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 
 abstract class AbsFragment<T : ViewModel> : Fragment() {
-    lateinit var mViewModel:  T
+    lateinit var mViewModel: T
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

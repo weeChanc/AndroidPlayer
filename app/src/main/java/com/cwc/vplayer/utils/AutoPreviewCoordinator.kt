@@ -24,7 +24,7 @@ object AutoPreviewCoordinator {
             var startNewPreview = false
             val mid = Math.round((firstVisibleItemPosition + lastVisibleItemPosition) / 2.0).toInt()
             val searchPos = arrayOf(
-                firstVisibleItemPosition + 1, firstVisibleItemPosition
+                    firstVisibleItemPosition + 1, firstVisibleItemPosition
             )
 
 
@@ -32,22 +32,22 @@ object AutoPreviewCoordinator {
             var selectItemView: FeedVideoCard? = null;
             for (cursorPosition in searchPos) {
                 val cursorItemView =
-                    layoutManager.findViewByPosition(cursorPosition)
-                        ?: continue
+                        layoutManager.findViewByPosition(cursorPosition)
+                                ?: continue
                 val cursorViewHolder =
-                    (recyclerView).getChildViewHolder(cursorItemView) as? VideoFileBinder.ViewHolder
+                        (recyclerView).getChildViewHolder(cursorItemView) as? VideoFileBinder.ViewHolder
 
                 val cursorItem = cursorViewHolder?.adapterPosition
                 if (cursorItem != null) {
                     if (lastPreviewPosition != cursorPosition) {
                         val item =
-                            (recyclerView.adapter as? VideoListAdapter)?.items?.get(cursorItem) as? VideoFile
-                                ?: break
+                                (recyclerView.adapter as? VideoListAdapter)?.items?.get(cursorItem) as? VideoFile
+                                        ?: break
 
                         startNewPreview = true
-                        val feedCard =( cursorItemView.findViewById(R.id.feed_video_card) as? FeedVideoCard)
+                        val feedCard = (cursorItemView.findViewById(R.id.feed_video_card) as? FeedVideoCard)
                         feedCard?.startPreview(
-                            item
+                                item
                         )
                         selectCursor = cursorPosition
                         selectItemView = feedCard
@@ -62,7 +62,7 @@ object AutoPreviewCoordinator {
                 lastPreViewItemView?.stopPreview()
                 if (lastPreviewPosition != -1) {
                     ((recyclerView.adapter as? VideoListAdapter)?.items?.getOrNull(lastPreviewPosition) as? VideoFile)?.isPreviewing =
-                        false
+                            false
                 }
                 lastPreViewItemView = selectItemView
                 lastPreviewPosition = selectCursor

@@ -24,7 +24,6 @@ import java.util.Formatter;
 import java.util.Locale;
 
 
-
 public class CommonUtil {
     public static String stringForTime(int timeMs) {
         if (timeMs <= 0 || timeMs >= 24 * 60 * 60 * 1000) {

@@ -79,9 +79,9 @@ public class VideoCategory implements Comparable<VideoCategory> {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if(obj instanceof VideoCategory){
+        if (obj instanceof VideoCategory) {
             return path.equals(((VideoCategory) obj).path);
-        }else{
+        } else {
             return false;
         }
     }
@@ -93,7 +93,7 @@ public class VideoCategory implements Comparable<VideoCategory> {
 
     @Override
     public int compareTo(VideoCategory o) {
-       return path.compareTo(o.path);
+        return path.compareTo(o.path);
     }
 
     @NonNull

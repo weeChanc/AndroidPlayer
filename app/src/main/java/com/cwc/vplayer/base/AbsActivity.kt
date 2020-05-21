@@ -17,13 +17,13 @@ abstract class AbsActivity<T : ViewModel> : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        Log.e("AbsActivity",this.javaClass.name +" on Resume")
+        Log.e("AbsActivity", this.javaClass.name + " on Resume")
     }
 
     abstract fun createViewModel(): T
 
     override fun onPause() {
         super.onPause()
-        Log.e("AbsActivity",this.javaClass.name +" on Pause")
+        Log.e("AbsActivity", this.javaClass.name + " on Pause")
     }
 }
