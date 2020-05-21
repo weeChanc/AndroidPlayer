@@ -94,32 +94,12 @@ public class VideoManager extends VideoBaseManager {
         }
     }
 
-
-    /**
-     * 恢复暂停状态
-     *
-     * @param seek 是否产生seek动作,直播设置为false
-     */
     public static void onResume(boolean seek) {
         if (VideoManager.instance().listener() != null) {
             VideoManager.instance().listener().onVideoResume(seek);
         }
     }
 
-    /**
-     * 当前是否全屏状态
-     *
-     * @return 当前是否全屏状态， true代表是。
-     */
-    @SuppressWarnings("ResourceType")
-    public static boolean isFullState(Activity activity) {
-        ViewGroup vp = (ViewGroup) (CommonUtil.scanForActivity(activity)).findViewById(Window.ID_ANDROID_CONTENT);
-        final View full = vp.findViewById(FULLSCREEN_ID);
-        VideoPlayer videoPlayer = null;
-        if (full != null) {
-            videoPlayer = (VideoPlayer) full;
-        }
-        return videoPlayer != null;
-    }
+
 
 }

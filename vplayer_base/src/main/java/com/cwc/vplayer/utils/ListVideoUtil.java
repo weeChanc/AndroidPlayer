@@ -404,27 +404,12 @@ public class ListVideoUtil {
 
     }
 
-    /**
-     * 显示小屏幕效果
-     *
-     * @param size      小视频的大小
-     * @param actionBar 是否有actionBar
-     * @param statusBar 是否有状态栏
-     */
-    public void showSmallVideo(Point size, final boolean actionBar, final boolean statusBar) {
-        if (mVideoPlayer.getCurrentState() == VideoPlayer.CURRENT_STATE_PLAYING) {
-            mVideoPlayer.showSmallVideo(size, actionBar, statusBar);
-            isSmall = true;
-        }
-    }
-
 
     /**
      * 恢复小屏幕效果
      */
     public void smallVideoToNormal() {
         isSmall = false;
-        mVideoPlayer.hideSmallVideo();
     }
 
 

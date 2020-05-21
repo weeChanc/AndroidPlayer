@@ -21,6 +21,7 @@ import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 
 import static com.rockcarry.ffplayer.MediaPlayer.PARAM_MEDIA_POSITION;
+import static com.rockcarry.ffplayer.MediaPlayer.PARAM_PLAY_SPEED;
 
 public class MyMediaPlayerWrapper implements IMediaPlayer {
     private static final int MSG_UPDATE_PROGRESS = 1;
@@ -32,24 +33,28 @@ public class MyMediaPlayerWrapper implements IMediaPlayer {
     String url = null;
     private OnPreparedListener onPreparedListener;
 
+    public void setSpeed(int speed) {
+        player.setParam(PARAM_PLAY_SPEED, speed);
+    }
+
     @Override
     public void setDisplay(SurfaceHolder surfaceHolder) {
-        Log.e("test","setdisplay");
+        Log.e("test", "setdisplay");
         player.setDisplaySurface(surfaceHolder.getSurface());
     }
 
     @Override
     public void setDataSource(Context context, Uri uri) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
         this.url = uri.toString();
-        Log.e("test","setDataSource");
+        Log.e("test", "setDataSource");
 //        player.open(uri.toString(),"video_hwaccel=1;video_rotate=0");
     }
 
     @Override
     public void setDataSource(Context context, Uri uri, Map<String, String> map) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
 //        player.open(uri.toString(),"video_hwaccel=1;video_rotate=0");
-        Log.e("test","setDataSource");
-         url = uri.toString();
+        Log.e("test", "setDataSource");
+        url = uri.toString();
     }
 
     @Override
@@ -59,7 +64,7 @@ public class MyMediaPlayerWrapper implements IMediaPlayer {
 
     @Override
     public void setDataSource(String s) throws IllegalArgumentException, SecurityException, IllegalStateException {
-        Log.e("test","setDataSource");
+        Log.e("test", "setDataSource");
         url = s;
     }
 
@@ -71,7 +76,7 @@ public class MyMediaPlayerWrapper implements IMediaPlayer {
     @SuppressLint("HandlerLeak")
     @Override
     public void prepareAsync() throws IllegalStateException {
-        Log.e("test","prepare async");
+        Log.e("test", "prepare async");
 
         player.open(url, "video_hwaccel=1;video_rotate=0");
         player.setPlayerMsgHandler(new Handler() {

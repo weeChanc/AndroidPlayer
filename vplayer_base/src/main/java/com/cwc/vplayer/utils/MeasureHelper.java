@@ -28,8 +28,6 @@ public final class MeasureHelper {
 
     private int mVideoWidth;
     private int mVideoHeight;
-    private int mVideoSarNum;
-    private int mVideoSarDen;
 
     private int mVideoRotationDegree;
 
@@ -55,11 +53,6 @@ public final class MeasureHelper {
     public void setVideoSize(int videoWidth, int videoHeight) {
         mVideoWidth = videoWidth;
         mVideoHeight = videoHeight;
-    }
-
-    public void setVideoSampleAspectRatio(int videoSarNum, int videoSarDen) {
-        mVideoSarNum = videoSarNum;
-        mVideoSarDen = videoSarDen;
     }
 
     public void setVideoRotation(int videoRotationDegree) {
@@ -90,11 +83,6 @@ public final class MeasureHelper {
 
         int realWidth = mVideoWidth;
 
-        if (mVideoSarNum != 0 && mVideoSarDen != 0) {
-            double pixelWidthHeightRatio = mVideoSarNum / (mVideoSarDen / 1.0);
-            realWidth = (int) (pixelWidthHeightRatio * mVideoWidth);
-        }
-
         int width = View.getDefaultSize(realWidth, widthMeasureSpec);
         int height = View.getDefaultSize(mVideoHeight, heightMeasureSpec);
         if (mCurrentAspectRatio == VideoType.SCREEN_MATCH_FULL) {
@@ -105,83 +93,7 @@ public final class MeasureHelper {
             int widthSpecSize = View.MeasureSpec.getSize(widthMeasureSpec);
             int heightSpecMode = View.MeasureSpec.getMode(heightMeasureSpec);
             int heightSpecSize = View.MeasureSpec.getSize(heightMeasureSpec);
-
-            if (widthSpecMode == View.MeasureSpec.AT_MOST && heightSpecMode == View.MeasureSpec.AT_MOST) {
-                float specAspectRatio = (float) widthSpecSize / (float) heightSpecSize;
-                float displayAspectRatio;
-                switch (mCurrentAspectRatio) {
-                    case VideoType.SCREEN_TYPE_16_9:
-                        displayAspectRatio = 16.0f / 9.0f;
-                        if (mVideoRotationDegree == 90 || mVideoRotationDegree == 270)
-                            displayAspectRatio = 1.0f / displayAspectRatio;
-                        break;
-                    case VideoType.SCREEN_TYPE_18_9:
-                        displayAspectRatio = 18.0f / 9.0f;
-                        if (mVideoRotationDegree == 90 || mVideoRotationDegree == 270)
-                            displayAspectRatio = 1.0f / displayAspectRatio;
-                        break;
-                    case VideoType.SCREEN_TYPE_4_3:
-                        displayAspectRatio = 4.0f / 3.0f;
-                        if (mVideoRotationDegree == 90 || mVideoRotationDegree == 270)
-                            displayAspectRatio = 1.0f / displayAspectRatio;
-                        break;
-                    case VideoType.SCREEN_TYPE_CUSTOM:
-                        displayAspectRatio = VideoType.getScreenScaleRatio();
-                        if (mVideoRotationDegree == 90 || mVideoRotationDegree == 270)
-                            displayAspectRatio = 1.0f / displayAspectRatio;
-                        break;
-                    case VideoType.SCREEN_TYPE_DEFAULT:
-                    case VideoType.SCREEN_TYPE_FULL:
-                        //case VideoType.AR_ASPECT_WRAP_CONTENT:
-                    default:
-                        displayAspectRatio = (float) realWidth / (float) mVideoHeight;
-                        if (mVideoSarNum > 0 && mVideoSarDen > 0)
-                            displayAspectRatio = displayAspectRatio * mVideoSarNum / mVideoSarDen;
-                        break;
-                }
-                boolean shouldBeWider = displayAspectRatio > specAspectRatio;
-
-                switch (mCurrentAspectRatio) {
-                    case VideoType.SCREEN_TYPE_DEFAULT:
-                    case VideoType.SCREEN_TYPE_16_9:
-                    case VideoType.SCREEN_TYPE_4_3:
-                    case VideoType.SCREEN_TYPE_18_9:
-                    case VideoType.SCREEN_TYPE_CUSTOM:
-                        if (shouldBeWider) {
-                            // too wide, fix width
-                            width = widthSpecSize;
-                            height = (int) (width / displayAspectRatio);
-                        } else {
-                            // too high, fix height
-                            height = heightSpecSize;
-                            width = (int) (height * displayAspectRatio);
-                        }
-                        break;
-                    case VideoType.SCREEN_TYPE_FULL:
-                        if (shouldBeWider) {
-                            // not high enough, fix height
-                            height = heightSpecSize;
-                            width = (int) (height * displayAspectRatio);
-                        } else {
-                            // not wide enough, fix width
-                            width = widthSpecSize;
-                            height = (int) (width / displayAspectRatio);
-                        }
-                        break;
-                    //case VideoType.AR_ASPECT_WRAP_CONTENT:
-                    default:
-                        if (shouldBeWider) {
-                            // too wide, fix width
-                            width = Math.min(realWidth, widthSpecSize);
-                            height = (int) (width / displayAspectRatio);
-                        } else {
-                            // too high, fix height
-                            height = Math.min(mVideoHeight, heightSpecSize);
-                            width = (int) (height * displayAspectRatio);
-                        }
-                        break;
-                }
-            } else if (widthSpecMode == View.MeasureSpec.EXACTLY && heightSpecMode == View.MeasureSpec.EXACTLY) {
+             if (widthSpecMode == View.MeasureSpec.EXACTLY && heightSpecMode == View.MeasureSpec.EXACTLY) {
                 // the size is fixed
                 width = widthSpecSize;
                 height = heightSpecSize;
@@ -240,11 +152,9 @@ public final class MeasureHelper {
                 int videoWidth = mParamsListener.getCurrentVideoWidth();
                 int videoHeight = mParamsListener.getCurrentVideoHeight();
                 Debuger.printfLog("videoWidth: " + videoWidth + " videoHeight: " + videoHeight);
-                int videoSarNum = mParamsListener.getVideoSarNum();
-                int videoSarDen = mParamsListener.getVideoSarDen();
+
 
                 if (videoWidth > 0 && videoHeight > 0) {
-                    setVideoSampleAspectRatio(videoSarNum, videoSarDen);
                     setVideoSize(videoWidth, videoHeight);
                 }
                 setVideoRotation(rotate);
@@ -276,9 +186,6 @@ public final class MeasureHelper {
 
         int getCurrentVideoHeight();
 
-        int getVideoSarNum();
-
-        int getVideoSarDen();
     }
 
 }

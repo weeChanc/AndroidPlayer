@@ -52,9 +52,6 @@ public abstract class BaseVideoPlayer extends VideoControlView {
     //是否需要在利用window实现全屏幕的时候隐藏statusbar
     protected boolean mStatusBar = false;
 
-    //是否使用全屏动画效果
-    protected boolean mShowFullAnimation = true;
-
     //是否自动旋转
     protected boolean mRotateViewAuto = true;
 
@@ -72,9 +69,6 @@ public abstract class BaseVideoPlayer extends VideoControlView {
 
     //全屏动画是否结束了
     protected boolean mFullAnimEnd = true;
-
-    //小窗口关闭按键
-    protected View mSmallClose;
 
     //旋转工具类
     protected OrientationUtils mOrientationUtils;
@@ -103,7 +97,6 @@ public abstract class BaseVideoPlayer extends VideoControlView {
     @Override
     protected void init(Context context) {
         super.init(context);
-        mSmallClose = findViewById(R.id.small_close);
     }
 
 
@@ -130,16 +123,6 @@ public abstract class BaseVideoPlayer extends VideoControlView {
         }
         if (mRenderViewContainer != null) {
             mRenderViewContainer.setOnClickListener(null);
-        }
-        if (mSmallClose != null) {
-            mSmallClose.setVisibility(VISIBLE);
-            mSmallClose.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    hideSmallVideo();
-                    releaseVideos();
-                }
-            });
         }
     }
 
@@ -316,25 +299,11 @@ public abstract class BaseVideoPlayer extends VideoControlView {
         final boolean isVertical = isVerticalFullByVideoSize();
         final boolean isLockLand = isLockLandByAutoFullSize();
 
-        if (isShowFullAnimation()) {
-            mInnerHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //autoFull模式下，非横屏视频视频不横屏，并且不自动旋转
-                    if (!isVertical && isLockLand && mOrientationUtils != null && mOrientationUtils.getIsLand() != 1) {
-                        mOrientationUtils.resolveByClick();
-                    }
-                    videoPlayer.setVisibility(VISIBLE);
-                    frameLayout.setVisibility(VISIBLE);
-                }
-            }, 300);
-        } else {
-            if (!isVertical && isLockLand && mOrientationUtils != null) {
-                mOrientationUtils.resolveByClick();
-            }
-            videoPlayer.setVisibility(VISIBLE);
-            frameLayout.setVisibility(VISIBLE);
+        if (!isVertical && isLockLand && mOrientationUtils != null) {
+            mOrientationUtils.resolveByClick();
         }
+        videoPlayer.setVisibility(VISIBLE);
+        frameLayout.setVisibility(VISIBLE);
 
 
         if (mVideoAllCallBack != null) {
@@ -360,10 +329,6 @@ public abstract class BaseVideoPlayer extends VideoControlView {
         mCurrentState = getVideoManager().getLastState();
         if (videoPlayer != null) {
             cloneParams(videoPlayer, this);
-        }
-        if (mCurrentState != CURRENT_STATE_NORMAL
-                || mCurrentState != CURRENT_STATE_AUTO_COMPLETE) {
-            createNetWorkState();
         }
         getVideoManager().setListener(getVideoManager().lastListener());
         getVideoManager().setLastListener(null);
@@ -404,9 +369,7 @@ public abstract class BaseVideoPlayer extends VideoControlView {
             }
         }
 
-        if (!mShowFullAnimation) {
-            delay = 0;
-        }
+        delay = 0;
 
         final ViewGroup vp = getViewGroup();
         final View oldF = vp.findViewById(getFullId());
@@ -439,27 +402,7 @@ public abstract class BaseVideoPlayer extends VideoControlView {
             videoPlayer = (VideoPlayer) oldF;
             //如果暂停了
             pauseFullBackCoverLogic(videoPlayer);
-            if (mShowFullAnimation) {
-                TransitionManager.beginDelayedTransition(vp);
-
-                LayoutParams lp = (LayoutParams) videoPlayer.getLayoutParams();
-                lp.setMargins(mListItemRect[0], mListItemRect[1], 0, 0);
-                lp.width = mListItemSize[0];
-                lp.height = mListItemSize[1];
-                //注意配置回来，不然动画效果会不对
-                lp.gravity = Gravity.NO_GRAVITY;
-                videoPlayer.setLayoutParams(lp);
-
-                mInnerHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        resolveNormalVideoShow(oldF, vp, videoPlayer);
-                    }
-                }, 400);
-            } else {
-                resolveNormalVideoShow(oldF, vp, videoPlayer);
-            }
-
+            resolveNormalVideoShow(oldF, vp, videoPlayer);
         } else {
             resolveNormalVideoShow(null, vp, null);
         }
@@ -697,28 +640,12 @@ public abstract class BaseVideoPlayer extends VideoControlView {
             final FrameLayout frameLayout = new FrameLayout(context);
             frameLayout.setBackgroundColor(Color.BLACK);
 
-            if (mShowFullAnimation) {
-                mFullAnimEnd = false;
-                LayoutParams lp = new LayoutParams(getWidth(), getHeight());
-                lp.setMargins(mListItemRect[0], mListItemRect[1], 0, 0);
-                frameLayout.addView(videoPlayer, lp);
-                vp.addView(frameLayout, lpParent);
-                mInnerHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        TransitionManager.beginDelayedTransition(vp);
-                        resolveFullVideoShow(context, videoPlayer, frameLayout);
-                        mFullAnimEnd = true;
-                    }
-                }, 300);
-            } else {
-                LayoutParams lp = new LayoutParams(getWidth(), getHeight());
-                frameLayout.addView(videoPlayer, lp);
-                vp.addView(frameLayout, lpParent);
-                videoPlayer.setVisibility(INVISIBLE);
-                frameLayout.setVisibility(INVISIBLE);
-                resolveFullVideoShow(context, videoPlayer, frameLayout);
-            }
+            LayoutParams lp = new LayoutParams(getWidth(), getHeight());
+            frameLayout.addView(videoPlayer, lp);
+            vp.addView(frameLayout, lpParent);
+            videoPlayer.setVisibility(INVISIBLE);
+            frameLayout.setVisibility(INVISIBLE);
+            resolveFullVideoShow(context, videoPlayer, frameLayout);
 
             videoPlayer.addTextureView();
 
@@ -735,105 +662,6 @@ public abstract class BaseVideoPlayer extends VideoControlView {
         return null;
     }
 
-
-    /**
-     * 显示小窗口
-     */
-    @SuppressWarnings("ResourceType, unchecked")
-    public BaseVideoPlayer showSmallVideo(Point size, final boolean actionBar, final boolean statusBar) {
-
-        final ViewGroup vp = getViewGroup();
-
-        removeVideo(vp, getSmallId());
-
-        if (mRenderViewContainer.getChildCount() > 0) {
-            mRenderViewContainer.removeAllViews();
-        }
-
-        try {
-            Constructor<BaseVideoPlayer> constructor = (Constructor<BaseVideoPlayer>) BaseVideoPlayer.this.getClass().getConstructor(Context.class);
-            BaseVideoPlayer videoPlayer = constructor.newInstance(getActivityContext());
-            videoPlayer.setId(getSmallId());
-
-            LayoutParams lpParent = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            FrameLayout frameLayout = new FrameLayout(mContext);
-
-            LayoutParams lp = new LayoutParams(size.x, size.y);
-            int marginLeft = CommonUtil.getScreenWidth(mContext) - size.x;
-            int marginTop = CommonUtil.getScreenHeight(mContext) - size.y;
-
-            if (actionBar) {
-                marginTop = marginTop - getActionBarHeight((Activity) mContext);
-            }
-
-            if (statusBar) {
-                marginTop = marginTop - getStatusBarHeight(mContext);
-            }
-
-            lp.setMargins(marginLeft, marginTop, 0, 0);
-            frameLayout.addView(videoPlayer, lp);
-
-            vp.addView(frameLayout, lpParent);
-
-            cloneParams(this, videoPlayer);
-
-            videoPlayer.setIsTouchWiget(false);//小窗口不能点击
-
-            videoPlayer.addTextureView();
-            //隐藏掉所有的弹出状态哟
-            videoPlayer.onClickUiToggle();
-            videoPlayer.setVideoAllCallBack(mVideoAllCallBack);
-            videoPlayer.setSmallVideoTextureView(new SmallVideoTouch(videoPlayer, marginLeft, marginTop));
-
-            getVideoManager().setLastListener(this);
-            getVideoManager().setListener(videoPlayer);
-            if (mVideoAllCallBack != null) {
-                Debuger.printfError("onEnterSmallWidget");
-                mVideoAllCallBack.onEnterSmallWidget(mOriginUrl, mTitle, videoPlayer);
-            }
-
-            return videoPlayer;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * 隐藏小窗口
-     */
-    @SuppressWarnings("ResourceType")
-    public void hideSmallVideo() {
-        final ViewGroup vp = getViewGroup();
-        VideoPlayer videoPlayer = (VideoPlayer) vp.findViewById(getSmallId());
-        removeVideo(vp, getSmallId());
-        mCurrentState = getVideoManager().getLastState();
-        if (videoPlayer != null) {
-            cloneParams(videoPlayer, this);
-        }
-        getVideoManager().setListener(getVideoManager().lastListener());
-        getVideoManager().setLastListener(null);
-        setStateAndUi(mCurrentState);
-        addTextureView();
-        mSaveChangeViewTIme = System.currentTimeMillis();
-        if (mVideoAllCallBack != null) {
-            Debuger.printfLog("onQuitSmallWidget");
-            mVideoAllCallBack.onQuitSmallWidget(mOriginUrl, mTitle, this);
-        }
-    }
-
-    public boolean isShowFullAnimation() {
-        return mShowFullAnimation;
-    }
-
-    /**
-     * 全屏动画
-     *
-     * @param showFullAnimation 是否使用全屏动画效果
-     */
-    public void setShowFullAnimation(boolean showFullAnimation) {
-        this.mShowFullAnimation = showFullAnimation;
-    }
 
     public boolean isRotateViewAuto() {
         if (mAutoFullWithSize) {

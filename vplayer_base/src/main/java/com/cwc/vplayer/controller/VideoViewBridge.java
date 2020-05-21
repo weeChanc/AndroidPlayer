@@ -34,17 +34,6 @@ public interface VideoViewBridge {
 
     void setPlayPosition(int playPosition);
 
-    /**
-     * 开始准备播放
-     *
-     * @param url         播放url
-     * @param mapHeadData 头部信息
-     * @param loop        是否循环
-     * @param speed       播放速度
-     * @param cache       是否缓存
-     * @param cachePath   缓存目录，可以为空，为空时使用默认
-     */
-    void prepare(final String url, final Map<String, String> mapHeadData, boolean loop, float speed, boolean cache, File cachePath);
 
     /**
      * 开始准备播放
@@ -91,28 +80,7 @@ public interface VideoViewBridge {
 
     int getLastState();
 
-    void setLastState(int lastState);
 
-    /**
-     * 播放中的url是否已经缓存
-     */
-    boolean isCacheFile();
-
-    /**
-     * 是否已经完全缓存到本地，主要用于开始播放前判断，是否提示用户
-     *
-     * @param cacheDir 缓存目录，为空是使用默认目录
-     * @param url      指定url缓存
-     */
-    boolean cachePreview(Context context, File cacheDir, String url);
-
-    /**
-     * 清除缓存
-     *
-     * @param cacheDir 缓存目录，为空是使用默认目录
-     * @param url      指定url缓存，为空时清除所有
-     */
-    void clearCache(Context context, File cacheDir, String url);
 
     /**
      * 网络速度
@@ -156,8 +124,4 @@ public interface VideoViewBridge {
     long getCurrentPosition();
 
     long getDuration();
-
-    int getVideoSarNum();
-
-    int getVideoSarDen();
 }

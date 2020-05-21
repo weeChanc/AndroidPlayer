@@ -850,14 +850,6 @@ public class StandardVideoPlayer extends VideoPlayer {
             getCurrentPlayer().getRenderProxy().taskShotPic(videoShotListener, high);
         }
     }
-
-    /**
-     * 保存截图
-     */
-    public void saveFrame(final File file, VideoShotSaveListener videoShotSaveListener) {
-        saveFrame(file, false, videoShotSaveListener);
-    }
-
     /**
      * 保存截图
      *
@@ -867,15 +859,5 @@ public class StandardVideoPlayer extends VideoPlayer {
         if (getCurrentPlayer().getRenderProxy() != null) {
             getCurrentPlayer().getRenderProxy().saveFrame(file, high, videoShotSaveListener);
         }
-    }
-
-    /**
-     * 重新开启进度查询以及控制view消失的定时任务
-     * 用于解决VideoHelper中通过removeview方式做全屏切换导致的定时任务停止的问题
-     * VideoControlView   onDetachedFromWindow（）
-     */
-    public void restartTimerTask() {
-        startProgressTimer();
-        startDismissControlViewTimer();
     }
 }

@@ -607,7 +607,6 @@ public class VideoOptionBuilder {
             videoPlayer.setSeekOnStart(mSeekOnStart);
         }
 
-        videoPlayer.setShowFullAnimation(mShowFullAnimation);
         videoPlayer.setLooping(mLooping);
         if (mVideoAllCallBack != null) {
             videoPlayer.setVideoAllCallBack(mVideoAllCallBack);

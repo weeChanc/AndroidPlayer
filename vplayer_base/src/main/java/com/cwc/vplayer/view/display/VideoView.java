@@ -227,21 +227,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
         return 0;
     }
 
-    @Override
-    public int getVideoSarNum() {
-        if (getVideoManager() != null) {
-            return getVideoManager().getVideoSarNum();
-        }
-        return 0;
-    }
-
-    @Override
-    public int getVideoSarDen() {
-        if (getVideoManager() != null) {
-            return getVideoManager().getVideoSarDen();
-        }
-        return 0;
-    }
 
     protected void updatePauseCover() {
         if ((mFullPauseBitmap == null || mFullPauseBitmap.isRecycled()) && mShowPauseCover) {
@@ -549,19 +534,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
         }, 500);
     }
 
-
-    /**
-     * 播放错误的时候，删除缓存文件
-     */
-    protected void deleteCacheFileWhenError() {
-        clearCurrentCache();
-        Debuger.printfError("Link Or mCache Error, Please Try Again " + mOriginUrl);
-        if (mCache) {
-            Debuger.printfError("mCache Link " + mUrl);
-        }
-        mUrl = mOriginUrl;
-    }
-
     @Override
     public void onPrepared() {
 
@@ -663,7 +635,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
 
         if (what != 38 && what != -38) {
             setStateAndUi(CURRENT_STATE_ERROR);
-            deleteCacheFileWhenError();
             if (mVideoAllCallBack != null) {
                 mVideoAllCallBack.onPlayError(mOriginUrl, mTitle, this);
             }
@@ -713,21 +684,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
     @Override
     protected void releaseSurface(Surface surface) {
         getVideoManager().releaseSurface(surface);
-    }
-
-    /**
-     * 清除当前缓存
-     */
-    public void clearCurrentCache() {
-        if (getVideoManager().isCacheFile() && mCache) {
-            //是否为缓存文件
-            Debuger.printfError("Play Error " + mUrl);
-            mUrl = mOriginUrl;
-            getVideoManager().clearCache(mContext, mCachePath, mOriginUrl);
-        } else if (mUrl.contains("127.0.0.1")) {
-            getVideoManager().clearCache(getContext(), mCachePath, mOriginUrl);
-        }
-
     }
 
     /**

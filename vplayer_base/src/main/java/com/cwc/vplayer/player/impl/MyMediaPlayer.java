@@ -5,7 +5,6 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Surface;
 
-import com.cwc.vplayer.player.base.cache.ICacheManager;
 import com.cwc.vplayer.player.base.model.VideoModel;
 import com.cwc.vplayer.player.base.model.VideoOptionModel;
 import com.cwc.vplayer.player.base.player.BasePlayerManager;
@@ -13,7 +12,6 @@ import com.cwc.vplayer.player.base.player.BasePlayerManager;
 import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
-import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 public class MyMediaPlayer extends BasePlayerManager {
 
@@ -26,8 +24,8 @@ public class MyMediaPlayer extends BasePlayerManager {
     }
 
     @Override
-    public void initVideoPlayer(Context context, Message message, List<VideoOptionModel> optionModelList, ICacheManager cacheManager) {
-        if(mediaPlayer == null){
+    public void initVideoPlayer(Context context, Message message, List<VideoOptionModel> optionModelList) {
+        if (mediaPlayer == null) {
             mediaPlayer = new MyMediaPlayerWrapper();
             VideoModel videoModel = (VideoModel) message.obj;
             String url = videoModel.getUrl();
@@ -41,7 +39,7 @@ public class MyMediaPlayer extends BasePlayerManager {
         if (msg.obj == null && mediaPlayer != null) {
             mediaPlayer.setSurface(null);
         } else {
-            Log.e("test","setDispaly");
+            Log.e("test", "setDispaly");
             Surface holder = (Surface) msg.obj;
             surface = holder;
             if (mediaPlayer != null && holder.isValid()) {
@@ -154,29 +152,12 @@ public class MyMediaPlayer extends BasePlayerManager {
     }
 
     @Override
-    public int getVideoSarNum() {
-        if (mediaPlayer != null) {
-            return mediaPlayer.getVideoSarNum();
-        }
-        return 1;
-    }
-
-    @Override
-    public int getVideoSarDen() {
-        if (mediaPlayer != null) {
-            return mediaPlayer.getVideoSarDen();
-        }
-        return 1;
-    }
-
-
-    @Override
     public boolean isSurfaceSupportLockCanvas() {
         return true;
     }
 
     @Override
     public void setSpeed(float speed, boolean soundTouch) {
-
+        mediaPlayer.setSpeed((int) speed);
     }
 }

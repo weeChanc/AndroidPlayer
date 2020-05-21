@@ -8,11 +8,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.Surface;
 
-import androidx.annotation.Nullable;
-
-import com.cwc.vplayer.factory.CacheFactory;
 import com.cwc.vplayer.factory.PlayerFactory;
-import com.cwc.vplayer.player.base.cache.ICacheManager;
 import com.cwc.vplayer.player.base.model.VideoModel;
 import com.cwc.vplayer.player.base.model.VideoOptionModel;
 import com.cwc.vplayer.player.base.player.BasePlayerManager;
@@ -33,7 +29,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListener, IMediaPlayer.OnCompletionListener,
         IMediaPlayer.OnBufferingUpdateListener, IMediaPlayer.OnSeekCompleteListener, IMediaPlayer.OnErrorListener,
-        IMediaPlayer.OnVideoSizeChangedListener, IMediaPlayer.OnInfoListener, ICacheManager.ICacheAvailableListener, VideoViewBridge {
+        IMediaPlayer.OnVideoSizeChangedListener, IMediaPlayer.OnInfoListener,  VideoViewBridge {
 
     private static final int HANDLER_PREPARE = 0;
     private static final int HANDLER_SETDISPLAY = 1;
@@ -62,10 +58,6 @@ public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListene
      */
     private IPlayerManager playerManager;
 
-    /**
-     * 缓存管理
-     */
-    private ICacheManager cacheManager;
 
     /**
      * 当前播放的视频宽的高
@@ -107,28 +99,6 @@ public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListene
      */
     protected boolean needTimeOutOther;
 
-    /**
-     * 删除默认所有缓存文件
-     */
-    public void clearAllDefaultCache(Context context) {
-        clearDefaultCache(context, null, null);
-    }
-
-    /**
-     * 清除缓存
-     *
-     * @param cacheDir 缓存目录，为空是使用默认目录
-     * @param url      指定url缓存，为空时清除所有
-     */
-    public void clearDefaultCache(Context context, @Nullable File cacheDir, @Nullable String url) {
-        if (cacheManager != null) {
-            cacheManager.clearCache(context, cacheDir, url);
-        } else {
-            if (getCacheManager() != null) {
-                getCacheManager().clearCache(context, cacheDir, url);
-            }
-        }
-    }
 
     protected void init() {
         mMediaHandler = new MediaHandler((Looper.getMainLooper()));
@@ -139,9 +109,6 @@ public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListene
         return PlayerFactory.getPlayManager();
     }
 
-    protected ICacheManager getCacheManager() {
-        return CacheFactory.getCacheManager();
-    }
 
     @Override
     public MediaPlayerListener listener() {
@@ -180,10 +147,6 @@ public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListene
         }
     }
 
-    @Override
-    public void prepare(String url, Map<String, String> mapHeadData, boolean loop, float speed, boolean cache, File cachePath) {
-        prepare(url, mapHeadData, loop, speed, cache, cachePath, null);
-    }
 
     @Override
     public void prepare(final String url, final Map<String, String> mapHeadData, boolean loop, float speed, boolean cache, File cachePath, String overrideExtension) {
@@ -328,19 +291,10 @@ public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListene
 
 
     @Override
-    public void onCacheAvailable(File cacheFile, String url, int percentsAvailable) {
-        bufferPoint = percentsAvailable;
-    }
-
-    @Override
     public int getLastState() {
         return lastState;
     }
 
-    @Override
-    public void setLastState(int lastState) {
-        this.lastState = lastState;
-    }
 
     @Override
     public int getCurrentVideoWidth() {
@@ -383,22 +337,6 @@ public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListene
     }
 
 
-    @Override
-    public boolean isCacheFile() {
-        return cacheManager != null && cacheManager.hadCached();
-    }
-
-    /**
-     * 这里只是用于点击时判断是否已经缓存
-     * 所以每次直接通过一个CacheManager对象判断即可
-     */
-    @Override
-    public boolean cachePreview(Context context, File cacheDir, String url) {
-        if (getCacheManager() != null) {
-            return getCacheManager().cachePreview(context, cacheDir, url);
-        }
-        return false;
-    }
 
     @Override
     public long getNetSpeed() {
@@ -408,10 +346,6 @@ public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListene
         return 0;
     }
 
-    @Override
-    public void clearCache(Context context, File cacheDir, String url) {
-        clearDefaultCache(context, cacheDir, url);
-    }
 
 
     @Override
@@ -503,22 +437,6 @@ public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListene
     }
 
     @Override
-    public int getVideoSarNum() {
-        if (playerManager != null) {
-            return playerManager.getVideoSarNum();
-        }
-        return 0;
-    }
-
-    @Override
-    public int getVideoSarDen() {
-        if (playerManager != null) {
-            return playerManager.getVideoSarDen();
-        }
-        return 0;
-    }
-
-    @Override
     public int getRotateInfoFlag() {
         return IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED;
     }
@@ -546,9 +464,6 @@ public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListene
                     if (playerManager != null) {
                         playerManager.release();
                     }
-                    if (cacheManager != null) {
-                        cacheManager.release();
-                    }
                     bufferPoint = 0;
                     setNeedMute(false);
                     cancelTimeOutBuffer();
@@ -570,15 +485,11 @@ public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListene
                 playerManager.release();
             }
             playerManager = getPlayManager();
-            cacheManager = getCacheManager();
-            if (cacheManager != null) {
-                cacheManager.setCacheAvailableListener(this);
-            }
             if (playerManager instanceof BasePlayerManager) {
                 ((BasePlayerManager) playerManager)
                         .setPlayerInitSuccessListener(mPlayerInitSuccessListener);
             }
-            playerManager.initVideoPlayer(context, msg, optionModelList, cacheManager);
+            playerManager.initVideoPlayer(context, msg, optionModelList);
 
             setNeedMute(needMute);
             IMediaPlayer mediaPlayer = playerManager.getMediaPlayer();
@@ -716,9 +627,6 @@ public abstract class VideoBaseManager implements IMediaPlayer.OnPreparedListene
         return playerManager;
     }
 
-    public ICacheManager getCurCacheManager() {
-        return cacheManager;
-    }
 
     public IPlayerInitSuccessListener getPlayerPreparedSuccessListener() {
         return mPlayerInitSuccessListener;

@@ -9,7 +9,6 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.Surface;
 
-import com.cwc.vplayer.player.base.cache.ICacheManager;
 import com.cwc.vplayer.player.base.model.VideoModel;
 import com.cwc.vplayer.player.base.model.VideoType;
 import com.cwc.vplayer.player.base.model.VideoOptionModel;
@@ -43,7 +42,7 @@ public class IjkPlayerManager extends BasePlayerManager {
     }
 
     @Override
-    public void initVideoPlayer(Context context, Message msg, List<VideoOptionModel> optionModelList, ICacheManager cacheManager) {
+    public void initVideoPlayer(Context context, Message msg, List<VideoOptionModel> optionModelList) {
         mediaPlayer = (ijkLibLoader == null) ? new IjkMediaPlayer() : new IjkMediaPlayer(ijkLibLoader);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setOnNativeInvokeListener(new IjkMediaPlayer.OnNativeInvokeListener() {
@@ -65,20 +64,16 @@ public class IjkPlayerManager extends BasePlayerManager {
                 mediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1);
             }
 
-            if (videoModel.isCache() && cacheManager != null) {
-                cacheManager.doCacheLogic(context, mediaPlayer, url, videoModel.getMapHeadData(), videoModel.getCachePath());
-            } else {
-                if (!TextUtils.isEmpty(url)) {
-                    Uri uri = Uri.parse(url);
-                    if (uri.getScheme().equals(ContentResolver.SCHEME_ANDROID_RESOURCE)) {
-                        RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(context, uri);
-                        mediaPlayer.setDataSource(rawDataSourceProvider);
-                    } else {
-                        mediaPlayer.setDataSource(url, videoModel.getMapHeadData());
-                    }
+            if (!TextUtils.isEmpty(url)) {
+                Uri uri = Uri.parse(url);
+                if (uri.getScheme().equals(ContentResolver.SCHEME_ANDROID_RESOURCE)) {
+                    RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(context, uri);
+                    mediaPlayer.setDataSource(rawDataSourceProvider);
                 } else {
                     mediaPlayer.setDataSource(url, videoModel.getMapHeadData());
                 }
+            } else {
+                mediaPlayer.setDataSource(url, videoModel.getMapHeadData());
             }
 
             mediaPlayer.setLooping(videoModel.isLooping());
@@ -247,22 +242,6 @@ public class IjkPlayerManager extends BasePlayerManager {
             return mediaPlayer.getDuration();
         }
         return 0;
-    }
-
-    @Override
-    public int getVideoSarNum() {
-        if (mediaPlayer != null) {
-            return mediaPlayer.getVideoSarNum();
-        }
-        return 1;
-    }
-
-    @Override
-    public int getVideoSarDen() {
-        if (mediaPlayer != null) {
-            return mediaPlayer.getVideoSarDen();
-        }
-        return 1;
     }
 
 

@@ -3,7 +3,6 @@ package com.cwc.vplayer.player.base.player;
 import android.content.Context;
 import android.os.Message;
 
-import com.cwc.vplayer.player.base.cache.ICacheManager;
 import com.cwc.vplayer.player.base.model.VideoOptionModel;
 
 import java.util.List;
@@ -23,9 +22,8 @@ public interface IPlayerManager {
      *
      * @param message         播放器所需初始化内容
      * @param optionModelList 配置信息
-     * @param cacheManager    缓存管理
      */
-    void initVideoPlayer(Context context, Message message, List<VideoOptionModel> optionModelList, ICacheManager cacheManager);
+    void initVideoPlayer(Context context, Message message, List<VideoOptionModel> optionModelList);
 
     /**
      * 设置渲染显示
@@ -88,7 +86,4 @@ public interface IPlayerManager {
 
     long getDuration();
 
-    int getVideoSarNum();
-
-    int getVideoSarDen();
 }

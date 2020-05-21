@@ -219,24 +219,6 @@ public class VTextureView extends TextureView implements TextureView.SurfaceText
         }
         return 0;
     }
-
-    @Override
-    public int getVideoSarNum() {
-        if (mVideoParamsListener != null) {
-            return mVideoParamsListener.getVideoSarNum();
-        }
-        return 0;
-    }
-
-    @Override
-    public int getVideoSarDen() {
-        if (mVideoParamsListener != null) {
-            return mVideoParamsListener.getVideoSarDen();
-        }
-        return 0;
-    }
-
-
     /**
      * 添加播放的view
      */

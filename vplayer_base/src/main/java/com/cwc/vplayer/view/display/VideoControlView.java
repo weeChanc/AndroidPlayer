@@ -942,12 +942,12 @@ public abstract class VideoControlView extends VideoView implements View.OnClick
 
     protected void setSecondaryProgress(int secProgress) {
         if (mProgressBar != null) {
-            if (secProgress != 0 && !getVideoManager().isCacheFile()) {
+            if (secProgress != 0) {
                 mProgressBar.setSecondaryProgress(secProgress);
             }
         }
         if (mBottomProgressBar != null) {
-            if (secProgress != 0 && !getVideoManager().isCacheFile()) {
+            if (secProgress != 0) {
                 mBottomProgressBar.setSecondaryProgress(secProgress);
             }
         }
@@ -1038,7 +1038,7 @@ public abstract class VideoControlView extends VideoView implements View.OnClick
 
     protected boolean isShowNetConfirm() {
         return !mOriginUrl.startsWith("file") && !mOriginUrl.startsWith("android.resource") && !CommonUtil.isWifiConnected(getContext())
-                && mNeedShowWifiTip && !getVideoManager().cachePreview(mContext.getApplicationContext(), mCachePath, mOriginUrl);
+                && mNeedShowWifiTip;
     }
 
     Runnable progressTask = new Runnable() {
