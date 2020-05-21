@@ -2,6 +2,7 @@ package com.rockcarry.ffplayer;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -37,6 +38,7 @@ public final class MediaPlayer {
 
     public boolean open(String url, String params) {
         nativeClose(m_hPlayer);
+        Log.e("test","java open");
         m_hPlayer = nativeOpen(url, null, 0, 0, params);
         return m_hPlayer != 0 ? true : false;
     }

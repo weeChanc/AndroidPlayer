@@ -2,6 +2,7 @@ package com.cwc.vplayer.factory;
 
 import com.cwc.vplayer.player.base.player.IPlayerManager;
 import com.cwc.vplayer.player.impl.IjkPlayerManager;
+import com.cwc.vplayer.player.impl.MyMediaPlayer;
 
 /**
  * 播放内核工厂
@@ -16,7 +17,7 @@ public class PlayerFactory {
 
     public static IPlayerManager getPlayManager() {
         if (sPlayerManager == null) {
-            sPlayerManager = IjkPlayerManager.class;
+            sPlayerManager = MyMediaPlayer.class;
         }
         try {
             return sPlayerManager.newInstance();

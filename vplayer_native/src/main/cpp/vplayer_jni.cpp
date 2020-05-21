@@ -14,6 +14,7 @@ extern "C" int av_jni_set_java_vm(void *vm, void *log_ctx);
  */
 static jlong JNICALL nativeOpen(JNIEnv *env, jobject obj, jstring url, jobject jsurface, jint w, jint h, jstring params)
 {
+    LOGI("native_open","open from java")
     DO_USE_VAR(obj);
     DO_USE_VAR(jsurface);
     DO_USE_VAR(w);

@@ -37,6 +37,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.2.0'
     implementation deps.ijkplayer_java
+    implementation project(path: ':vplayer_native')
 //    implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
 //    implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
 //    implementation 'tv.danmaku.ijk.media:ijkplayer-armv5:0.8.8'

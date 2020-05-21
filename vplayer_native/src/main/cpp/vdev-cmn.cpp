@@ -146,11 +146,11 @@ void vdev_avsync_and_complete(void *ctxt) {
         }
 
         avdiff = (int) (c->apts - c->vpts); // diff between audio and video pts
-        LOGI("avdiff: %lld", c->apts);
+//        LOGI("avdiff: %lld", c->apts);
         if (avdiff >= 0) return;
         avdiff = -avdiff;
         unsigned int sleep = (unsigned int) (avdiff & 0x7FFF);
-        LOGI("sleep: %u", sleep);
+//        LOGI("sleep: %u", sleep);
         av_usleep(sleep * 1000);
 
 

@@ -95,5 +95,4 @@ target_link_libraries( ffplayer_jni
         swscale
         postproc
         avfilter
-        avdevice
-        yuv)
+        avdevice)

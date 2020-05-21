@@ -678,7 +678,7 @@ static void *video_decode_thread_proc(void *param) {
 // 函数实现
 void *player_open(char *file, void *appdata, PLAYER_INIT_PARAMS *params) {
     PLAYER *player = NULL;
-
+    LOGI("test","open!!!")
     // av register all
     av_register_all();
     avformat_network_init();
@@ -787,6 +787,7 @@ void player_play(void *hplayer) {
 }
 
 void player_pause(void *hplayer) {
+
     if (!hplayer) return;
     PLAYER *player = (PLAYER *) hplayer;
     player->player_status |= PS_R_PAUSE;

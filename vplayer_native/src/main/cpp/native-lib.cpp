@@ -1,4 +1,3 @@
-#include <libyuv/convert_argb.h>
 
 extern "C" {
 #include <jni.h>
@@ -304,11 +303,11 @@ Java_com_cwc_vplayer_jni_AVUtils_videoRender(JNIEnv *env, jclass type, jstring i
                                pCodecCtx->height);
 
                 //YUV格式的数据转换成RGBA 8888格式的数据, FFmpeg 也可以转换，但是存在问题，使用libyuv这个库实现
-                libyuv::I420ToARGB(yuv_frame->data[0], yuv_frame->linesize[0],
-                                   yuv_frame->data[2], yuv_frame->linesize[2],
-                                   yuv_frame->data[1], yuv_frame->linesize[1],
-                                   rgb_frame->data[0], rgb_frame->linesize[0],
-                                   pCodecCtx->width, pCodecCtx->height);
+//                libyuv::I420ToARGB(yuv_frame->data[0], yuv_frame->linesize[0],
+//                                   yuv_frame->data[2], yuv_frame->linesize[2],
+//                                   yuv_frame->data[1], yuv_frame->linesize[1],
+//                                   rgb_frame->data[0], rgb_frame->linesize[0],
+//                                   pCodecCtx->width, pCodecCtx->height);
                 //3、unlock window
                 ANativeWindow_unlockAndPost(pWindow);
                 frame_count++;
