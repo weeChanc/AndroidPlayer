@@ -26,6 +26,7 @@ import com.cwc.vplayer.utils.CommonUtil;
 import com.cwc.vplayer.utils.Debuger;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.cwc.vplayer.utils.CommonUtil.hideNavKey;
@@ -317,7 +318,6 @@ public abstract class VideoControlView extends VideoView implements View.OnClick
                         mAudioManager.abandonAudioFocus(onAudioFocusChangeListener);
                     }
                 }
-                releaseNetWorkState();
                 break;
             case CURRENT_STATE_PREPAREING:
                 resetProgressAndTime();
@@ -388,10 +388,6 @@ public abstract class VideoControlView extends VideoView implements View.OnClick
                 return;
             }
             if (mCurrentState == CURRENT_STATE_NORMAL) {
-                if (isShowNetConfirm()) {
-                    showWifiDialog();
-                    return;
-                }
                 startPlayLogic();
             } else if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE) {
                 onClickUiToggle();
@@ -638,7 +634,6 @@ public abstract class VideoControlView extends VideoView implements View.OnClick
             super.setUp(mOriginUrl,
                     mCache,
                     mCachePath,
-                    mMapHeadData,
                     mTitle);
         }
         super.prepareVideo();
@@ -827,10 +822,6 @@ public abstract class VideoControlView extends VideoView implements View.OnClick
             return;
         }
         if (mCurrentState == CURRENT_STATE_NORMAL || mCurrentState == CURRENT_STATE_ERROR) {
-            if (isShowNetConfirm()) {
-                showWifiDialog();
-                return;
-            }
             startButtonLogic();
         } else if (mCurrentState == CURRENT_STATE_PLAYING) {
             try {
@@ -1075,7 +1066,6 @@ public abstract class VideoControlView extends VideoView implements View.OnClick
 
     /************************* 继承之后可自定义ui与显示隐藏 *************************/
 
-    protected abstract void showWifiDialog();
 
     protected abstract void showProgressDialog(float deltaX,
                                                String seekTime, int seekTimePosition,
@@ -1116,13 +1106,12 @@ public abstract class VideoControlView extends VideoView implements View.OnClick
     /**
      * 在点击播放的时候才进行真正setup
      */
-    public boolean setUpLazy(String url, boolean cacheWithPlay, File cachePath, Map<String, String> mapHeadData, String title) {
+    public boolean setUpLazy(String url, boolean cacheWithPlay, File cachePath, String title) {
         mOriginUrl = url;
         mCache = cacheWithPlay;
         mCachePath = cachePath;
         mSetUpLazy = true;
         mTitle = title;
-        mMapHeadData = mapHeadData;
         if (isCurrentMediaListener() &&
                 (System.currentTimeMillis() - mSaveChangeViewTIme) < CHANGE_DELAY_TIME)
             return false;
@@ -1258,14 +1247,7 @@ public abstract class VideoControlView extends VideoView implements View.OnClick
         this.mHideKey = hideKey;
     }
 
-    public boolean isNeedShowWifiTip() {
-        return mNeedShowWifiTip;
-    }
 
-
-    public boolean isTouchWiget() {
-        return mIsTouchWiget;
-    }
 
     /**
      * 是否可以滑动界面改变进度，声音等
@@ -1331,9 +1313,6 @@ public abstract class VideoControlView extends VideoView implements View.OnClick
         this.mDismissControlTime = dismissControlTime;
     }
 
-    public int getDismissControlTime() {
-        return mDismissControlTime;
-    }
 
     /**
      * 进度回调
@@ -1342,9 +1321,6 @@ public abstract class VideoControlView extends VideoView implements View.OnClick
         this.mVideoProgressListener = videoProgressListener;
     }
 
-    public boolean isShowDragProgressTextOnSeekBar() {
-        return isShowDragProgressTextOnSeekBar;
-    }
 
     /**
      * 拖动进度条时，是否在 seekbar 开始部位显示拖动进度

@@ -614,7 +614,6 @@ public class VideoOptionBuilder {
         if (mVideoProgressListener != null) {
             videoPlayer.setVideoProgressListener(mVideoProgressListener);
         }
-        videoPlayer.setOverrideExtension(mOverrideExtension);
         videoPlayer.setAutoFullWithSize(mAutoFullWithSize);
         videoPlayer.setRotateViewAuto(mRotateViewAuto);
         videoPlayer.setOnlyRotateLand(mIsOnlyRotateLand);
@@ -639,9 +638,9 @@ public class VideoOptionBuilder {
         videoPlayer.setSeekRatio(mSeekRatio);
         videoPlayer.setRotateWithSystem(mRotateWithSystem);
         if (mSetUpLazy) {
-            videoPlayer.setUpLazy(mUrl, mCacheWithPlay, mCachePath, mMapHeadData, mVideoTitle);
+            videoPlayer.setUpLazy(mUrl, mCacheWithPlay, mCachePath, mVideoTitle);
         } else {
-            videoPlayer.setUp(mUrl, mCacheWithPlay, mCachePath, mMapHeadData, mVideoTitle);
+            videoPlayer.setUp(mUrl, mCacheWithPlay, mCachePath, mVideoTitle);
         }
     }
 

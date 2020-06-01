@@ -134,34 +134,6 @@ public class StandardVideoPlayer extends VideoPlayer {
     }
 
     /**
-     * 显示wifi确定框，如需要自定义继承重写即可
-     */
-    @Override
-    protected void showWifiDialog() {
-        if (!NetworkUtils.isAvailable(mContext)) {
-            //Toast.makeText(mContext, getResources().getString(R.string.no_net), Toast.LENGTH_LONG).show();
-            startPlayLogic();
-            return;
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivityContext());
-        builder.setMessage(getResources().getString(R.string.tips_not_wifi));
-        builder.setPositiveButton(getResources().getString(R.string.tips_not_wifi_confirm), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                startPlayLogic();
-            }
-        });
-        builder.setNegativeButton(getResources().getString(R.string.tips_not_wifi_cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
-    }
-
-    /**
      * 触摸显示滑动进度dialog，如需要自定义继承重写即可，记得重写dismissProgressDialog
      */
     @Override
@@ -830,34 +802,4 @@ public class StandardVideoPlayer extends VideoPlayer {
         mDialogProgressNormalColor = normalColor;
     }
 
-
-    /************************************* 关于截图的 ****************************************/
-
-    /**
-     * 获取截图
-     */
-    public void taskShotPic(VideoShotListener videoShotListener) {
-        this.taskShotPic(videoShotListener, false);
-    }
-
-    /**
-     * 获取截图
-     *
-     * @param high 是否需要高清的
-     */
-    public void taskShotPic(VideoShotListener videoShotListener, boolean high) {
-        if (getCurrentPlayer().getRenderProxy() != null) {
-            getCurrentPlayer().getRenderProxy().taskShotPic(videoShotListener, high);
-        }
-    }
-    /**
-     * 保存截图
-     *
-     * @param high 是否需要高清的
-     */
-    public void saveFrame(final File file, final boolean high, final VideoShotSaveListener videoShotSaveListener) {
-        if (getCurrentPlayer().getRenderProxy() != null) {
-            getCurrentPlayer().getRenderProxy().saveFrame(file, high, videoShotSaveListener);
-        }
-    }
 }

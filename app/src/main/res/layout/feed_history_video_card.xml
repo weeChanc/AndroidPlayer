@@ -11,9 +11,9 @@
                                    app:cardElevation="4dp">
 
     <com.cwc.vplayer.ui.feed.FeedVideoCard
-            android:id="@+id/feed_video_card"
-            android:layout_width="match_parent"
-            android:layout_height="260dp"></com.cwc.vplayer.ui.feed.FeedVideoCard>
+        android:id="@+id/feed_video_card"
+        android:layout_width="match_parent"
+        android:layout_height="260dp" />
 
 
 </androidx.cardview.widget.CardView>

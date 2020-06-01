@@ -17,7 +17,7 @@ public class PlayerFactory {
 
     public static IPlayerManager getPlayManager() {
         if (sPlayerManager == null) {
-            sPlayerManager = MyMediaPlayer.class;
+            sPlayerManager = IjkPlayerManager.class;
         }
         try {
             return sPlayerManager.newInstance();

@@ -228,6 +228,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 if (File(location).exists() && initSize > 100) {
                     list.add(info)
                 }
+                Log.e("test",info.path)
             } while (cursor.moveToNext())
         }
         cursor?.close()

@@ -25,12 +25,10 @@ import com.cwc.vplayer.controller.MediaPlayerListener;
 import com.cwc.vplayer.controller.VideoViewBridge;
 import com.cwc.vplayer.utils.CommonUtil;
 import com.cwc.vplayer.utils.Debuger;
-import com.cwc.vplayer.utils.NetInfoModule;
 import com.cwc.vplayer.view.render.VTextureRenderView;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Map;
 
 import static com.cwc.vplayer.utils.CommonUtil.getTextSpeed;
 
@@ -152,11 +150,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
     //视频回调
     protected VideoAllCallBack mVideoAllCallBack;
 
-    //http request header
-    protected Map<String, String> mMapHeadData = new HashMap<>();
-
-    //网络监听
-    protected NetInfoModule mNetInfoModule;
 
     public VideoView(@NonNull Context context) {
         super(context);
@@ -310,7 +303,7 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
             e.printStackTrace();
         }
         mBackUpPlayingBufferState = -1;
-        getVideoManager().prepare(mUrl, (mMapHeadData == null) ? new HashMap<String, String>() : mMapHeadData, mLooping, mSpeed, mCache, mCachePath, mOverrideExtension);
+        getVideoManager().prepare(mUrl,new HashMap<String, String>() , mLooping, mSpeed, mCache, mCachePath, mOverrideExtension);
         setStateAndUi(CURRENT_STATE_PREPAREING);
     }
 
@@ -337,8 +330,7 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
         }
     };
 
-    /**
-     * 获得了Audio Focus
+    /** 获得了Audio Focus
      */
     protected void onGankAudio() {
     }
@@ -388,32 +380,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
      */
     public boolean setUp(String url, boolean cacheWithPlay, String title) {
         return setUp(url, cacheWithPlay, ((File) null), title);
-    }
-
-
-    /**
-     * 设置播放URL
-     *
-     * @param url           播放url
-     * @param cacheWithPlay 是否边播边缓存
-     * @param cachePath     缓存路径，如果是M3U8或者HLS，请设置为false
-     * @param mapHeadData   头部信息
-     * @param title         title
-     * @return
-     */
-    public boolean setUp(String url, boolean cacheWithPlay, File cachePath, Map<String, String> mapHeadData, String title) {
-        if (setUp(url, cacheWithPlay, cachePath, title)) {
-            if (this.mMapHeadData != null) {
-                this.mMapHeadData.clear();
-            } else {
-                this.mMapHeadData = new HashMap<>();
-            }
-            if (mapHeadData != null) {
-                this.mMapHeadData.putAll(mapHeadData);
-            }
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -576,7 +542,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
                 e.printStackTrace();
             }
         }
-        releaseNetWorkState();
 
         if (mVideoAllCallBack != null && isCurrentMediaListener()) {
             Debuger.printfLog("onAutoComplete");
@@ -612,7 +577,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
             }
         }
 
-        releaseNetWorkState();
 
     }
 
@@ -756,10 +720,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
 
         addTextureView();
 
-        createNetWorkState();
-
-        listenerNetWorkState();
-
         mHadPlay = true;
 
         if (mPauseBeforePrepared) {
@@ -771,53 +731,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
     protected boolean isCurrentMediaListener() {
         return getVideoManager().listener() != null
                 && getVideoManager().listener() == this;
-    }
-
-    /**
-     * 创建网络监听
-     */
-    protected void createNetWorkState() {
-        if (mNetInfoModule == null) {
-            mNetInfoModule = new NetInfoModule(mContext.getApplicationContext(), new NetInfoModule.NetChangeListener() {
-                @Override
-                public void changed(String state) {
-                    if (!mNetSate.equals(state)) {
-                        Debuger.printfError("******* change network state ******* " + state);
-                        mNetChanged = true;
-                    }
-                    mNetSate = state;
-                }
-            });
-            mNetSate = mNetInfoModule.getCurrentConnectionType();
-        }
-    }
-
-    /**
-     * 监听网络状态
-     */
-    protected void listenerNetWorkState() {
-        if (mNetInfoModule != null) {
-            mNetInfoModule.onHostResume();
-        }
-    }
-
-    /**
-     * 取消网络监听
-     */
-    protected void unListenerNetWorkState() {
-        if (mNetInfoModule != null) {
-            mNetInfoModule.onHostPause();
-        }
-    }
-
-    /**
-     * 释放网络监听
-     */
-    protected void releaseNetWorkState() {
-        if (mNetInfoModule != null) {
-            mNetInfoModule.onHostPause();
-            mNetInfoModule = null;
-        }
     }
 
     /************************* 需要继承处理部分 *************************/
@@ -860,13 +773,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
     /************************* 公开接口 *************************/
 
     /**
-     * 获取当前播放状态
-     */
-    public int getCurrentState() {
-        return mCurrentState;
-    }
-
-    /**
      * 根据状态判断是否播放中
      */
     public boolean isInPlayingState() {
@@ -876,23 +782,11 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
 
     /**
      * 播放tag防止错误，因为普通的url也可能重复
-     */
-    public String getPlayTag() {
-        return mPlayTag;
-    }
-
-    /**
-     * 播放tag防止错误，因为普通的url也可能重复
      *
      * @param playTag 保证不重复就好
      */
     public void setPlayTag(String playTag) {
         this.mPlayTag = playTag;
-    }
-
-
-    public int getPlayPosition() {
-        return mPlayPosition;
     }
 
     /**
@@ -921,9 +815,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
         return getTextSpeed(speed);
     }
 
-    public long getSeekOnStart() {
-        return mSeekOnStart;
-    }
 
     /**
      * 从哪里开始播放
@@ -934,12 +825,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
         this.mSeekOnStart = seekOnStart;
     }
 
-    /**
-     * 缓冲进度/缓存进度
-     */
-    public int getBuffterPoint() {
-        return mBufferPoint;
-    }
 
     /**
      * 是否全屏
@@ -962,7 +847,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
     public void setLooping(boolean looping) {
         this.mLooping = looping;
     }
-
 
     /**
      * 设置播放过程中的回调
@@ -998,20 +882,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
         }
     }
 
-    /**
-     * 播放中生效的播放数据
-     *
-     * @param speed
-     * @param soundTouch
-     */
-    public void setSpeedPlaying(float speed, boolean soundTouch) {
-        setSpeed(speed, soundTouch);
-        getVideoManager().setSpeedPlaying(speed, soundTouch);
-    }
-
-    public boolean isShowPauseCover() {
-        return mShowPauseCover;
-    }
 
     /**
      * 是否需要加载显示暂停的cover图片
@@ -1037,10 +907,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
         }
     }
 
-    public boolean isStartAfterPrepared() {
-        return mStartAfterPrepared;
-    }
-
     /**
      * 准备成功之后立即播放
      *
@@ -1050,9 +916,6 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
         this.mStartAfterPrepared = startAfterPrepared;
     }
 
-    public boolean isReleaseWhenLossAudio() {
-        return mReleaseWhenLossAudio;
-    }
 
     /**
      * 长时间失去音频焦点，暂停播放器
@@ -1063,31 +926,4 @@ public abstract class VideoView extends VTextureRenderView implements MediaPlaye
         this.mReleaseWhenLossAudio = releaseWhenLossAudio;
     }
 
-    public Map<String, String> getMapHeadData() {
-        return mMapHeadData;
-    }
-
-    /**
-     * 单独设置mapHeader
-     *
-     * @param headData
-     */
-    public void setMapHeadData(Map<String, String> headData) {
-        if (headData != null) {
-            this.mMapHeadData = headData;
-        }
-    }
-
-    public String getOverrideExtension() {
-        return mOverrideExtension;
-    }
-
-    /**
-     * 是否需要覆盖拓展类型，目前只针对exoPlayer内核模式有效
-     *
-     * @param overrideExtension 比如传入 m3u8,mp4,avi 等类型
-     */
-    public void setOverrideExtension(String overrideExtension) {
-        this.mOverrideExtension = overrideExtension;
-    }
 }

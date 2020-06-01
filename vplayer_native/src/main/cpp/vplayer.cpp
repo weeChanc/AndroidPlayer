@@ -207,18 +207,6 @@ static void vfilter_graph_free(PLAYER *player) {
     player->vfilter_rotate_ctx = NULL;
 }
 
-static void vfilter_graph_input(PLAYER *player, AVFrame *frame) {
-    if (!player->vfilter_graph) return;
-    av_buffersrc_add_frame_flags(player->vfilter_source_ctx, frame, AV_BUFFERSRC_FLAG_KEEP_REF);
-}
-
-static int vfilter_graph_output(PLAYER *player, AVFrame *frame) {
-    if (player->vfilter_graph) {
-        return av_buffersink_get_frame(player->vfilter_sink_ctx, frame);
-    } else {
-        return 0;
-    }
-}
 //-- for filter graph
 
 static int init_stream(PLAYER *player, enum AVMediaType type, int sel) {

@@ -230,10 +230,10 @@ public abstract class BaseVideoPlayer extends VideoControlView {
         to.mAutoFullWithSize = from.mAutoFullWithSize;
         to.mOverrideExtension = from.mOverrideExtension;
         if (from.mSetUpLazy) {
-            to.setUpLazy(from.mOriginUrl, from.mCache, from.mCachePath, from.mMapHeadData, from.mTitle);
+            to.setUpLazy(from.mOriginUrl, from.mCache, from.mCachePath,  from.mTitle);
             to.mUrl = from.mUrl;
         } else {
-            to.setUp(from.mOriginUrl, from.mCache, from.mCachePath, from.mMapHeadData, from.mTitle);
+            to.setUp(from.mOriginUrl, from.mCache, from.mCachePath, from.mTitle);
         }
         to.setLooping(from.isLooping());
         to.setIsTouchWigetFull(from.mIsTouchWigetFull);
@@ -314,7 +314,6 @@ public abstract class BaseVideoPlayer extends VideoControlView {
 
         checkoutState();
 
-        checkAutoFullWithSizeAndAdaptation(videoPlayer);
     }
 
     /**
@@ -471,8 +470,6 @@ public abstract class BaseVideoPlayer extends VideoControlView {
             if (isV) {
                 if (mOrientationUtils != null) {
                     mOrientationUtils.backToProtVideo();
-                    //处理在未开始播放的时候点击全屏
-                    checkAutoFullWithSizeAndAdaptation(this);
                 }
             }
         }
@@ -822,45 +819,5 @@ public abstract class BaseVideoPlayer extends VideoControlView {
         }
     }
 
-    /**
-     * 检测是否根据视频尺寸，自动选择竖屏全屏或者横屏全屏；
-     * 并且适配在竖屏横屏时，由于刘海屏或者打孔屏占据空间，导致标题显示被遮盖的问题
-     *
-     * @param videoPlayer 将要显示的播放器对象
-     */
-    protected void checkAutoFullWithSizeAndAdaptation(final BaseVideoPlayer videoPlayer) {
-        if (videoPlayer != null) {
-            //判断是否自动选择；判断是否是竖直的视频；判断是否隐藏状态栏
-            if (isNeedAutoAdaptation &&
-                    isAutoFullWithSize() && isVerticalVideo() && isFullHideStatusBar()) {
-                mInnerHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        videoPlayer.getCurrentPlayer().autoAdaptation();
-                    }
-                }, 100);
-            }
-        }
-    }
 
-    /**
-     * 自动适配在竖屏全屏时，
-     * 由于刘海屏或者打孔屏占据空间带来的影响(某些机型在全屏时会自动将布局下移（或者添加padding），
-     * 例如三星S10、小米8；但是也有一些机型在全屏时不会处理，此时，就为了兼容这部分机型)
-     */
-    protected void autoAdaptation() {
-        Context context = getContext();
-        if (isVerticalVideo()) {
-            int[] location = new int[2];
-            getLocationOnScreen(location);
-            /*同时判断系统是否有自动将布局从statusbar下方开始显示，根据在屏幕中的位置判断*/
-            //如果系统没有将布局下移，那么此时处理
-            if (location[1] == 0) {
-                setPadding(0, getStatusBarHeight(context), 0, 0);
-                Debuger.printfLog("竖屏，系统未将布局下移");
-            } else {
-                Debuger.printfLog("竖屏，系统将布局下移；y:" + location[1]);
-            }
-        }
-    }
 }
